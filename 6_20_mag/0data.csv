@@ -1,0 +1,45 @@
+Error in p_val1 * num_pdg : non-numeric argument to binary operator
+
+stl00001
+0.194794161232855
+1140.32501985713
+4.66226812009945
+4.796875
+aace|amac|apa3|apan|apoc|atrc|atrn|bsub|dmos|ecok|efav|efog|ehor|geur|gfra|ghan|gobo|gxyl|lani|lbga|lbrc|lbuc|lcas|lfal|lfer|lfrc|lfrk|lgas|llac|lmle|lmli|lplc|lplw|lrha|lver|pbur|pput|smar|swit
+smut|spar
+stl00002
+0.0908776537274443
+531.997784920459
+4.63990571270105
+4.72414248021108
+aace|amac|apa3|apan|apoc|atrc|atrn|bsub|dmos|ecok|ehor|geur|gfra|ghan|gobo|gxyl|lbga|lbrc|lbuc|lcas|lfal|llac|lplc|lplw|lrha|lver|pbur
+efav|efog|lani|lfer|lfrc|lfrk|lgas|lmle|lmli|pput|smar|smut|spar|swit
+stl00003,stl00057
+0.0372297892588604
+217.943186321369
+4.65747390596572
+4.88282647584973
+aace|amac|apa3|apan|apoc|atrc|atrn|bsub|dmos|ecok|efav|efog|ehor|geur|gfra|ghan|gobo|gxyl|lani|lbga|lbrc|lbuc|lcas|lfal|lfer|lgas|llac|lmle|lmli|lplc|lplw|lrha|lver|pbur|pput|smar|smut|spar|swit
+lfrc|lfrk
+stl00004
+0.252322439950194
+1477.09556346843
+4.61000922509225
+4.683382386235
+aace|amac|atrc|atrn|dmos|geur|gobo|swit
+apa3|apan|apoc|bsub|ecok|efav|efog|ehor|gfra|ghan|gxyl|lani|lbga|lbrc|lbuc|lcas|lfal|lfer|lfrc|lfrk|lgas|llac|lmle|lmli|lplc|lplw|lrha|lver|pbur|pput|smar|smut|spar
+stl00005,stl01492,stl01515
+4.83681004292968e-06
+0.0283146859913104
+4.53918064338741
+4.73299389002037
+aace|amac|apa3|apan|apoc|atrc|atrn|geur|gfra|ghan|gobo|gxyl|smar|swit
+bsub|dmos|ecok|efav|efog|ehor|lani|lbga|lbrc|lbuc|lcas|lfal|lfer|lfrc|lfrk|lgas|llac|lmle|lmli|lplc|lplw|lrha|lver|pbur|pput|smut|spar
+Error in p_val1 * num_pdg : non-numeric argument to binary operator
+
+Error in p_val1 * num_pdg : non-numeric argument to binary operator
+
+Error in p_val1 * num_pdg : non-numeric argument to binary operator
+
+Error in p_val1 * num_pdg : non-numeric argument to binary operator
+
