@@ -38,11 +38,11 @@
 #'
 #'
 #' #Survival with two independent random effects and one additional fixed effect, run on multiple cores
-#' mcl_mtrx <- analyze_OrthoMCL(after_ortho_format, starv_pheno_data, "TRT", "survmulti", time="t2", event="event", rndm1="EXP", rndm2="VIAL", multi=1)
+#' mcl_mtrx <- analyze_OrthoMCL(after_ortho_format, starv_pheno_data, "TRT", model="survmulti", time="t2", event="event", rndm1="EXP", rndm2="VIAL", multi=1)
 #'
 #'
 #' #Survival with two independent random effects and one additional fixed effect, including drops on multi cores
-#' analyze_OrthoMCL(after_ortho_format, starv_pheno_data, "TRT", "survmulticensor", time="t1", time2="t2", event="event", rndm1="EXP", rndm2="VIAL", fix2="BACLO", multi=1)
+#' analyze_OrthoMCL(after_ortho_format, starv_pheno_data, "TRT", model="survmulticensor", time="t1", time2="t2", event="event", rndm1="EXP", rndm2="VIAL", fix2="BACLO", multi=1)
 #' #to be appended with surv_append_matrix
 #' @export
 
@@ -675,18 +675,20 @@ analyze.surv.multi <- function(haplo_mtrx, haplo_names, var_data, species_name, 
   cl <- makeCluster(multi)  # of nodes
   registerDoParallel(cl)
   
-  outmulti <- c(rep(1,7),unlist(foreach(i=icount(stopnum-startnum)) %dopar% { 
+  outmulti <- c(rep(1,7),unlist(foreach(i=icount(stopnum-startnum+1)) %dopar% { 
     
     
     library(coxme)
     library(multcomp)
     library(survival)
     
+    i=i+startnum-1
+    
     ### start over with fresh values each iteration
     try(rm(output, name, lmm, l1.1,p_val1,mean_contain, mean_missing, taxa_contain, taxa_missing),silent = T)
     
     ### getting column names for experimental fixed effect
-    name <- paste("V", i+1, sep="")
+    name <- paste("V", i, sep="")
     sub$fix <- haplo_tx[, which(colnames(haplo_tx)==name)]
     sub$fix <- factor(sub$fix)
     sub$species <- haplo_tx[, which(colnames(haplo_tx)==species_name)]
@@ -829,6 +831,12 @@ analyze.surv.censor.multi <- function(haplo_mtrx, haplo_names, var_data, species
     lmm <- try(coxme(S~fix + fix2 + (1|trt) + (1|rndm1/rndm2), data=sub3),T)
     l1.1 <- try(glht(lmm, mcp(fix = "Tukey")),T)
     p_val1 <- try(summary(l1.1)$test$pvalues[1],T) # should this be 2?
+    
+    
+    write(summary(l1.1)$test$pvalues[1],file="data.csv")
+    write(summary(l1.1)$test$pvalues[2],file="data.csv")
+  
+
     
     ### calculating meta-data
     # means

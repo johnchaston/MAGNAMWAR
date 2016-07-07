@@ -4,16 +4,17 @@
 \alias{analyze_OrthoMCL}
 \title{Main OrthoMCL Analysis}
 \usage{
-analyze_OrthoMCL(haplo_data, var_data, species_name, model, resp = NULL,
+analyze_OrthoMCL(haplo_data, var_data, model, species_name, resp = NULL,
   fix2 = NULL, rndm1 = NULL, rndm2 = NULL, multi = 1, time = NULL,
   event = NULL, time2 = NULL, startnum = 1, stopnum = "end")
 }
 \arguments{
-\item{var_data}{R object with column names of the following variables}
+\item{haplo_data}{output of format_afterOrtho --list of 2 things-- 1: binary matrix indicating the presence / absence of genes in each COG and 2: vector of names of COGs}
+
+\item{var_data}{R object with column names of the following variables#'
+@param model Linear Model with gene presence as fixed effect (lm), Wilcox Test with gene presence as fixed effect (wx), Linear Mixed Effect models with gene presence as fixed effect and additional variables specified as: one random effect (lmeR1); two independent random effects (lmeR2ind); two random effects with rndm2 nested in rndm1 (lmeR2nest); or two independent random effects with one additional fixed effect (lmeF2)}
 
 \item{species_name}{Column name in var_data containing 4-letter species designations}
-
-\item{model}{Linear Model with gene presence as fixed effect (lm), Wilcox Test with gene presence as fixed effect (wx), Linear Mixed Effect models with gene presence as fixed effect and additional variables specified as: one random effect (lmeR1); two independent random effects (lmeR2ind); two random effects with rndm2 nested in rndm1 (lmeR2nest); or two independent random effects with one additional fixed effect (lmeF2)}
 
 \item{resp}{Column name in var_data containing response variable}
 
@@ -24,8 +25,6 @@ analyze_OrthoMCL(haplo_data, var_data, species_name, model, resp = NULL,
 \item{rndm2}{Column name in var_data containing second random variable}
 
 \item{multi}{Number of cores (can only be used with surv_multi)}
-
-\item{presence_matrix}{output of format_afterOrtho --list of 2 things-- 1: binary matrix indicating the presence / absence of genes in each COG and 2: vector of names of COGs}
 }
 \value{
 A matrix with the following columns: COG, p-values, Bonferroni corrected p-values, mean phenotype of COG-containing taxa, mean pheotype of COG-lacking taxa, taxa included in COG, taxa not included in COG
@@ -59,11 +58,11 @@ mcl_mtrx <- analyze_OrthoMCL(after_ortho_format, pheno_data, "Treatment", "wx", 
 
 
 #Survival with two independent random effects and one additional fixed effect, run on multiple cores
-mcl_mtrx <- analyze_OrthoMCL(after_ortho_format, starv_pheno_data, "TRT", "survmulti", time="t2", event="event", rndm1="EXP", rndm2="VIAL", multi=1)
+mcl_mtrx <- analyze_OrthoMCL(after_ortho_format, starv_pheno_data, "TRT", model="survmulti", time="t2", event="event", rndm1="EXP", rndm2="VIAL", multi=1)
 
 
 #Survival with two independent random effects and one additional fixed effect, including drops on multi cores
-analyze_OrthoMCL(after_ortho_format, starv_pheno_data, "TRT", "survmulticensor", time="t1", time2="t2", event="event", rndm1="EXP", rndm2="VIAL", fix2="BACLO", multi=1)
+analyze_OrthoMCL(after_ortho_format, starv_pheno_data, "TRT", model="survmulticensor", time="t1", time2="t2", event="event", rndm1="EXP", rndm2="VIAL", fix2="BACLO", multi=1)
 #to be appended with surv_append_matrix
 }
 \references{
