@@ -9,7 +9,7 @@ format_afterOrtho(file, format = "ortho")
 \arguments{
 \item{file}{Path to the orthoMCL output file}
 
-\item{format}{Defaults to "ortho" for output from orthomcl.org. Other option is "groups" for output from local run of OrthoMCL software.}
+\item{format}{Defaults to 'ortho' for output from orthomcl.org. Other option is 'groups' for output from local run of OrthoMCL software.}
 }
 \value{
 value
@@ -18,11 +18,11 @@ value
 After running OrthoMCL and/or submitting to www.orthomcl.org, formats the output file to be used in analyzeOrthoMCL
 }
 \examples{
-file <- system.file("sample_data", "orthologGroups.txt", package="MAGNAMWAR")
+file <- system.file('sample_data', 'orthologGroups.txt', package='MAGNAMWAR')
 after_ortho_format <- format_afterOrtho(file)
 
-file_grps <- system.file("sample_data", "groups_example_r.txt", package="MAGNAMWAR")
-after_ortho_format_grps <- format_afterOrtho(file_grps, format = "groups")
+file_grps <- system.file('sample_data', 'groups_example_r.txt', package='MAGNAMWAR')
+after_ortho_format_grps <- format_afterOrtho(file_grps, format = 'groups')
 
 }
 

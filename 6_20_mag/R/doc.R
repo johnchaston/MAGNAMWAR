@@ -12,4 +12,4 @@
 #'   ...
 #' }
 #' @source \url{http://www.diamondse.info/}
-#"aaa"
+#'aaa'

@@ -1,16 +1,18 @@
 Package: MAGNAMWAR
 Type: Package
-Title: Mono-Associated Gnotobiotic Animal Meta-Genome Wide Association R Package
+Title: A Pipeline for Meta-Genome Wide Association
 Version: 1.0
 Date: 2015-07-14
-Author: Hayden Z. Smith <smithinformatics@gmail.com>, John Chaston
-    <john_chaston@byu.edu>
-Maintainer: Corinne Penrod <chaston.lab@gmail.com>
+Authors@R: as.person(c(
+    "Corinne Penrod <chaston.lab@gmail.com> [aut, cre]", 
+    "John Chaston <john_chaston@byu.edu> [aut]",
+    "Hayden Z. Smith <smithinformatics@gmail.com> [ctb]"
+  ))
 Description: This package correlates meta-genomic variation to target species
     phenotypic variations in meta-genome with assocation studies.
 License: CC0
 LazyData: true
-Depends:
+Imports:
     lme4,
     parallel,
     coxme,

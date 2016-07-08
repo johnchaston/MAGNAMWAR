@@ -34,35 +34,35 @@ Main function for analyzing the statistical association of PDG (phylogenetic dis
 }
 \examples{
 #Linear Model
-mcl_mtrx <- analyze_OrthoMCL(after_ortho_format, pheno_data, "Treatment", "lm", resp="RespVar")
+mcl_mtrx <- analyze_OrthoMCL(after_ortho_format, pheno_data, 'Treatment', 'lm', resp='RespVar')
 
 
 #Linear Mixed Effect with one random effect
-mcl_mtrx <- analyze_OrthoMCL(after_ortho_format, pheno_data, "Treatment", "lmeR1", resp="RespVar", rndm1="Experiment")
+mcl_mtrx <- analyze_OrthoMCL(after_ortho_format, pheno_data, 'Treatment', 'lmeR1', resp='RespVar', rndm1='Experiment')
 
 
 #Linear Mixed Effect with two independent random effects
-mcl_mtrx <- analyze_OrthoMCL(after_ortho_format, pheno_data, "Treatment", "lmeR2ind", resp="RespVar", rndm1="Experiment", rndm2="Vial")
+mcl_mtrx <- analyze_OrthoMCL(after_ortho_format, pheno_data, 'Treatment', 'lmeR2ind', resp='RespVar', rndm1='Experiment', rndm2='Vial')
 
 
 #Linear Mixed Effect with rndm2 nested in rndm1
-mcl_mtrx <- analyze_OrthoMCL(after_ortho_format, pheno_data, "Treatment", "lmeR2nest", resp="RespVar", rndm1="Experiment", rndm2="Vial")
+mcl_mtrx <- analyze_OrthoMCL(after_ortho_format, pheno_data, 'Treatment', 'lmeR2nest', resp='RespVar', rndm1='Experiment', rndm2='Vial')
 
 
 #Linear Mixed Effect with two independent random effects and one additional fixed effect
-mcl_mtrx <- analyze_OrthoMCL(after_ortho_format, pheno_data, "Treatment", "lmeF2", resp="RespVar", fix2="Treatment", rndm1="Experiment", rndm2="Vial")
+mcl_mtrx <- analyze_OrthoMCL(after_ortho_format, pheno_data, 'Treatment', 'lmeF2', resp='RespVar', fix2='Treatment', rndm1='Experiment', rndm2='Vial')
 
 
 #Wilcox Test
-mcl_mtrx <- analyze_OrthoMCL(after_ortho_format, pheno_data, "Treatment", "wx", resp="RespVar")
+mcl_mtrx <- analyze_OrthoMCL(after_ortho_format, pheno_data, 'Treatment', 'wx', resp='RespVar')
 
 
 #Survival with two independent random effects and one additional fixed effect, run on multiple cores
-mcl_mtrx <- analyze_OrthoMCL(after_ortho_format, starv_pheno_data, "TRT", model="survmulti", time="t2", event="event", rndm1="EXP", rndm2="VIAL", multi=1)
+mcl_mtrx <- analyze_OrthoMCL(after_ortho_format, starv_pheno_data, 'TRT', model='survmulti', time='t2', event='event', rndm1='EXP', rndm2='VIAL', multi=1)
 
 
 #Survival with two independent random effects and one additional fixed effect, including drops on multi cores
-analyze_OrthoMCL(after_ortho_format, starv_pheno_data, "TRT", model="survmulticensor", time="t1", time2="t2", event="event", rndm1="EXP", rndm2="VIAL", fix2="BACLO", multi=1)
+analyze_OrthoMCL(after_ortho_format, starv_pheno_data, 'TRT', model='survmulticensor', time='t1', time2='t2', event='event', rndm1='EXP', rndm2='VIAL', fix2='BACLO', multi=1)
 #to be appended with surv_append_matrix
 }
 \references{

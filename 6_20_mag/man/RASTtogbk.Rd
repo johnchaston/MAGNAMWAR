@@ -18,9 +18,9 @@ Useful for reformating RAST files to GBK format
 }
 \examples{
 
-lfrc_fasta <- system.file("sample_data", "RASTtogbk//lfrc.fasta", package="MAGNAMWAR")
-lfrc_reference <- system.file("sample_data", "RASTtogbk//lfrc_lookup.csv", package="MAGNAMWAR")
-lfrc_path <- system.file("sample_data", "RASTtogbk//lfrc_out.fasta", package="MAGNAMWAR")
+lfrc_fasta <- system.file('sample_data', 'RASTtogbk//lfrc.fasta', package='MAGNAMWAR')
+lfrc_reference <- system.file('sample_data', 'RASTtogbk//lfrc_lookup.csv', package='MAGNAMWAR')
+lfrc_path <- system.file('sample_data', 'RASTtogbk//lfrc_out.fasta', package='MAGNAMWAR')
 
 RASTtogbk(lfrc_fasta,lfrc_reference,lfrc_path)
 

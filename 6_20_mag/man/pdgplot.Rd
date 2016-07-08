@@ -35,7 +35,7 @@ Bar plot of PDG vs phenotype data with presence of taxa in PDG indicated by colo
 }
 \examples{
 #dev.off()
-pdgplot(pheno_data, mcl_mtrx, "OG5_126778", "Treatment", "RespVar", ylimit=12)
+pdgplot(pheno_data, mcl_mtrx, 'OG5_126778', 'Treatment', 'RespVar', ylimit=12)
 }
 \references{
 Some sort of reference

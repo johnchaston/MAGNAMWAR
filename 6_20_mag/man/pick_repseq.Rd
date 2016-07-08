@@ -9,7 +9,7 @@ pick_repseq(mcl_data, fa_dir, del_mid = T)
 \arguments{
 \item{mcl_data}{output of format_afterOrtho() --list of 2 things-- 1: binary matrix indicating the presence / absence of genes in each COG and 2: vector of names of COGs}
 
-\item{fa_dir}{Path to the directory where all raw GenBank files are stored. Note, all file names must be changed to a 4-letter code representing each species and have ".fasta" file descriptor}
+\item{fa_dir}{Path to the directory where all raw GenBank files are stored. Note, all file names must be changed to a 4-letter code representing each species and have '.fasta' file descriptor}
 
 \item{del_mid}{Print intermediate fully concatinated fasta (default: FALSE)}
 }
@@ -20,8 +20,8 @@ The path to the representative sequence file in fasta format
 Randomly picks a representative sequence from GenBank fasta files for every OrthoMCL COG
 }
 \examples{
-dir <- system.file("sample_data", "fasta_dir", package="MAGNAMWAR")
-dir <- paste(dir,"/",sep='')
+dir <- system.file('sample_data', 'fasta_dir', package='MAGNAMWAR')
+dir <- paste(dir,'/',sep='')
 repseqs <- pick_repseq(after_ortho_format, dir)
 }
 

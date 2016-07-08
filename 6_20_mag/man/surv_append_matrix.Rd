@@ -20,8 +20,8 @@ A csv file containing a matrix with the following columns: COG, p-values, Bonfer
 Function used to append all .csv files that are outputted from analyze_OrthoMCL into one matrix.
 }
 \examples{
-file <- system.file("sample_data", "outputs", package="MAGNAMWAR")
-directory <- paste(file, "/", sep = "")
+file <- system.file('sample_data', 'outputs', package='MAGNAMWAR')
+directory <- paste(file, '/', sep = '')
 surv_append_matrix(directory)
 
 

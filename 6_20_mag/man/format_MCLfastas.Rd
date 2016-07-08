@@ -7,9 +7,9 @@
 format_MCLfastas(fa_dir, genbnk_id = 4)
 }
 \arguments{
-\item{fa_dir}{Path to the directory where all raw GenBank files are stored. Note, all file names must be changed to a 4-letter code representing each species and have ".fasta" file descriptor}
+\item{fa_dir}{Path to the directory where all raw GenBank files are stored. Note, all file names must be changed to a 4-letter code representing each species and have '.fasta' file descriptor}
 
-\item{genbnk_id}{The index of the sequence ID in the GenBank pipe-separated annotation line (default: 4)}
+\item{genbnk_id}{(Only necessary for the deprecated version of fasta headers) The index of the sequence ID in the GenBank pipe-separated annotation line (default: 4)}
 }
 \value{
 The path to the final OrthoMCL compatible fasta file
@@ -18,8 +18,8 @@ The path to the final OrthoMCL compatible fasta file
 Creates the composite fasta file for use in running OrthoMCL and/or submitting to www.orthomcl.org
 }
 \examples{
-dir <- system.file("sample_data", "fasta_dir", package="MAGNAMWAR")
-dir <- paste(dir,"/",sep='')
+dir <- system.file('sample_data', 'fasta_dir', package='MAGNAMWAR')
+dir <- paste(dir,'/',sep='')
 formatted_file <- format_MCLfastas(dir)
 }
 
