@@ -25,7 +25,7 @@ format_MCLfastas <- function(fa_dir, genbnk_id = 4) {
     info_vec <- vector()
     seq_vec <- vector()
     
-    cat("Writing out to ", outfile, "\n")
+    cat("Writing out to", outfile, "\n")
     
     for (i in 1:length(files)) {
         

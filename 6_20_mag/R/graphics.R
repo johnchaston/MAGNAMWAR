@@ -172,8 +172,7 @@ pdg_v_cog <- function(mcl_data, num = 40, ...) {
         plot[num, 1] <- paste(num, "+", sep = "")
         plot[num, 2] <- sum
         
-        r_axis <- round(plot[2, 2], digits = -2)
-        plot[1, 2] <- r_axis + 5
+        r_axis <- plot[1, 2] + 5
         
     } else {
         
@@ -186,7 +185,7 @@ pdg_v_cog <- function(mcl_data, num = 40, ...) {
     }
     
     ### Plotting dev.off() # reset margins for labels
-    barplot <- barplot(plot$Freq, names.arg = plot$COGS, ylim = c(0, r_axis), xlab = expression(paste("COGs PDG"^"-1")), 
+    barplot <- barplot(plot$Freq, names.arg = plot$COGS, ylim = c(-1, r_axis), xlab = expression(paste("COGs PDG"^"-1")), 
         ylab = "PDGs")
     axis(1, at = barplot, labels = plot$COGS)
     
@@ -399,7 +398,7 @@ manhat_grp <- function(mcl_data, mcl_mtrx, tree = NULL) {
     colnames(DF) <- c("Taxa", "Protein ID", "Gene")
     row.names(DF) <- NULL
     
-    pvalue <- data.frame(Gene = mcl_mtrx[, "COG"], PValue = (mcl_mtrx[, "corrected_p-val1"]))
+    pvalue <- data.frame(Gene = mcl_mtrx[, "COG"], PValue = (mcl_mtrx[, "corrected_pval1"]))
     spl <- strsplit(as.character(pvalue$Gene), split = ",")
     pvalue <- data.frame(Gene = unlist(spl), PValue = rep(pvalue$PValue, sapply(spl, length)))
     

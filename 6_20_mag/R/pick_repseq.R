@@ -3,7 +3,6 @@
 #' Randomly picks a representative sequence from GenBank fasta files for every OrthoMCL COG
 #' @param mcl_data output of format_afterOrtho() --list of 2 things-- 1: binary matrix indicating the presence / absence of genes in each COG and 2: vector of names of COGs
 #' @param fa_dir Path to the directory where all raw GenBank files are stored. Note, all file names must be changed to a 4-letter code representing each species and have '.fasta' file descriptor
-#' @param del_mid Print intermediate fully concatinated fasta (default: FALSE)
 #' @return The path to the representative sequence file in fasta format
 #' @examples
 #' dir <- system.file('sample_data', 'fasta_dir', package='MAGNAMWAR')
@@ -12,18 +11,18 @@
 #' @export
 
 
-pick_repseq <- function(mcl_data, fa_dir, del_mid = T) {
+pick_repseq <- function(mcl_data, fa_dir) {
     
     ### must feed it a formatted mcl_data file from format_afterOrtho
     mcl_data <- mcl_data$proteins
     
-    filename <- "repseq.fasta"
-    repseqfile <- paste(c(fa_dir, filename), collapse = "")
+#     filename <- "repseq.fasta"
+#     repseqfile <- paste(c(fa_dir, filename), collapse = "")
+#     if (filename %in% files) {
+#         file.remove(repseqfile)
+#     }
+
     files <- dir(fa_dir, pattern = ".fasta")
-    if (filename %in% files) {
-        file.remove(repseqfile)
-    }
-    
     files <- files[!files %in% "MCLformatted_all.fasta"]
     
     if (getwd() != fa_dir) {
@@ -32,12 +31,21 @@ pick_repseq <- function(mcl_data, fa_dir, del_mid = T) {
     
     for (k in 1:length(files)) {
         l = strsplit(files[k], split = ".", fixed = T)
-        var2 <- read.fasta(file = files[k], seqtype = "AA", as.string = T)
+        var2 <- read.fasta(file = files[k], seqtype = "AA", as.string = T, forceDNAtolower = F, seqonly = F, strip.desc = T)
         var3 <- matrix(rep("NA", length(var2) * 3), ncol = 3)
         colnames(var3) = c("V1", "V2", "V3")
         for (j in 1:length(var2)) {
-            var6 <- strsplit(strsplit(getAnnot(var2[[j]]), "[", T)[[1]][1], "|", T)
-            var3[j, ] <- c(var6[[1]][4], var6[[1]][5], var2[[j]][1])
+            
+            info <- getAnnot(var2[[j]])
+            prot_id <- strsplit(info, split = " ")
+            
+            #how to get the annotation off new fasta
+            other_info <- paste(prot_id[[1]][2:length(prot_id[[1]])], collapse = ' ') 
+            
+            var3[j, ] <- c(prot_id[[1]][1], other_info, var2[[j]][1])
+# OLD             
+#             var6 <- strsplit(strsplit(getAnnot(var2[[j]]), "[", T)[[1]][1], "|", T)
+#             var3[j, ] <- c(var6[[1]][4], var6[[1]][5], var2[[j]][1])             
         }
         var3 <- data.frame(var3)
         assign(l[[1]][1], var3)
@@ -91,9 +99,9 @@ pick_repseq <- function(mcl_data, fa_dir, del_mid = T) {
         
     }
     
-    write.table(out_reps, "try.txt", row.names = F, quote = F, col.names = F)
-    out_reps <- read.fasta("try.txt", seqtype = "AA", as.string = T, strip.desc = T)
-    file.remove("try.txt")
+#     write.table(out_reps, "try.txt", row.names = F, quote = F, col.names = F)
+#     out_reps <- read.fasta("try.txt", seqtype = "AA", as.string = T, strip.desc = T)
+#     file.remove("try.txt")
     return(out_reps)
     
 }

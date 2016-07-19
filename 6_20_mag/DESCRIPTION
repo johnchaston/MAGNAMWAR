@@ -24,6 +24,5 @@ Imports:
     ape,
     ggplot2,
     foreach,
-    doParallel,
-    splitstackshape
+    doParallel
 RoxygenNote: 5.0.1

@@ -12,5 +12,7 @@ write_mcl <- function(mtrx, filename) {
     
     write.csv(mtrx, filename, quote = F, row.names = F)
     
-    return(filename)
+    wd <- getwd()
+    file <- paste(wd, filename, sep = '/')
+    cat("wrote matrix to", file, '\n')
 }
