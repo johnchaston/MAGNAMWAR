@@ -6,8 +6,8 @@
 #' @return Returns the original OrthoMCL output matrix with additional columns: representative sequence taxon, representative sequence id, representative sequence annotation, representative sequence 
 #' @examples
 #' joined_mtrx_grps <- join_repset(repseqs_grps, mcl_mtrx_grps)
-#' #mcl_mtrx1 previously derived from analyze_OrthoMCL()
-#' #repseqs1 previously derived from pick_repseq()
+#' #mcl_mtrx previously derived from analyze_OrthoMCL()
+#' #repseqs previously derived from pick_repseq()
 #' @export
 
 join_repset <- function(reps_file, mcl_mtrx) {

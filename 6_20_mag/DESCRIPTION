@@ -4,7 +4,7 @@ Title: A Pipeline for Meta-Genome Wide Association
 Version: 1.0
 Date: 2015-07-14
 Authors@R: as.person(c(
-    "Corinne Penrod <chaston.lab@gmail.com> [aut, cre]", 
+    "Corinne Penrod <coripenrod@gmail.com> [aut, cre]", 
     "John Chaston <john_chaston@byu.edu> [aut]",
     "Hayden Z. Smith <smithinformatics@gmail.com> [ctb]"
   ))
@@ -22,7 +22,9 @@ Imports:
     plyr,
     qqman,
     ape,
-    ggplot2,
+    dplyr,
+    iterators,
     foreach,
     doParallel
+Depends: R (>= 2.10)
 RoxygenNote: 5.0.1

@@ -59,7 +59,7 @@
 #' #Survival with two independent random effects and one additional fixed effect,
 #' #including drops on multi cores
 #' \dontrun{
-#' mtrx <- analyze_OrthoMCL(after_ortho_format, starv_pheno_data, 'TRT', model='survmulticensor',
+#' mcl_mtrx <- analyze_OrthoMCL(after_ortho_format, starv_pheno_data, 'TRT', model='survmulticensor',
 #'  time='t1', time2='t2', event='event', rndm1='EXP', rndm2='VIAL', fix2='BACLO', multi=1)
 #'  }
 #' #to be appended with surv_append_matrix
