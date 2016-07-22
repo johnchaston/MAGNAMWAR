@@ -1,15 +1,20 @@
 #' Main OrthoMCL Analysis
 #' 
 #' Main function for analyzing the statistical association of PDG (phylogenetic distribution group) presence with phenotype data
-#' @param haplo_data output of format_afterOrtho --list of 2 things-- 1: binary matrix indicating the presence / absence of genes in each COG and 2: vector of names of COGs
-#' @param var_data R object with column names of the following variables
+#' @param mcl_data output of format_afterOrtho --list of 2 things-- 1: binary matrix indicating the presence / absence of genes in each COG and 2: vector of names of COGs
+#' @param pheno_data R object with column names of the following variables
 #' @param model Linear Model with gene presence as fixed effect (lm),Linear Mixed Effect models with gene presence as fixed effect and additional variables specified as: one random effect (lmeR1); two independent random effects (lmeR2ind); two random effects with rndm2 nested in rndm1 (lmeR2nest); or two independent random effects with one additional fixed effect (lmeF2), Wilcox Test with gene presence as fixed effect (wx), Survival Test with support for multi core design
-#' @param species_name Column name in var_data containing 4-letter species designations
-#' @param resp Column name in var_data containing response variable
-#' @param fix2 Column name in var_data containing second fixed effect
-#' @param rndm1 Column name in var_data containing first random variable
-#' @param rndm2 Column name in var_data containing second random variable 
-#' @param multi Number of cores (can only be used with surv_multi)
+#' @param species_name Column name in pheno_data containing 4-letter species designations
+#' @param resp Column name in pheno_data containing response variable
+#' @param fix2 Column name in pheno_data containing second fixed effect
+#' @param rndm1 Column name in pheno_data containing first random variable
+#' @param rndm2 Column name in pheno_data containing second random variable
+#' @param multi (can only be used with survival tests) Number of cores
+#' @param time (can only be used with survival tests) Column name in pheno_data containing first time
+#' @param event (can only be used with survival tests) Column name in pheno_data containing event
+#' @param time2 (can only be used with survival tests) Column name in pheno_data containing econd time
+#' @param startnum number of test to start on
+#' @param stopnum number of test to stop on
 #' @return A matrix with the following columns: COG, p-values, Bonferroni corrected p-values, mean phenotype of COG-containing taxa, mean pheotype of COG-lacking taxa, taxa included in COG, taxa not included in COG
 #' @references Some sort of reference
 #' @examples 
@@ -19,9 +24,10 @@
 #'
 #'
 #' #Linear Mixed Effect with one random effect
+#' \dontrun{
 #' mcl_mtrx <- analyze_OrthoMCL(after_ortho_format, pheno_data, 'lmeR1',
 #' 'Treatment', resp='RespVar', rndm1='Experiment')
-#'
+#' }
 #'
 #' #Linear Mixed Effect with two independent random effects
 #' mcl_mtrx <- analyze_OrthoMCL(after_ortho_format, pheno_data, 'lmeR2ind',
@@ -50,69 +56,61 @@
 #' }
 #'
 #' #5 minutes!
-#' #Survival with two independent random effects and one additional fixed effect, including drops on multi cores
+#' #Survival with two independent random effects and one additional fixed effect,
+#' #including drops on multi cores
 #' \dontrun{
 #' mtrx <- analyze_OrthoMCL(after_ortho_format, starv_pheno_data, 'TRT', model='survmulticensor',
 #'  time='t1', time2='t2', event='event', rndm1='EXP', rndm2='VIAL', fix2='BACLO', multi=1)
 #'  }
 #' #to be appended with surv_append_matrix
+#' @importFrom foreach %dopar%
+#' @importFrom multcomp glht mcp
 #' @export
-#' @import lme4
-#' @import doParallel
-#' @import survival
-#' @import coxme
-#' @import seqinr
-#' @import multcomp
-#' @import parallel
-#' @import foreach
-#' @import ape
-#' @import ggplot2
-#' @import plyr
-#' @import qqman
 
 
 
-analyze_OrthoMCL <- function(haplo_data, var_data, model, species_name, resp = NULL, fix2 = NULL, rndm1 = NULL, rndm2 = NULL, 
+
+analyze_OrthoMCL <- function(mcl_data, pheno_data, model, species_name, resp = NULL, fix2 = NULL, rndm1 = NULL, rndm2 = NULL, 
     multi = 1, time = NULL, event = NULL, time2 = NULL, startnum = 1, stopnum = "end") {    
     
     cat("Importing Data\n")
   
-    haplo_mtrx <- t(haplo_data$pa_matrix)
-    colnames(haplo_mtrx) <- NULL
-    haplo_names <- row.names(haplo_data$pa_matrix)
+    pa_mtrx <- t(mcl_data$pa_matrix)
+    colnames(pa_mtrx) <- NULL
+    haplo_names <- row.names(mcl_data$pa_matrix)
     
     if (model == "lm") 
-      mtrx <- analyze.f(haplo_mtrx, haplo_names, var_data, species_name, resp)
+      mtrx <- analyze.f(pa_mtrx, haplo_names, pheno_data, species_name, resp)
     else if (model == "lmeR1") 
-      mtrx <- analyze.fr(haplo_mtrx, haplo_names, var_data, species_name, resp, rndm1)
+      mtrx <- analyze.fr(pa_mtrx, haplo_names, pheno_data, species_name, resp, rndm1)
     else if (model == "lmeR2ind") 
-        mtrx <- analyze.frr.plus(haplo_mtrx, haplo_names, var_data, species_name, resp, rndm1, rndm2)
+        mtrx <- analyze.frr.plus(pa_mtrx, haplo_names, pheno_data, species_name, resp, rndm1, rndm2)
     else if (model == "lmeR2nest") 
-      mtrx <- analyze.frr.div(haplo_mtrx, haplo_names, var_data, species_name, resp, rndm1, rndm2)
+      mtrx <- analyze.frr.div(pa_mtrx, haplo_names, pheno_data, species_name, resp, rndm1, rndm2)
     else if (model == "lmeF2") 
-        mtrx <- analyze.ffrr(haplo_mtrx, haplo_names, var_data, species_name, resp, fix2, rndm1, rndm2)  
+        mtrx <- analyze.ffrr(pa_mtrx, haplo_names, pheno_data, species_name, resp, fix2, rndm1, rndm2)  
     else if (model == "wx") 
-        mtrx <- analyze.wilcox(haplo_mtrx, haplo_names, var_data, species_name, resp)
+        mtrx <- analyze.wilcox(pa_mtrx, haplo_names, pheno_data, species_name, resp)
     else if (model == "survmulti") 
-        mtrx <- analyze.surv.multi(haplo_mtrx, haplo_names, var_data, species_name, time, event, rndm1, 
+        mtrx <- analyze.surv.multi(pa_mtrx, haplo_names, pheno_data, species_name, time, event, rndm1, 
             rndm2, multi, startnum, stopnum) 
     else if (model == "survmulticensor") 
-        mtrx <- analyze.surv.censor.multi(haplo_mtrx, haplo_names, var_data, species_name, time, time2, 
+        mtrx <- analyze.surv.censor.multi(pa_mtrx, haplo_names, pheno_data, species_name, time, time2, 
             event, rndm1, rndm2, fix2, multi, startnum, stopnum) 
     else cat("Error: Could not find a correct match for your model declaration\n")
     
     return(mtrx)
 }
 
-analyze.f <- function(haplo_mtrx, haplo_names, tx, species_name, resp_var) {
+analyze.f <- function(pa_mtrx, haplo_names, tx, species_name, resp_var) {
   
   #library(multcomp)
       
   cat("Merging Files\n")
-  haplo_tx <- merge(tx, haplo_mtrx, by.y = "row.names", by.x = species_name, all = F)
+  haplo_tx <- merge(tx, pa_mtrx, by.y = "row.names", by.x = species_name, all = F)
   haplo_tx <- droplevels(subset(haplo_tx, haplo_tx[resp_var] > 0))
   
-  num_pdg <- dim(haplo_mtrx)[2]  #number of phylogenetic distribution groups
+  num_pdg <- dim(pa_mtrx)[2]  #number of phylogenetic distribution groups
   
   count <- 0
   for (i in 1:length(haplo_names)) {
@@ -135,20 +133,20 @@ analyze.f <- function(haplo_mtrx, haplo_names, tx, species_name, resp_var) {
     sub$species <- haplo_tx[, which(colnames(haplo_tx) == species_name)]
     
     ### fitting the linear model
-    lm <- try(lm(resp_var ~ fix, data = sub), T)
+    lm <- try(stats::lm(resp_var ~ fix, data = sub), T)
     if (class(lm) != "try-error") {
       l1 <- try(glht(lm, mcp(fix = "Tukey")), T)
       l2 <- try(summary(l1), T)
       pval <- try(l2$test$pvalues[1], T)
       
       ### calculating meta-data
-      mean_calc <- aggregate(resp_var ~ fix, sub, mean)  #matrix with mean_contain and mean_missing
+      mean_calc <- stats::aggregate(resp_var ~ fix, sub, mean)  #matrix with mean_contain and mean_missing
       mean_calc$fix <- as.numeric(as.character(mean_calc$fix))
       mean_calc2 <- mean_calc[order(mean_calc$fix, decreasing = F), ]
       mean_contain <- mean_calc2[2, 2]
       mean_missing <- mean_calc2[1, 2]
       
-      taxa <- aggregate(as.numeric(as.character(fix)) ~ species, sub, mean)
+      taxa <- stats::aggregate(as.numeric(as.character(fix)) ~ species, sub, mean)
       colnames(taxa) <- c("taxa_name", "presence")
       
       taxa_mtrx1 <- droplevels(subset(taxa, taxa$presence == 1))
@@ -161,10 +159,10 @@ analyze.f <- function(haplo_mtrx, haplo_names, tx, species_name, resp_var) {
       
       try(if (pval_corrected > 1) {
         pval_corrected <- 1
-      })
+      }, T)
       
-      #         if (class(pval) == "try-error") 
-      #           cat(paste("test for group/s ", haplo_names[i], " did not run (usually because fixed effects are unbalanced at that group)", sep = ''),'\n')
+      
+      
       
       ### adding data to output matrix
       for (j in unlist(strsplit(haplo_names[i],','))) {
@@ -188,22 +186,19 @@ analyze.f <- function(haplo_mtrx, haplo_names, tx, species_name, resp_var) {
   colnames(output_clean) <- c("COG", "pval1", "corrected_pval1", "mean_COGContain", "mean_COGLack", "taxa_contain", 
                               "taxa_miss")
   
-  # output_clean <- output[rowSums(is.na(output))!=9, ] colnames(output_clean) <- c('COG', 'pval1', 'corrected_pval1',
-  # 'pval2', 'corrected_pval2', 'mean_COGContain', 'mean_COGLack', 'taxa_contain', 'taxa_miss')
-  
   return(output_clean)
 }
 
-analyze.fr <- function(haplo_mtrx, haplo_names, tx, species_name, resp_var, rndm1) {
+analyze.fr <- function(pa_mtrx, haplo_names, tx, species_name, resp_var, rndm1) {
   
   #library(lme4)
   #library(multcomp)
       
   cat("Merging Files\n")
-  haplo_tx <- merge(tx, haplo_mtrx, by.y = "row.names", by.x = species_name, all = F)
+  haplo_tx <- merge(tx, pa_mtrx, by.y = "row.names", by.x = species_name, all = F)
   haplo_tx <- droplevels(subset(haplo_tx, haplo_tx[resp_var] > 0))
   
-  num_pdg <- dim(haplo_mtrx)[2]  #number of phylogenetic distribution groups
+  num_pdg <- dim(pa_mtrx)[2]  #number of phylogenetic distribution groups
   
   count <- 0
   for (i in 1:length(haplo_names)) {
@@ -229,20 +224,20 @@ analyze.fr <- function(haplo_mtrx, haplo_names, tx, species_name, resp_var, rndm
     sub$species <- haplo_tx[, which(colnames(haplo_tx) == species_name)]
     
     ### fitting the linear mixed model
-    lmm <- try(lmer(resp_var ~ fix + (1 | rndm), data = sub), T)
+    lmm <- try(lme4::lmer(resp_var ~ fix + (1 | rndm), data = sub), T)
     if (class(lmm) != "try-error") {
       l1 <- try(glht(lmm, mcp(fix = "Tukey")), T)
       l2 <- try(summary(l1), T)
       pval <- try(l2$test$pvalues[1], T)
       
       ### calculating meta-data
-      mean_calc <- aggregate(resp_var ~ fix, sub, mean)  #matrix with mean_contain and mean_missing
+      mean_calc <- stats::aggregate(resp_var ~ fix, sub, mean)  #matrix with mean_contain and mean_missing
       mean_calc$fix <- as.numeric(as.character(mean_calc$fix))
       mean_calc2 <- mean_calc[order(mean_calc$fix, decreasing = F), ]
       mean_contain <- mean_calc2[2, 2]
       mean_missing <- mean_calc2[1, 2]
       
-      taxa <- aggregate(as.numeric(as.character(fix)) ~ species, sub, mean)
+      taxa <- stats::aggregate(as.numeric(as.character(fix)) ~ species, sub, mean)
       colnames(taxa) <- c("taxa_name", "presence")
       
       taxa_mtrx1 <- droplevels(subset(taxa, taxa$presence == 1))
@@ -257,8 +252,8 @@ analyze.fr <- function(haplo_mtrx, haplo_names, tx, species_name, resp_var, rndm
         pval_corrected <- 1
       }, T)
       
-      #         if (class(pval) == "try-error") 
-      #           cat(paste("test for group/s ", haplo_names[i], " did not run (usually because fixed effects are unbalanced at that group)", sep = ''),'\n')
+      
+      
       
       ### adding data to output matrix
       for (j in unlist(strsplit(haplo_names[i],','))) {
@@ -284,22 +279,20 @@ analyze.fr <- function(haplo_mtrx, haplo_names, tx, species_name, resp_var, rndm
   return(output_clean)
 }
 
-analyze.frr.plus <- function(haplo_mtrx, haplo_names, tx, species_name, resp_var, rndm1, rndm2) {
+analyze.frr.plus <- function(pa_mtrx, haplo_names, tx, species_name, resp_var, rndm1, rndm2) {
   
 #   library(lme4)
 #   library(multcomp)
   
   cat("Merging Files\n")
-  haplo_tx <- merge(tx, haplo_mtrx, by.y = "row.names", by.x = species_name, all = F)
+  haplo_tx <- merge(tx, pa_mtrx, by.y = "row.names", by.x = species_name, all = F)
   haplo_tx <- droplevels(subset(haplo_tx, haplo_tx[resp_var] > 0))
   
-  num_pdg <- dim(haplo_mtrx)[2]  #number of phylogenetic distribution groups
+  num_pdg <- dim(pa_mtrx)[2]  #number of phylogenetic distribution groups
   
   count <- 0
   for (i in 1:length(haplo_names)) {
-    #         for (j in haplo_names[i]) count <- count + 1
-    count <- count + length(unlist(strsplit(haplo_names[i],',')))
-    
+    count <- count + length(unlist(strsplit(haplo_names[i],',')))    
   }
   
   cat("Running Analysis\n")
@@ -325,20 +318,20 @@ analyze.frr.plus <- function(haplo_mtrx, haplo_names, tx, species_name, resp_var
     sub$species <- haplo_tx[, which(colnames(haplo_tx) == species_name)]
     
     ### fitting the linear mixed model
-    lmm <- try(lmer(resp_var ~ fix + (1 | rndm1) + (1 | rndm2), data = sub), T)
+    lmm <- try(lme4::lmer(resp_var ~ fix + (1 | rndm1) + (1 | rndm2), data = sub), T)
     if (class(lmm) != "try-error") {
       l1 <- try(glht(lmm, mcp(fix = "Tukey")),T)
       l2 <- try(summary(l1), T)
       pval <- try(l2$test$pvalues[1], T) 
       
       ### calculating meta-data
-      mean_calc <- aggregate(resp_var ~ fix, sub, mean)  #matrix with mean_contain and mean_missing
+      mean_calc <- stats::aggregate(resp_var ~ fix, sub, mean)  #matrix with mean_contain and mean_missing
       mean_calc$fix <- as.numeric(as.character(mean_calc$fix))
       mean_calc2 <- mean_calc[order(mean_calc$fix, decreasing = F), ]
       mean_contain <- mean_calc2[2, 2]
       mean_missing <- mean_calc2[1, 2]
       
-      taxa <- aggregate(as.numeric(as.character(fix)) ~ species, sub, mean)
+      taxa <- stats::aggregate(as.numeric(as.character(fix)) ~ species, sub, mean)
       colnames(taxa) <- c("taxa_name", "presence")
       
       
@@ -352,10 +345,10 @@ analyze.frr.plus <- function(haplo_mtrx, haplo_names, tx, species_name, resp_var
       
       try(if (pval_corrected > 1) {
         pval_corrected <- 1
-      })
+      },T)
       
-      #         if (class(pval) == "try-error") 
-      #           cat(paste("test for group ", haplo_names[i], " did not run (usually because fixed effects are unbalanced at that group)", sep = ''),'\n')
+      
+      
       
       ### adding data to output matrix
       for (j in unlist(strsplit(haplo_names[i],','))) {
@@ -380,16 +373,16 @@ analyze.frr.plus <- function(haplo_mtrx, haplo_names, tx, species_name, resp_var
   return(output_clean)
 }
 
-analyze.frr.div <- function(haplo_mtrx, haplo_names, tx, species_name, resp_var, rndm1, rndm2) {
+analyze.frr.div <- function(pa_mtrx, haplo_names, tx, species_name, resp_var, rndm1, rndm2) {
   
 #   library(lme4)
 #   library(multcomp)
 #   
   cat("Merging Files\n")
-  haplo_tx <- merge(tx, haplo_mtrx, by.y = "row.names", by.x = species_name, all = F)
+  haplo_tx <- merge(tx, pa_mtrx, by.y = "row.names", by.x = species_name, all = F)
   haplo_tx <- droplevels(subset(haplo_tx, haplo_tx[resp_var] > 0))
   
-  num_pdg <- dim(haplo_mtrx)[2]  #number of phylogenetic distribution groups
+  num_pdg <- dim(pa_mtrx)[2]  #number of phylogenetic distribution groups
   
   count <- 0
   for (i in 1:length(haplo_names)) {
@@ -418,7 +411,7 @@ analyze.frr.div <- function(haplo_mtrx, haplo_names, tx, species_name, resp_var,
     sub$species <- haplo_tx[, which(colnames(haplo_tx) == species_name)]
     
     ### fitting the linear mixed model
-    lmm <- try(lmer(resp_var ~ fix + (1 | rndm1/rndm2), data = sub), T)
+    lmm <- try(lme4::lmer(resp_var ~ fix + (1 | rndm1/rndm2), data = sub), T)
     if (class(lmm) != "try-error") {
       l1 <- try(glht(lmm, mcp(fix = "Tukey")), T)
       l2 <- try(summary(l1), T)
@@ -431,13 +424,13 @@ analyze.frr.div <- function(haplo_mtrx, haplo_names, tx, species_name, resp_var,
       }, T)
       
       ### calculating meta-data
-      mean_calc <- aggregate(resp_var ~ fix, sub, mean)  #matrix with mean_contain and mean_missing
+      mean_calc <- stats::aggregate(resp_var ~ fix, sub, mean)  #matrix with mean_contain and mean_missing
       mean_calc$fix <- as.numeric(as.character(mean_calc$fix))
       mean_calc2 <- mean_calc[order(mean_calc$fix, decreasing = F), ]
       mean_contain <- mean_calc2[2, 2]
       mean_missing <- mean_calc2[1, 2]
       
-      taxa <- aggregate(as.numeric(as.character(fix)) ~ species, sub, mean)
+      taxa <- stats::aggregate(as.numeric(as.character(fix)) ~ species, sub, mean)
       colnames(taxa) <- c("taxa_name", "presence")
       
       taxa_mtrx1 <- droplevels(subset(taxa, taxa$presence == 1))
@@ -446,8 +439,8 @@ analyze.frr.div <- function(haplo_mtrx, haplo_names, tx, species_name, resp_var,
       taxa_mtrx0 <- droplevels(subset(taxa, taxa$presence == 0))
       taxa_missing <- paste(taxa_mtrx0$taxa_name, collapse = "|")
       
-      #         if (class(pval) == "try-error") 
-      #           cat(paste("test for group/s ", haplo_names[i], " did not run (usually because fixed effects are unbalanced at that group)", sep = ''),'\n')
+      
+      
       
       ### adding data to output matrix
       for (j in unlist(strsplit(haplo_names[i],','))) {
@@ -472,16 +465,16 @@ analyze.frr.div <- function(haplo_mtrx, haplo_names, tx, species_name, resp_var,
   return(output_clean)
 }
 
-analyze.ffrr <- function(haplo_mtrx, haplo_names, tx, species_name, resp_var, fix_var2, rndm1, rndm2) {
+analyze.ffrr <- function(pa_mtrx, haplo_names, tx, species_name, resp_var, fix_var2, rndm1, rndm2) {
     
 #     library(lme4)
 #     library(multcomp)
-#     
+     
     cat("Merging Files\n")
-    haplo_tx <- merge(tx, haplo_mtrx, by.y = "row.names", by.x = species_name, all = F)
+    haplo_tx <- merge(tx, pa_mtrx, by.y = "row.names", by.x = species_name, all = F)
     haplo_tx <- droplevels(subset(haplo_tx, haplo_tx[resp_var] > 0))
     
-    num_pdg <- dim(haplo_mtrx)[2]  #number of phylogenetic distribution groups
+    num_pdg <- dim(pa_mtrx)[2]  #number of phylogenetic distribution groups
     
     count <- 0
     for (i in 1:length(haplo_names)) {
@@ -509,7 +502,7 @@ analyze.ffrr <- function(haplo_mtrx, haplo_names, tx, species_name, resp_var, fi
         sub$species <- haplo_tx[, which(colnames(haplo_tx) == species_name)]
         
         ### fitting the linear mixed model
-        lmm <- try(lmer(resp_var ~ fix + fix2 + (1 | rndm1) + (1 | rndm2), data = sub), T)
+        lmm <- try(lme4::lmer(resp_var ~ fix + fix2 + (1 | rndm1) + (1 | rndm2), data = sub), T)
         if (class(lmm) != "try-error") {
           l1.1 <- try(glht(lmm, mcp(fix = "Tukey")), T)
           l1.2 <- try(summary(l1.1), T)
@@ -528,17 +521,17 @@ analyze.ffrr <- function(haplo_mtrx, haplo_names, tx, species_name, resp_var, fi
           
           try(if (pval1_corrected > 1) {
               pval1_corrected <- 1
-          })
+          },T)
           
           
           ### calculating meta-data
-          mean_calc <- aggregate(resp_var ~ fix, sub, mean)  #matrix with mean_contain and mean_missing
+          mean_calc <- stats::aggregate(resp_var ~ fix, sub, mean)  #matrix with mean_contain and mean_missing
           mean_calc$fix <- as.numeric(as.character(mean_calc$fix))
           mean_calc2 <- mean_calc[order(mean_calc$fix, decreasing = F), ]
           mean_contain <- mean_calc2[2, 2]
           mean_missing <- mean_calc2[1, 2]
           
-          taxa <- aggregate(as.numeric(as.character(fix)) ~ species, sub, mean)
+          taxa <- stats::aggregate(as.numeric(as.character(fix)) ~ species, sub, mean)
           colnames(taxa) <- c("taxa_name", "presence")
           
           taxa_mtrx1 <- droplevels(subset(taxa, taxa$presence == 1))
@@ -547,8 +540,8 @@ analyze.ffrr <- function(haplo_mtrx, haplo_names, tx, species_name, resp_var, fi
           taxa_mtrx0 <- droplevels(subset(taxa, taxa$presence == 0))
           taxa_missing <- paste(taxa_mtrx0$taxa_name, collapse = "|")
           
-  #         if (class(pval1) == "try-error") 
-  #           cat(paste("test for group/s ", haplo_names[i], " did not run (usually because fixed effects are unbalanced at that group)", sep = ''),'\n')
+  
+  
           
           ### adding data to output matrix
           for (j in unlist(strsplit(haplo_names[i],','))) {
@@ -575,13 +568,13 @@ analyze.ffrr <- function(haplo_mtrx, haplo_names, tx, species_name, resp_var, fi
     return(output_clean)
 }
 
-analyze.wilcox <- function(haplo_mtrx, haplo_names, tx, species_name, resp_var) {
+analyze.wilcox <- function(pa_mtrx, haplo_names, tx, species_name, resp_var) {
     
     cat("Merging Files\n")
-    haplo_tx <- merge(tx, haplo_mtrx, by.y = "row.names", by.x = species_name, all = F)
+    haplo_tx <- merge(tx, pa_mtrx, by.y = "row.names", by.x = species_name, all = F)
     haplo_tx <- droplevels(subset(haplo_tx, haplo_tx[resp_var] > 0))
     
-    num_pdg <- dim(haplo_mtrx)[2]  #number of phylogenetic distribution groups
+    num_pdg <- dim(pa_mtrx)[2]  #number of phylogenetic distribution groups
     
     count <- 0
     for (i in 1:length(haplo_names)) {
@@ -604,17 +597,17 @@ analyze.wilcox <- function(haplo_mtrx, haplo_names, tx, species_name, resp_var) 
         sub$species <- haplo_tx[, which(colnames(haplo_tx) == species_name)]
         
         ### fitting the linear model
-        wix <- try(wilcox.test(resp_var ~ fix, data = sub), T)
+        wix <- try(stats::wilcox.test(resp_var ~ fix, data = sub), T)
         pval <- try(wix$p.value, T)
         
         ### calculating meta-data
-        mean_calc <- aggregate(resp_var ~ fix, sub, mean)  #matrix with mean_contain and mean_missing
+        mean_calc <- stats::aggregate(resp_var ~ fix, sub, mean)  #matrix with mean_contain and mean_missing
         mean_calc$fix <- as.numeric(as.character(mean_calc$fix))
         mean_calc2 <- mean_calc[order(mean_calc$fix, decreasing = F), ]
         mean_contain <- mean_calc2[2, 2]
         mean_missing <- mean_calc2[1, 2]
         
-        taxa <- aggregate(as.numeric(as.character(fix)) ~ species, sub, mean)
+        taxa <- stats::aggregate(as.numeric(as.character(fix)) ~ species, sub, mean)
         colnames(taxa) <- c("taxa_name", "presence")
         
         taxa_mtrx1 <- droplevels(subset(taxa, taxa$presence == 1))
@@ -627,10 +620,10 @@ analyze.wilcox <- function(haplo_mtrx, haplo_names, tx, species_name, resp_var) 
         
         try(if (pval_corrected > 1) {
             pval_corrected <- 1
-        })
+        },T)
         
-#         if (class(pval) == "try-error") 
-#           cat(paste("test for group/s ", haplo_names[i], " did not run (usually because fixed effects are unbalanced at that group)", sep = ''),'\n')
+
+
         
         ### adding data to output matrix
         for (j in unlist(strsplit(haplo_names[i],','))) {
@@ -658,7 +651,7 @@ analyze.wilcox <- function(haplo_mtrx, haplo_names, tx, species_name, resp_var) 
 }
 
 ### from analyze_surve_0.0.2.R
-analyze.surv.multi <- function(haplo_mtrx, haplo_names, tx, species_name, time, event, rndm1, rndm2, multi, 
+analyze.surv.multi <- function(pa_mtrx, haplo_names, tx, species_name, time, event, rndm1, rndm2, multi, 
     startnum, stopnum) {
 #     
 #     library(survival)
@@ -666,10 +659,10 @@ analyze.surv.multi <- function(haplo_mtrx, haplo_names, tx, species_name, time, 
 #     library(foreach)
 #     library(doParallel)
 #     
-    ### merge the binary matrix with phenotype data; tx = phenotypes; haplo_mtrx=binary matrix produced by
+    ### merge the binary matrix with phenotype data; tx = phenotypes; pa_mtrx=binary matrix produced by
     ### 'parse_orthologGroups'
     cat("Merging Files\n")
-    haplo_tx <- merge(tx, haplo_mtrx, by.y = "row.names", by.x = species_name, all = F)
+    haplo_tx <- merge(tx, pa_mtrx, by.y = "row.names", by.x = species_name, all = F)
     
     ### set the number of tests to peform
     num_pdg <- length(haplo_names) - 1
@@ -691,7 +684,7 @@ analyze.surv.multi <- function(haplo_mtrx, haplo_names, tx, species_name, time, 
         rndm2)])  # values in matrix \t###
     sub <- data.frame(sub)  #make into a dataframe, compatible with subsequent analyses
     colnames(sub) <- c("time", "event", "trt", "rndm1", "rndm2")  # define column names
-    sub$S <- Surv(sub$time, sub$event)  # create the response variable, a survival model
+    sub$S <- survival::Surv(sub$time, sub$event)  # create the response variable, a survival model
     sub$rndm1 <- as.numeric(as.character(sub$rndm1))  # set the random effects as factors
     sub$rndm2 <- as.numeric(as.character(sub$rndm2))  # set the random effects as factors
     sub$rndm1b <- factor(sub$rndm1, labels = c(1:length(table(list(sub$rndm1)))))
@@ -710,10 +703,10 @@ analyze.surv.multi <- function(haplo_mtrx, haplo_names, tx, species_name, time, 
     startnum <- as.numeric(as.character(startnum))
     
     ### set up the parallelization
-    cl <- makeCluster(multi)  # of nodes
-    registerDoParallel(cl)
+    cl <- parallel::makeCluster(multi)  # of nodes
+    doParallel::registerDoParallel(cl)
     
-    outmulti <- c(rep(1, 7), unlist(foreach(i = icount(stopnum - startnum + 1)) %dopar% {
+    outmulti <- c(rep(1, 7), unlist(foreach::foreach(i = iterators::icount(stopnum - startnum + 1)) %dopar% {
         
         
 #         library(coxme)
@@ -732,19 +725,20 @@ analyze.surv.multi <- function(haplo_mtrx, haplo_names, tx, species_name, time, 
         sub$species <- haplo_tx[, which(colnames(haplo_tx) == species_name)]
         
         ### fitting the survival model
-        lmm <- try(coxme(S ~ fix + (1 | trt) + (1 | rndm1/rndm2), data = sub), T)
+        lmm <- try(coxme::coxme(S ~ fix + (1 | trt) + (1 | rndm1/rndm2), data = sub), T)
         if (class(lmm) != "try-error") {
           l1.1 <- try(glht(lmm, mcp(fix = "Tukey")), T)
           pval1 <- try(summary(l1.1)$test$pvalues[1], T)
           
           ### calculating meta-data means
-          mean_calc <- aggregate(time ~ fix, sub, mean)  #matrix with mean_contain and mean_missing
+          mean_calc <- stats::aggregate(time ~ fix, sub, mean)  #matrix with mean_contain and mean_missing
           mean_calc$fix <- as.numeric(as.character(mean_calc$fix))
           mean_calc2 <- mean_calc[order(mean_calc$fix, decreasing = F), ]
           mean_contain <- mean_calc2[2, 2]
           mean_missing <- mean_calc2[1, 2]
+          
           # taxa
-          taxa <- aggregate(as.numeric(as.character(fix)) ~ species, sub, mean)
+          taxa <- stats::aggregate(as.numeric(as.character(fix)) ~ species, sub, mean)
           colnames(taxa) <- c("taxa_name", "presence")
           taxa_mtrx1 <- droplevels(subset(taxa, taxa$presence == 1))
           taxa_contain <- paste(taxa_mtrx1$taxa_name, collapse = "|")
@@ -757,7 +751,7 @@ analyze.surv.multi <- function(haplo_mtrx, haplo_names, tx, species_name, time, 
           
           try(if (pval1_corrected > 1) {
               pval1_corrected <- 1
-          })
+          },T)
           
           
           ### adding data to output matrix
@@ -783,7 +777,7 @@ analyze.surv.multi <- function(haplo_mtrx, haplo_names, tx, species_name, time, 
     return(output_clean)
 }
 
-analyze.surv.censor.multi <- function(haplo_mtrx, haplo_names, tx, species_name, time, time2, event, rndm1, rndm2, 
+analyze.surv.censor.multi <- function(pa_mtrx, haplo_names, tx, species_name, time, time2, event, rndm1, rndm2, 
     fix2, multi, startnum, stopnum) {
 #     
 #     library(survival)
@@ -793,10 +787,10 @@ analyze.surv.censor.multi <- function(haplo_mtrx, haplo_names, tx, species_name,
 #     library(coxme)
 #     library(multcomp)
 #     
-    ### merge the binary matrix with phenotype data: tx = phenotypes; haplo_mtrx=binary matrix produced by
+    ### merge the binary matrix with phenotype data: tx = phenotypes; pa_mtrx=binary matrix produced by
     ### 'parse_orthologGroups'
     
-    haplo_tx <- merge(tx, haplo_mtrx, by.y = "row.names", by.x = species_name, all = F)
+    haplo_tx <- merge(tx, pa_mtrx, by.y = "row.names", by.x = species_name, all = F)
     
     ### number of phylogenetic distribution groups (PDG)
     num_pdg <- length(haplo_names) - 1
@@ -820,7 +814,7 @@ analyze.surv.censor.multi <- function(haplo_mtrx, haplo_names, tx, species_name,
                   haplo_tx[, which(colnames(haplo_tx) == fix2)])  # values in matrix \t###
     sub3 <- data.frame(sub3)  #make into a dataframe, compatible with subsequent analyses
     colnames(sub3) <- c("time1", "time2", "event", "trt", "rndm1", "rndm2", "fix2")  # define column names
-    sub3$S <- Surv(as.numeric(as.character(sub3$time1)), as.numeric(as.character(sub3$time2)), as.numeric(as.character(sub3$event)))  # create the response variable, a survival model
+    sub3$S <- survival::Surv(as.numeric(as.character(sub3$time1)), as.numeric(as.character(sub3$time2)), as.numeric(as.character(sub3$event)))  # create the response variable, a survival model
     sub3$rndm1 <- as.numeric(as.character(sub3$rndm1))  # set the random effects as numeric
     sub3$v <- factor(sub3$rndm2, labels = c(1:length(table(list(sub3$rndm2)))))  # 
     sub3$v2 <- as.numeric(sub3$v)  # set the random effects as numeric
@@ -838,10 +832,10 @@ analyze.surv.censor.multi <- function(haplo_mtrx, haplo_names, tx, species_name,
     startnum <- as.numeric(as.character(startnum))
     
     ### set up the parallelization
-    cl <- makeCluster(multi)  # of nodes
-    registerDoParallel(cl)
+    cl <- parallel::makeCluster(multi)  # of nodes
+    doParallel::registerDoParallel(cl)
     
-    outmulti <- c(rep(1, 7), unlist(foreach(i = icount(stopnum - startnum + 1)) %dopar% {
+    outmulti <- c(rep(1, 7), unlist(foreach::foreach(i = iterators::icount(stopnum - startnum + 1)) %dopar% {
         
 #         library(coxme)
 #         library(multcomp)
@@ -859,7 +853,7 @@ analyze.surv.censor.multi <- function(haplo_mtrx, haplo_names, tx, species_name,
         sub3$species <- haplo_tx[, which(colnames(haplo_tx) == species_name)]
         
         ### fitting the survival model
-        lmm <- try(coxme(S ~ fix + fix2 + (1 | trt) + (1 | rndm1/rndm2), data = sub3), T)
+        lmm <- try(coxme::coxme(S ~ fix + fix2 + (1 | trt) + (1 | rndm1/rndm2), data = sub3), T)
         if (class(lmm) != "try-error") {
           l1.1 <- try(glht(lmm, mcp(fix = "Tukey")), T)
           pval1 <- try(summary(l1.1)$test$pvalues[1], T)  # should this be 2?
@@ -871,13 +865,13 @@ analyze.surv.censor.multi <- function(haplo_mtrx, haplo_names, tx, species_name,
           
           
           ### calculating meta-data means
-          mean_calc <- aggregate(time2 ~ fix, sub3, mean)  #matrix with mean_contain and mean_missing
+          mean_calc <- stats::aggregate(time2 ~ fix, sub3, mean)  #matrix with mean_contain and mean_missing
           mean_calc$fix <- as.numeric(as.character(mean_calc$fix))
           mean_calc2 <- mean_calc[order(mean_calc$fix, decreasing = F), ]
           mean_contain <- mean_calc2[2, 2]
           mean_missing <- mean_calc2[1, 2]
           # taxa
-          taxa <- aggregate(as.numeric(as.character(fix)) ~ species, sub3, mean)
+          taxa <- stats::aggregate(as.numeric(as.character(fix)) ~ species, sub3, mean)
           colnames(taxa) <- c("taxa_name", "presence")
           taxa_mtrx1 <- droplevels(subset(taxa, taxa$presence == 1))
           taxa_contain <- paste(taxa_mtrx1$taxa_name, collapse = "|")
@@ -890,7 +884,7 @@ analyze.surv.censor.multi <- function(haplo_mtrx, haplo_names, tx, species_name,
           
           try(if (pval1_corrected > 1) {
               pval1_corrected <- 1
-          })
+          },T)
           
           for (j in unlist(strsplit(haplo_names[i],','))) {
               rm(output)

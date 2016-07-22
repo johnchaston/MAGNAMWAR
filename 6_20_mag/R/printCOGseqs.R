@@ -5,6 +5,7 @@
 #' @param after_ortho output from format_afterOrtho
 #' @param fasta_dir directory to fastas
 #' @param out_dir complete path to output directory
+#' @param outfile name of file that will be written to
 #' @return A fasta file with all protein sequnces and ids for a given COG
 #' @examples 
 #' 
@@ -35,7 +36,7 @@ printCOGseqs <- function(after_ortho, COG, fasta_dir, out_dir = NULL, outfile = 
     COG_proteins = t(as.data.frame(strsplit(as.character(COG_proteins), split = "\\|")))
     row.names(COG_proteins) <- COG_proteins[, 2]
     
-    myfiles <- lapply(files, function(x) read.fasta(x, seqtype = "AA", as.string = T))
+    myfiles <- lapply(files, function(x) seqinr::read.fasta(x, seqtype = "AA", as.string = T))
     
     if (outfile == "none") {
         outfile = paste(COG, "seqs.fasta", sep = "")
@@ -45,13 +46,14 @@ printCOGseqs <- function(after_ortho, COG, fasta_dir, out_dir = NULL, outfile = 
         
         taxa_fn <- paste(COG_proteins[i, 1], ".fasta", sep = "")
         numfile <- match(taxa_fn, files)
-        num_prot <- grep(COG_proteins[i, 2], getName(myfiles[[numfile]]))
+        num_prot <- grep(COG_proteins[i, 2], seqinr::getName(myfiles[[numfile]]))
         
         if (getwd() != out_dir) {
             setwd(out_dir)
         }
-        write.fasta(getSequence(myfiles[[numfile]][num_prot[1]]), sub(">", "", getAnnot(myfiles[[numfile]][num_prot[1]])), 
-            outfile, open = "a")
+        seqinr::write.fasta(seqinr::getSequence(myfiles[[numfile]][num_prot[1]]),
+                    sub(">", "", seqinr::getAnnot(myfiles[[numfile]][num_prot[1]])), 
+                    outfile, open = "a")
         
     }
 }

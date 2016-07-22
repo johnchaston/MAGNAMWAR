@@ -2,12 +2,13 @@
 #' 
 #' Bar plot of PDG vs phenotype data with presence of taxa in PDG indicated by color
 #' @param data R object of phenotype data
-#' @param mcl_data mcl matrix (analyze_OrthoMCL output)
+#' @param mcl_matrix analyze_OrthoMCL output
 #' @param species_colname name of column in data file with taxa designations
 #' @param data_colname name of column in data file with data observations
 #' @param GRP optional parameter, a string with the name of chosen group (COG) to be colored
 #' @param xlab string to label barplot's x axis
 #' @param ylab string to label barplot's y axis
+#' @param ylimit optional parameter to limit y axis
 #' @param tree optional parameter (defaults to NULL) Path to tree file, orders the taxa by phylogenetic distribution, else it defaults to alphabetical
 #' @param order vector with order of taxa names for across the x axis (defaults to alpha ordering)
 #' @return a barplot with taxa vs phenotypic data complete with standard error bars
@@ -31,10 +32,13 @@ pdgplot <- function(data, mcl_matrix, GRP = "NONE", species_colname, data_colnam
     data <- data[, c(species_colname, data_colname)]
     colnames(data) <- c("one", "two")
     
+    two <- "two"
+    sem <- "sem"
+    
     ccc <- aggregate(data$one, data["one"], paste, collapse = " ")
     ddd <- aggregate(data$two, data["two"], paste, collapse = " ")
     
-    means.sem <- ddply(data, c("one"), summarise, mean = mean(two), sem = sd(two)/sqrt(length(two)))
+    means.sem <- plyr::ddply(data, c("one"), dplyr::summarise, mean = mean(two), sem = sd(two)/sqrt(length(two)))
     means.sem <- transform(means.sem, lower = mean - sem, upper = mean + sem)
     mean <- means.sem[, 2]
     stDevs <- means.sem[, 3]
@@ -48,7 +52,7 @@ pdgplot <- function(data, mcl_matrix, GRP = "NONE", species_colname, data_colnam
     
     if (!is.null(tree)) {
         # order by tree
-        tree <- read.tree(tree)
+        tree <- ape::read.tree(tree)
         
         x <- x[tree$tip.label]
         stDevs <- stDevs[tree$tip.label]
@@ -104,6 +108,7 @@ pdgplot <- function(data, mcl_matrix, GRP = "NONE", species_colname, data_colnam
 #' Barplot that indicates the number of PDGs vs COGs(clustered orthologous groups) in a PDG
 #' @param mcl_data format_afterOrtho output
 #' @param num an integer indicating where the x axis should end and be compiled
+#' @param ... args to be passed to barplot
 #' @return a barplot with a height determined by the second column and the first column abbreviated to accomodate visual spacing
 #' @references Some sort of reference
 #' @examples 
@@ -186,7 +191,7 @@ pdg_v_cog <- function(mcl_data, num = 40, ...) {
     
     ### Plotting dev.off() # reset margins for labels
     barplot <- barplot(plot$Freq, names.arg = plot$COGS, ylim = c(-1, r_axis), xlab = expression(paste("COGs PDG"^"-1")), 
-        ylab = "PDGs")
+        ylab = "PDGs", ...)
     axis(1, at = barplot, labels = plot$COGS)
     
     ### Fitting label on top of bar
@@ -204,7 +209,7 @@ pdg_v_cog <- function(mcl_data, num = 40, ...) {
 #' Presents data for each taxa including standard error bars next to a phylogenetic tree.
 #' @param phy Path to tree file
 #' @param data R object of phenotype data
-#' @param mcl_data mcl matrix (analyze_OrthoMCL output)
+#' @param mcl_matrix analyze_OrthoMCL output
 #' @param species_colname name of column in data file with taxa designations
 #' @param data_colname name of column in data file with data observations
 #' @param color optional parameter, (defaults to NULL) assign colors to individual taxa by providing file (format: Taxa | Color)
@@ -215,7 +220,8 @@ pdg_v_cog <- function(mcl_data, num = 40, ...) {
 #' @references Some sort of reference
 #' @examples 
 #' file <- system.file('sample_data', 'muscle_tree2.dnd', package='MAGNAMWAR')
-#' phydataerror(file, pheno_data, mcl_mtrx, species_colname = 'Treatment', data_colname = 'RespVar', GRP='OG5_126778', xlabel='TAG Content')
+#' phydataerror(file, pheno_data, mcl_mtrx, species_colname = 'Treatment', data_colname = 'RespVar',
+#'  GRP='OG5_126778', xlabel='TAG Content')
 #' #dev.off() #reset margins and align bars
 #' @export
 
@@ -226,7 +232,7 @@ phydataerror <- function(phy, data, mcl_matrix, species_colname, data_colname, c
     
     ### building tree
     
-    phy = read.tree(phy)
+    phy = ape::read.tree(phy)
     
     ### .matchDataPhylo from ape library
     
@@ -250,7 +256,10 @@ phydataerror <- function(phy, data, mcl_matrix, species_colname, data_colname, c
     ccc <- aggregate(data$one, data["one"], paste, collapse = " ")
     ddd <- aggregate(data$two, data["two"], paste, collapse = " ")
     
-    means.sem <- ddply(data, c("one"), summarise, mean = mean(two), sem = sd(two)/sqrt(length(two)))
+    two <- "two"
+    sem <- "sem"
+    
+    means.sem <- plyr::ddply(data, c("one"), dplyr::summarise, mean = mean(two), sem = sd(two)/sqrt(length(two)))
     means.sem <- transform(means.sem, lower = mean - sem, upper = mean + sem)
     mean <- means.sem[, 2]
     stDevs <- means.sem[, 3]
@@ -373,11 +382,15 @@ qqplotter <- function(mcl_mtrx) {
 #' Manhattan plot that graphs all p-values for taxa.
 #' @param mcl_data format_afterOrtho output
 #' @param mcl_mtrx output of analyze_OrthoMCL()
-#' @param equation of line of significance, defaults to -log10((.05)/dim(pdgs)[1])
+#' @param tree tree file optional, used for ordering taxa along x axis
 #' @return a manhattan plot
 #' @references Some sort of reference
 #' @examples 
 #' manhat_grp(after_ortho_format, mcl_mtrx)
+#' 
+#' #@param equation of line of significance, defaults to -log10((.05)/dim(pdgs)[1])
+#' @importFrom plyr as.quoted .
+#' @importFrom ape .PlotPhyloEnv
 #' @export
 
 manhat_grp <- function(mcl_data, mcl_mtrx, tree = NULL) {
@@ -398,7 +411,7 @@ manhat_grp <- function(mcl_data, mcl_mtrx, tree = NULL) {
     colnames(DF) <- c("Taxa", "Protein ID", "Gene")
     row.names(DF) <- NULL
     
-    pvalue <- data.frame(Gene = mcl_mtrx[, "COG"], PValue = (mcl_mtrx[, "corrected_pval1"]))
+    pvalue <- data.frame(Gene = mcl_mtrx[, "COG"], PValue = (mcl_mtrx[, 3]))
     spl <- strsplit(as.character(pvalue$Gene), split = ",")
     pvalue <- data.frame(Gene = unlist(spl), PValue = rep(pvalue$PValue, sapply(spl, length)))
     
@@ -406,16 +419,23 @@ manhat_grp <- function(mcl_data, mcl_mtrx, tree = NULL) {
     finalkey <- merge(pvalue, DF, all = F)
     colnames(finalkey) <- c("Gene", "PValue", "TAXA", "protein_id")
     
+    TAXA <- "TAXA"
     
     ### pulling taxa names
     if (!is.null(tree)) {
-        tree_lab <- read.tree(tree)
+        tree_lab <- ape::read.tree(tree)
         taxa_names <- tree_lab$tip.label
     } else {
         taxa_names <- unique(finalkey[, 3])
     }
+    
     taxsub <- subset(finalkey, grepl(paste(taxa_names, collapse = "|"), finalkey[, 3]))
-    taxsub2 <- arrange(taxsub, TAXA, protein_id)
+    
+    taxsub2 <- taxsub[order(taxsub$TAXA, taxsub$protein_id),]
+    row.names(taxsub2) <- NULL
+    
+    #old version dplyr
+    #taxsub2 <- arrange(taxsub, TAXA, protein_id)
     
     ### PROBLEM: WHAT TO DO WHEN finalkey DOESN'T HAVE THE TAXA INCLUDED IN tree?  ex. efOG v efog
     
@@ -429,7 +449,7 @@ manhat_grp <- function(mcl_data, mcl_mtrx, tree = NULL) {
     ### BP positioning
     names(chk$TAXA) <- NULL
     names(chk$protein_id) <- NULL
-    chk <- ddply(chk, .(TAXA), transform, BP = seq_along(TAXA))
+    chk <- plyr::ddply(chk, .(TAXA), transform, BP = seq_along(TAXA))
     chk2 <- data.frame(lapply(chk, as.character), stringsAsFactors = F)
     chk3 <- chk2[chk2[, 3] > 0, ]
     
@@ -438,7 +458,7 @@ manhat_grp <- function(mcl_data, mcl_mtrx, tree = NULL) {
         TAXA = chk3$TAXA)
     plot <- na.omit(plot)
     cat("creating manhattan plot...\n")
-    manhattan(plot, chrlabs = as.character(taxa_names$TAXA), las = 2, xlab = "", cex = 0.25, suggestiveline = -log10((0.05)/dim(mcl_mtrx)[1]), 
+    qqman::manhattan(plot, chrlabs = as.character(taxa_names$TAXA), las = 2, xlab = "", cex = 0.25, suggestiveline = -log10((0.05)/dim(mcl_mtrx)[1]), 
         genomewideline = FALSE)
     cat("finished.\n")
 }

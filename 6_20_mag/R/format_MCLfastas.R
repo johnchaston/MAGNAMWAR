@@ -12,8 +12,6 @@
 
 format_MCLfastas <- function(fa_dir, genbnk_id = 4) {
     
-    library("seqinr")
-    
     filename <- "MCLformatted_all.fasta"
     outfile <- paste(c(fa_dir, filename), collapse = "")
     
@@ -37,11 +35,11 @@ format_MCLfastas <- function(fa_dir, genbnk_id = 4) {
             
             id <- strsplit(files[i], split = "\\.")
             
-            reps_fa <- read.fasta(file = abs_path, as.string = T, forceDNAtolower = F, seqonly = F, strip.desc = T)
+            reps_fa <- seqinr::read.fasta(file = abs_path, as.string = T, forceDNAtolower = F, seqonly = F, strip.desc = T)
             
             for (j in 1:length(reps_fa)) {
                 
-                info <- getAnnot(reps_fa[[j]])
+                info <- seqinr::getAnnot(reps_fa[[j]])
                 prot_id <- strsplit(info, split = " ")
                 # other_info <- paste(prot_id[[1]][2:length(prot_id[[1]])], collapse = ' ') #how to get the annotation off new fasta
                 # files
@@ -57,7 +55,7 @@ format_MCLfastas <- function(fa_dir, genbnk_id = 4) {
                 if (!(mcl_info %in% info_vec)) {
                   info_vec <- c(info_vec, mcl_info)
                   seq_vec <- c(seq_vec, reps_fa[[j]][1])
-                  write.fasta(reps_fa[[j]][1], mcl_info, outfile, open = "a")
+                  seqinr::write.fasta(reps_fa[[j]][1], mcl_info, outfile, open = "a")
                 } else {
                   cat("Duplicate protein id found: ", mcl_info, "\n")
                 }
