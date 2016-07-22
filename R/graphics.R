@@ -223,6 +223,9 @@ pdg_v_cog <- function(mcl_data, num = 40, ...) {
 #' phydataerror(file, pheno_data, mcl_mtrx, species_colname = 'Treatment', data_colname = 'RespVar',
 #'  GRP='OG5_126778', xlabel='TAG Content')
 #' #dev.off() #reset margins and align bars
+#' @importFrom graphics abline axis barplot par plot segments text title
+#' @importFrom stats aggregate na.omit ppoints sd
+#' @importFrom utils read.csv read.delim read.table write.csv write.table
 #' @export
 
 

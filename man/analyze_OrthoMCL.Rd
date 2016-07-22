@@ -4,28 +4,38 @@
 \alias{analyze_OrthoMCL}
 \title{Main OrthoMCL Analysis}
 \usage{
-analyze_OrthoMCL(haplo_data, var_data, model, species_name, resp = NULL,
+analyze_OrthoMCL(mcl_data, pheno_data, model, species_name, resp = NULL,
   fix2 = NULL, rndm1 = NULL, rndm2 = NULL, multi = 1, time = NULL,
   event = NULL, time2 = NULL, startnum = 1, stopnum = "end")
 }
 \arguments{
-\item{haplo_data}{output of format_afterOrtho --list of 2 things-- 1: binary matrix indicating the presence / absence of genes in each COG and 2: vector of names of COGs}
+\item{mcl_data}{output of format_afterOrtho --list of 2 things-- 1: binary matrix indicating the presence / absence of genes in each COG and 2: vector of names of COGs}
 
-\item{var_data}{R object with column names of the following variables}
+\item{pheno_data}{R object with column names of the following variables}
 
 \item{model}{Linear Model with gene presence as fixed effect (lm),Linear Mixed Effect models with gene presence as fixed effect and additional variables specified as: one random effect (lmeR1); two independent random effects (lmeR2ind); two random effects with rndm2 nested in rndm1 (lmeR2nest); or two independent random effects with one additional fixed effect (lmeF2), Wilcox Test with gene presence as fixed effect (wx), Survival Test with support for multi core design}
 
-\item{species_name}{Column name in var_data containing 4-letter species designations}
+\item{species_name}{Column name in pheno_data containing 4-letter species designations}
 
-\item{resp}{Column name in var_data containing response variable}
+\item{resp}{Column name in pheno_data containing response variable}
 
-\item{fix2}{Column name in var_data containing second fixed effect}
+\item{fix2}{Column name in pheno_data containing second fixed effect}
 
-\item{rndm1}{Column name in var_data containing first random variable}
+\item{rndm1}{Column name in pheno_data containing first random variable}
 
-\item{rndm2}{Column name in var_data containing second random variable}
+\item{rndm2}{Column name in pheno_data containing second random variable}
 
-\item{multi}{Number of cores (can only be used with surv_multi)}
+\item{multi}{(can only be used with survival tests) Number of cores}
+
+\item{time}{(can only be used with survival tests) Column name in pheno_data containing first time}
+
+\item{event}{(can only be used with survival tests) Column name in pheno_data containing event}
+
+\item{time2}{(can only be used with survival tests) Column name in pheno_data containing econd time}
+
+\item{startnum}{number of test to start on}
+
+\item{stopnum}{number of test to stop on}
 }
 \value{
 A matrix with the following columns: COG, p-values, Bonferroni corrected p-values, mean phenotype of COG-containing taxa, mean pheotype of COG-lacking taxa, taxa included in COG, taxa not included in COG
@@ -40,9 +50,10 @@ mcl_mtrx <- analyze_OrthoMCL(after_ortho_format, pheno_data, 'lm',
 
 
 #Linear Mixed Effect with one random effect
+\dontrun{
 mcl_mtrx <- analyze_OrthoMCL(after_ortho_format, pheno_data, 'lmeR1',
 'Treatment', resp='RespVar', rndm1='Experiment')
-
+}
 
 #Linear Mixed Effect with two independent random effects
 mcl_mtrx <- analyze_OrthoMCL(after_ortho_format, pheno_data, 'lmeR2ind',
@@ -71,9 +82,10 @@ mcl_mtrx <- analyze_OrthoMCL(after_ortho_format, starv_pheno_data, 'TRT', model=
 }
 
 #5 minutes!
-#Survival with two independent random effects and one additional fixed effect, including drops on multi cores
+#Survival with two independent random effects and one additional fixed effect,
+#including drops on multi cores
 \dontrun{
-mtrx <- analyze_OrthoMCL(after_ortho_format, starv_pheno_data, 'TRT', model='survmulticensor',
+mcl_mtrx <- analyze_OrthoMCL(after_ortho_format, starv_pheno_data, 'TRT', model='survmulticensor',
  time='t1', time2='t2', event='event', rndm1='EXP', rndm2='VIAL', fix2='BACLO', multi=1)
  }
 #to be appended with surv_append_matrix

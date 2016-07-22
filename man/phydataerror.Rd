@@ -12,6 +12,8 @@ phydataerror(phy, data, mcl_matrix, species_colname, data_colname,
 
 \item{data}{R object of phenotype data}
 
+\item{mcl_matrix}{analyze_OrthoMCL output}
+
 \item{species_colname}{name of column in data file with taxa designations}
 
 \item{data_colname}{name of column in data file with data observations}
@@ -23,8 +25,6 @@ phydataerror(phy, data, mcl_matrix, species_colname, data_colname,
 \item{xlabel}{string to label barplot's x axis}
 
 \item{...}{argument to be passed from other methods such as parameters from barplot() function}
-
-\item{mcl_data}{mcl matrix (analyze_OrthoMCL output)}
 }
 \value{
 A phylogenetic tree with a barplot of the data (with standard error bars) provided matched by taxa.
@@ -34,7 +34,8 @@ Presents data for each taxa including standard error bars next to a phylogenetic
 }
 \examples{
 file <- system.file('sample_data', 'muscle_tree2.dnd', package='MAGNAMWAR')
-phydataerror(file, pheno_data, mcl_mtrx, species_colname = 'Treatment', data_colname = 'RespVar', GRP='OG5_126778', xlabel='TAG Content')
+phydataerror(file, pheno_data, mcl_mtrx, species_colname = 'Treatment', data_colname = 'RespVar',
+ GRP='OG5_126778', xlabel='TAG Content')
 #dev.off() #reset margins and align bars
 }
 \references{

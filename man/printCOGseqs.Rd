@@ -14,6 +14,8 @@ printCOGseqs(after_ortho, COG, fasta_dir, out_dir = NULL, outfile = "none")
 \item{fasta_dir}{directory to fastas}
 
 \item{out_dir}{complete path to output directory}
+
+\item{outfile}{name of file that will be written to}
 }
 \value{
 A fasta file with all protein sequnces and ids for a given COG
@@ -27,7 +29,7 @@ COG <- 'OG5_126968'
 dir <- system.file('sample_data', 'fasta_dir', package='MAGNAMWAR')
 dir <- paste(dir,'/',sep='')
  
-printCOGseqs(after_ortho_format,COG,dir)
+printCOGseqs(after_ortho_format, COG, dir)
 
 }
 

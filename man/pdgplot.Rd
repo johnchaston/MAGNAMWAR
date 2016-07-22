@@ -11,6 +11,8 @@ pdgplot(data, mcl_matrix, GRP = "NONE", species_colname, data_colname,
 \arguments{
 \item{data}{R object of phenotype data}
 
+\item{mcl_matrix}{analyze_OrthoMCL output}
+
 \item{GRP}{optional parameter, a string with the name of chosen group (COG) to be colored}
 
 \item{species_colname}{name of column in data file with taxa designations}
@@ -21,11 +23,11 @@ pdgplot(data, mcl_matrix, GRP = "NONE", species_colname, data_colname,
 
 \item{ylab}{string to label barplot's y axis}
 
+\item{ylimit}{optional parameter to limit y axis}
+
 \item{tree}{optional parameter (defaults to NULL) Path to tree file, orders the taxa by phylogenetic distribution, else it defaults to alphabetical}
 
 \item{order}{vector with order of taxa names for across the x axis (defaults to alpha ordering)}
-
-\item{mcl_data}{mcl matrix (analyze_OrthoMCL output)}
 }
 \value{
 a barplot with taxa vs phenotypic data complete with standard error bars

@@ -24,5 +24,6 @@ lfrc_path <- system.file('sample_data', 'RASTtogbk//lfrc_out.fasta', package='MA
 
 RASTtogbk(lfrc_fasta,lfrc_reference,lfrc_path)
 
+
 }
 

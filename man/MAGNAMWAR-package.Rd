@@ -25,10 +25,4 @@ Maintainer: \packageMaintainer{MAGNAMWAR}
 ~~ Optionally other standard keywords, one per line, from file KEYWORDS in the R documentation directory ~~
 }
 \keyword{ package }
-\seealso{
-~~ Optional links to other man pages, e.g. ~~
-~~ \code{\link[<pkg>:<pkg>-package]{<pkg>}} ~~
-}
-\examples{
 
-}

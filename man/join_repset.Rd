@@ -19,7 +19,7 @@ Joins the OrthoMCL output matrix to representative sequences
 }
 \examples{
 joined_mtrx_grps <- join_repset(repseqs_grps, mcl_mtrx_grps)
-#mcl_mtrx1 previously derived from analyze_OrthoMCL()
-#repseqs1 previously derived from pick_repseq()
+#mcl_mtrx previously derived from analyze_OrthoMCL()
+#repseqs previously derived from pick_repseq()
 }
 

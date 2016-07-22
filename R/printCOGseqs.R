@@ -13,7 +13,7 @@
 #' dir <- system.file('sample_data', 'fasta_dir', package='MAGNAMWAR')
 #' dir <- paste(dir,'/',sep='')
 #'  
-#' printCOGseqs(after_ortho_format,COG,dir)
+#' printCOGseqs(after_ortho_format, COG, dir)
 #' 
 #' @export
 
