@@ -1,0 +1,140 @@
+* using log directory 'd:/RCompile/CRANguest/R-devel/MAGNAMWAR.Rcheck'
+* using R Under development (unstable) (2016-07-21 r70955)
+* using platform: x86_64-w64-mingw32 (64-bit)
+* using session charset: ISO8859-1
+* checking for file 'MAGNAMWAR/DESCRIPTION' ... OK
+* checking extension type ... Package
+* this is package 'MAGNAMWAR' version '1.0'
+* checking CRAN incoming feasibility ... NOTE
+Maintainer: 'Corinne Penrod <coripenrod@gmail.com>'
+
+New submission
+
+Possibly mis-spelled words in DESCRIPTION:
+  assocation (12:47)
+  genomic (11:43)
+  phenotypic (12:5)
+
+Authors@R field should be a call to person(), or combine such calls.
+
+The Description field should not start with the package name,
+  'This package' or similar.
+
+The Date field is over a month old.
+* checking package namespace information ... OK
+* checking package dependencies ... OK
+* checking if this is a source package ... OK
+* checking if there is a namespace ... OK
+* checking for hidden files and directories ... OK
+* checking for portable file names ... OK
+* checking whether package 'MAGNAMWAR' can be installed ... OK
+* checking installed package size ... OK
+* checking package directory ... OK
+* checking DESCRIPTION meta-information ... OK
+* checking top-level files ... OK
+* checking for left-over files ... OK
+* checking index information ... OK
+* checking package subdirectories ... OK
+* checking R files for non-ASCII characters ... OK
+* checking R files for syntax errors ... OK
+* loading checks for arch 'i386'
+** checking whether the package can be loaded ... OK
+** checking whether the package can be loaded with stated dependencies ... OK
+** checking whether the package can be unloaded cleanly ... OK
+** checking whether the namespace can be loaded with stated dependencies ... OK
+** checking whether the namespace can be unloaded cleanly ... OK
+** checking loading without being on the library search path ... OK
+** checking use of S3 registration ... OK
+* loading checks for arch 'x64'
+** checking whether the package can be loaded ... OK
+** checking whether the package can be loaded with stated dependencies ... OK
+** checking whether the package can be unloaded cleanly ... OK
+** checking whether the namespace can be loaded with stated dependencies ... OK
+** checking whether the namespace can be unloaded cleanly ... OK
+** checking loading without being on the library search path ... OK
+** checking use of S3 registration ... OK
+* checking dependencies in R code ... OK
+* checking S3 generic/method consistency ... OK
+* checking replacement functions ... OK
+* checking foreign function calls ... OK
+* checking R code for possible problems ... NOTE
+RASTtogbk: no visible global function definition for 'read.csv'
+RASTtogbk: no visible global function definition for 'write.table'
+format_afterOrtho: no visible global function definition for
+  'read.table'
+format_afterOrtho: no visible global function definition for
+  'read.delim'
+manhat_grp: no visible global function definition for 'na.omit'
+pdg_v_cog: no visible global function definition for 'axis'
+pdg_v_cog: no visible global function definition for 'par'
+pdg_v_cog: no visible global function definition for 'text'
+pdgplot: no visible global function definition for 'aggregate'
+pdgplot: no visible global function definition for 'sd'
+pdgplot: no visible global function definition for 'barplot'
+pdgplot: no visible global function definition for 'segments'
+pdgplot: no visible global function definition for 'title'
+phydataerror: no visible global function definition for 'aggregate'
+phydataerror: no visible global function definition for 'sd'
+phydataerror: no visible global function definition for 'plot'
+phydataerror: no visible global function definition for 'par'
+phydataerror: no visible global function definition for 'read.table'
+phydataerror: no visible global function definition for 'barplot'
+phydataerror: no visible global function definition for 'segments'
+phydataerror: no visible global function definition for 'axis'
+phydataerror: no visible global function definition for 'title'
+qqplotter: no visible global function definition for 'ppoints'
+qqplotter: no visible global function definition for 'plot'
+qqplotter: no visible global function definition for 'abline'
+surv_append_matrix: no visible global function definition for
+  'read.csv'
+surv_append_matrix: no visible global function definition for
+  'write.csv'
+write_mcl: no visible global function definition for 'write.csv'
+Undefined global functions or variables:
+  abline aggregate axis barplot na.omit par plot ppoints read.csv
+  read.delim read.table sd segments text title write.csv write.table
+Consider adding
+  importFrom("graphics", "abline", "axis", "barplot", "par", "plot",
+             "segments", "text", "title")
+  importFrom("stats", "aggregate", "na.omit", "ppoints", "sd")
+  importFrom("utils", "read.csv", "read.delim", "read.table",
+             "write.csv", "write.table")
+to your NAMESPACE file.
+* checking Rd files ... OK
+* checking Rd metadata ... OK
+* checking Rd line widths ... OK
+* checking Rd cross-references ... OK
+* checking for missing documentation entries ... OK
+* checking for code/documentation mismatches ... OK
+* checking Rd \usage sections ... OK
+* checking Rd contents ... OK
+* checking for unstated dependencies in examples ... OK
+* checking contents of 'data' directory ... OK
+* checking data for non-ASCII characters ... OK
+* checking data for ASCII and uncompressed saves ... OK
+* checking examples ...
+** running examples for arch 'i386' ... [15s] OK
+** running examples for arch 'x64' ... ERROR
+Running examples in 'MAGNAMWAR-Ex.R' failed
+The error most likely occurred in:
+
+> base::assign(".ptime", proc.time(), pos = "CheckExEnv")
+> ### Name: printCOGseqs
+> ### Title: Print COG Sequences
+> ### Aliases: printCOGseqs
+> 
+> ### ** Examples
+> 
+> 
+> COG <- 'OG5_126968'
+> dir <- system.file('sample_data', 'fasta_dir', package='MAGNAMWAR')
+> dir <- paste(dir,'/',sep='')
+>  
+> printCOGseqs(after_ortho_format,COG,dir)
+Error in seqinr::read.fasta(x, seqtype = "AA", as.string = T) : 
+  no line starting with a > character found
+Calls: printCOGseqs -> lapply -> FUN -> <Anonymous>
+Execution halted
+* checking PDF version of manual ... OK
+* DONE
+Status: 1 ERROR, 2 NOTEs
