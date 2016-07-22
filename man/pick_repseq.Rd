@@ -4,12 +4,14 @@
 \alias{pick_repseq}
 \title{Pick Representative Sequences}
 \usage{
-pick_repseq(mcl_data, fa_dir)
+pick_repseq(mcl_data, fa_dir, fastaformat = "new")
 }
 \arguments{
 \item{mcl_data}{output of format_afterOrtho() --list of 2 things-- 1: binary matrix indicating the presence / absence of genes in each COG and 2: vector of names of COGs}
 
 \item{fa_dir}{Path to the directory where all raw GenBank files are stored. Note, all file names must be changed to a 4-letter code representing each species and have '.fasta' file descriptor}
+
+\item{fastaformat}{options: new & old; defaults to old; takes care of NCBI updated fasta headers}
 }
 \value{
 The path to the representative sequence file in fasta format
@@ -20,6 +22,6 @@ Randomly picks a representative sequence from GenBank fasta files for every Orth
 \examples{
 dir <- system.file('sample_data', 'fasta_dir', package='MAGNAMWAR')
 dir <- paste(dir,'/',sep='')
-repseqs <- pick_repseq(after_ortho_format, dir)
+repseqs <- pick_repseq(after_ortho_format, dir, fastaformat = "old")
 }
 

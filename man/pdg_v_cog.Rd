@@ -10,6 +10,8 @@ pdg_v_cog(mcl_data, num = 40, ...)
 \item{mcl_data}{format_afterOrtho output}
 
 \item{num}{an integer indicating where the x axis should end and be compiled}
+
+\item{...}{args to be passed to barplot}
 }
 \value{
 a barplot with a height determined by the second column and the first column abbreviated to accomodate visual spacing

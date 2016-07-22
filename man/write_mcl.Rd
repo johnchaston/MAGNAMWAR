@@ -18,7 +18,7 @@ The path to the written file
 Writes a tab separated version of the analyzed OrthoMCL data with or without the joined representative sequences
 }
 \examples{
-path <- write_mcl(mcl_mtrx, 'matrix.tsv')
+write_mcl(mcl_mtrx, 'matrix.tsv')
 #mcl_mtrx previously derived from analyze_OrthoMCL() or join_repset()
 }
 

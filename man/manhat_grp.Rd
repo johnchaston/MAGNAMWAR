@@ -11,7 +11,7 @@ manhat_grp(mcl_data, mcl_mtrx, tree = NULL)
 
 \item{mcl_mtrx}{output of analyze_OrthoMCL()}
 
-\item{equation}{of line of significance, defaults to -log10((.05)/dim(pdgs)[1])}
+\item{tree}{tree file optional, used for ordering taxa along x axis}
 }
 \value{
 a manhattan plot
@@ -21,6 +21,8 @@ Manhattan plot that graphs all p-values for taxa.
 }
 \examples{
 manhat_grp(after_ortho_format, mcl_mtrx)
+
+#@param equation of line of significance, defaults to -log10((.05)/dim(pdgs)[1])
 }
 \references{
 Some sort of reference
