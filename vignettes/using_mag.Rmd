@@ -2,28 +2,58 @@
 title: "Using MAGNAMWAR: a case study with *Drosophila melanogaster*"
 author: "Corinne Penrod"
 date: "July 25, 2016"
-output: html_vignette
+output: rmarkdown::html_vignette
+
 vignette: >
   %\VignetteIndexEntry{Using MAGNAMWAR: a case study with *Drosophila melanogaster*}
   %\VignetteEngine{knitr::rmarkdown}
   \usepackage[utf8]{MAGNAMWAR}
+
 ---
+```{r,echo = F}
+library(MAGNAMWAR)
+```
+## Introduction
 
+This vignette describes the recommended order for function use to take full advantage of MAGNAMWAR. The workflow described below was originally created for use in research of host-microbe interactions of *Drosophila melanogaster*. The data included in the package and used in documentation examples are extreme subsets of data collected in a lab. The following functions are in a specific order as each builds on the next.
 
-## 1. Introduction
+As well as outlining the order of function use, we will provide a case study with the data included in the package. This data was collected by the Chaston Lab and is a subset of STARVATION data...
 
-This vignette describes the recommended order for function use to take full advantage of MAGNAMWAR. The workflow described below was originally created for use in research of host-microbe interactions of Drosophila melanogaster. The data included in the package are extreme subsets of data collected in a lab. The following functions are in a specific order as each builds on the next.
+## 1. A Brief Outline
+
+The following table outlines the specific input and outputs per function in the order each function should be used. Below are provided only the essential functions. Throughout the rest of the vignette, other optional functions will be discussed in detail.
+
+Function | Purpose | Input | Output | Case Study Input | Case Study Output
+-------- | ------- | ----- | ------ | ---------------- | -----------------
+format\_MCLfastas | prep amino acid fasta files for OrthoMCL analysis | 4-letter abbreviated amino acid fasta files of every host-mono-associated organism | concatenated fasta file of all inputs, removes any duplicate ids | fastas in sample\_data/fasta\_dir/ | MCLformatted\_all.fasta
+format\_afterOrtho | format output of OrthoMCL clusters to be used with analyses | groups file from OrthoMCL | Parsed data contained in a list of 2 objects (presence absence matrix, protein ids) | sample\_data/groups\_ example\_r.txt | after\_ortho\_format_grps
+analyzeOrthoMCL | main analysis of data | list from format\_afterOrtho; phenotypic data with host-associated organism labels | a matrix with 7 variables (cluster group, p-value, corrected p-value...) | after\_ortho\_format_grps; pheno\_data | mcl\_mtrx\_grps
+join\_repseq | appends representative sequences with analyzeOrthoMCL matrix | format\_afterOrtho output (presence absence matrix, protein ids); amino acid fasta files; output matrix of analyzeOrthoMCL | a data frame of the joined matrix | after\_ortho\_format\_grps; sample\_data/fasta\_dir/;  mcl\_mtrx\_grps | joined\_mtrx_grps
 
 
 ## 2. Prepping For OrthoMCL Clustering Software
 
+OrthoMCL software has certain requirements for running clustering analysis such as no existence of duplicate protein ids. The following functions are for fasta file preparation before running the OrthoMCL algorithm.
+
 ### RASTtogbk
 
-If you have fasta files in RAST format, use this function to convert them to gbk format.
+For fasta files in RAST format, use this function to convert them to gbk format before using `format_MCLfastas`. An example of using this function is shown below:
+
+```{r}
+
+
+lfrc_fasta <- system.file('sample_data', 'RASTtogbk//lfrc.fasta', package='MAGNAMWAR')
+lfrc_reference <- system.file('sample_data', 'RASTtogbk//lfrc_lookup.csv', package='MAGNAMWAR')
+lfrc_path <- system.file('sample_data', 'RASTtogbk//lfrc_out.fasta', package='MAGNAMWAR')
+
+RASTtogbk(lfrc_fasta,lfrc_reference,lfrc_path)
+
+#RASTtogbk('inst/sample_data/RASTtogbk/lfrc.fasta','inst/sample_data/RASTtogbk/lfrc_lookup.csv','inst/sample_data/RASTtogbk//lfrc_out.fasta')
+```
 
 ### format_MCLfastas
 
-Before using this function, all fasta files of the microbes must be renamed with a 4-letter distinct code followed by “.fasta” i.e. aace.fasta. Within MAGNAMWAR, we have provided examples of fasta files named in this format which are used in the examples of this function. The output of this function is the file MCLformatted_all.fasta which is a concatenated fasta file that is to be used as input for the [OrthoMCL clustering software](www.orthomcl.org) !MAYBE reference here. 
+Before using this function, all fasta files of the microbes must be renamed with a 4-letter distinct code followed by ".fasta"" i.e. aace.fasta. Within MAGNAMWAR, we have provided examples of fasta files named in this format which are used in the examples of this function. The output of this function is the file MCLformatted_all.fasta which is a concatenated fasta file that is to be used as input for the [OrthoMCL clustering software](www.orthomcl.org) !MAYBE reference here. 
 
 
 ```{r}
@@ -47,7 +77,7 @@ plot(cars)
 
 ### format_afterOrtho
 
-Take the direct output from OrthoMCL and input it into format_afterOrtho, specifying the second argument as whether the software was run online (“ortho”) or locally (“groups”). The software defaults to assume an online run of OrthoMCL (“ortho”).
+Take the direct output from OrthoMCL and input it into format_afterOrtho, specifying the second argument as whether the software was run online ("ortho") or locally ("groups"). The software defaults to assume an online run of OrthoMCL ("ortho"").
 
 
 Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
@@ -99,7 +129,7 @@ For specific survival tests in MAGNAMWAR, the output files are small .csv files 
 Writes the matrix result from analyzeOrthoMCL into a tab separated file.
 
 
-## 5.Graphics
+## 6. Graphics
 
 ### pdg_v_cog
 
