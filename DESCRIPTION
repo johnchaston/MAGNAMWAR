@@ -3,13 +3,13 @@ Type: Package
 Title: A Pipeline for Meta-Genome Wide Association
 Version: 1.0
 Date: 2016-07-22
-Authors@R: as.person(c(
-    "Corinne Penrod <coripenrod@gmail.com> [aut, cre]", 
-    "John Chaston <john_chaston@byu.edu> [aut]",
-    "Hayden Z. Smith <smithinformatics@gmail.com> [ctb]"
-  ))
-Description: Correlates meta-genomic variation to target species
-    phenotypic variations in meta-genome with association studies.
+Authors@R: c(
+    person("Corinne","Penrod", email="coripenrod@gmail.com", role = c("aut", "cre")), 
+    person("John", "Chaston", email = "john_chaston@byu.edu", role = "aut"),
+    person(c("Hayden","Z."), "Smith", email = "smithinformatics@gmail.com", role = "ctb")
+  )
+Description: Correlates variation within the meta-genome to target species
+    phenotype variations in meta-genome with association studies.
 License: CC0
 LazyData: true
 Imports:
@@ -26,5 +26,7 @@ Imports:
     iterators,
     foreach,
     doParallel
+Suggests: knitr, rmarkdown
+VignetteBuilder: knitr
 Depends: R (>= 2.10)
 RoxygenNote: 5.0.1

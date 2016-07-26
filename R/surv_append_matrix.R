@@ -7,10 +7,13 @@
 #' @return A csv file containing a matrix with the following columns: COG, p-values, Bonferroni corrected p-values, mean phenotype of COG-containing taxa, mean pheotype of COG-lacking taxa, taxa included in COG, taxa not included in COG
 #' @references Some sort of reference
 #' @examples 
+#' 
+#' # Not run ~ directory structure depends on system
+#' \dontrun{
 #' file <- system.file('sample_data', 'outputs', package='MAGNAMWAR')
 #' directory <- paste(file, '/', sep = '')
 #' surv_append_matrix(directory)
-#'
+#' }
 #'
 #' @export
 
@@ -30,7 +33,7 @@ surv_append_matrix <- function(work_dir, out_name = "surv_matrix.csv", out_dir =
     out_starve <- matrix(c(rep(1, 7)), ncol = 7)
     for (i in filenames) {
         data <- read.csv(paste(i, sep = ""), header = F)
-        if (as.character(data[1]) == "Error in p_val1 * num_pdg : non-numeric argument to binary operator") {
+        if (grepl("Error",(data[1]))) {
             break
         } else {
             for (k in 1:ncol(data)) {

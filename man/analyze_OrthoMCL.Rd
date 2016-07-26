@@ -6,7 +6,8 @@
 \usage{
 analyze_OrthoMCL(mcl_data, pheno_data, model, species_name, resp = NULL,
   fix2 = NULL, rndm1 = NULL, rndm2 = NULL, multi = 1, time = NULL,
-  event = NULL, time2 = NULL, startnum = 1, stopnum = "end")
+  event = NULL, time2 = NULL, startnum = 1, stopnum = "end",
+  output_dir = NULL)
 }
 \arguments{
 \item{mcl_data}{output of format_afterOrtho --list of 2 things-- 1: binary matrix indicating the presence / absence of genes in each COG and 2: vector of names of COGs}
@@ -36,6 +37,8 @@ analyze_OrthoMCL(mcl_data, pheno_data, model, species_name, resp = NULL,
 \item{startnum}{number of test to start on}
 
 \item{stopnum}{number of test to stop on}
+
+\item{output_dir}{if using survival tests, where small output files will be placed before using surv_append_matrix. Must specify a directory if choosign to output small files, else only written as a matrix}
 }
 \value{
 A matrix with the following columns: COG, p-values, Bonferroni corrected p-values, mean phenotype of COG-containing taxa, mean pheotype of COG-lacking taxa, taxa included in COG, taxa not included in COG
@@ -74,14 +77,14 @@ mcl_mtrx <- analyze_OrthoMCL(after_ortho_format, pheno_data, 'lmeF2',
 mcl_mtrx <- analyze_OrthoMCL(after_ortho_format, pheno_data, 'wx',
  'Treatment', resp='RespVar')
 
-# 5 minutes!
+# Not run ~ 5 minutes
 #Survival with two independent random effects and one additional fixed effect, run on multiple cores
 \dontrun{
 mcl_mtrx <- analyze_OrthoMCL(after_ortho_format, starv_pheno_data, 'TRT', model='survmulti',
  time='t2', event='event', rndm1='EXP', rndm2='VIAL', multi=1)
 }
 
-#5 minutes!
+# Not run ~ 5 minutes
 #Survival with two independent random effects and one additional fixed effect,
 #including drops on multi cores
 \dontrun{

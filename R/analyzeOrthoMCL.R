@@ -15,6 +15,7 @@
 #' @param time2 (can only be used with survival tests) Column name in pheno_data containing econd time
 #' @param startnum number of test to start on
 #' @param stopnum number of test to stop on
+#' @param output_dir if using survival tests, where small output files will be placed before using surv_append_matrix. Must specify a directory if choosign to output small files, else only written as a matrix
 #' @return A matrix with the following columns: COG, p-values, Bonferroni corrected p-values, mean phenotype of COG-containing taxa, mean pheotype of COG-lacking taxa, taxa included in COG, taxa not included in COG
 #' @references Some sort of reference
 #' @examples 
@@ -48,14 +49,14 @@
 #' mcl_mtrx <- analyze_OrthoMCL(after_ortho_format, pheno_data, 'wx',
 #'  'Treatment', resp='RespVar')
 #'
-#'# 5 minutes!
+#' # Not run ~ 5 minutes
 #' #Survival with two independent random effects and one additional fixed effect, run on multiple cores
 #' \dontrun{
 #' mcl_mtrx <- analyze_OrthoMCL(after_ortho_format, starv_pheno_data, 'TRT', model='survmulti',
 #'  time='t2', event='event', rndm1='EXP', rndm2='VIAL', multi=1)
 #' }
 #'
-#' #5 minutes!
+#' # Not run ~ 5 minutes
 #' #Survival with two independent random effects and one additional fixed effect,
 #' #including drops on multi cores
 #' \dontrun{
@@ -71,7 +72,7 @@
 
 
 analyze_OrthoMCL <- function(mcl_data, pheno_data, model, species_name, resp = NULL, fix2 = NULL, rndm1 = NULL, rndm2 = NULL, 
-    multi = 1, time = NULL, event = NULL, time2 = NULL, startnum = 1, stopnum = "end") {    
+    multi = 1, time = NULL, event = NULL, time2 = NULL, startnum = 1, stopnum = "end", output_dir=NULL) {    
     
     cat("Importing Data\n")
   
@@ -93,10 +94,10 @@ analyze_OrthoMCL <- function(mcl_data, pheno_data, model, species_name, resp = N
         mtrx <- analyze.wilcox(pa_mtrx, haplo_names, pheno_data, species_name, resp)
     else if (model == "survmulti") 
         mtrx <- analyze.surv.multi(pa_mtrx, haplo_names, pheno_data, species_name, time, event, rndm1, 
-            rndm2, multi, startnum, stopnum) 
+            rndm2, multi, startnum, stopnum, output_dir) 
     else if (model == "survmulticensor") 
         mtrx <- analyze.surv.censor.multi(pa_mtrx, haplo_names, pheno_data, species_name, time, time2, 
-            event, rndm1, rndm2, fix2, multi, startnum, stopnum) 
+            event, rndm1, rndm2, fix2, multi, startnum, stopnum, output_dir) 
     else cat("Error: Could not find a correct match for your model declaration\n")
     
     return(mtrx)
@@ -652,7 +653,7 @@ analyze.wilcox <- function(pa_mtrx, haplo_names, tx, species_name, resp_var) {
 
 ### from analyze_surve_0.0.2.R
 analyze.surv.multi <- function(pa_mtrx, haplo_names, tx, species_name, time, event, rndm1, rndm2, multi, 
-    startnum, stopnum) {
+    startnum, stopnum, output_dir) {
 #     
 #     library(survival)
 #     library(parallel)
@@ -667,8 +668,11 @@ analyze.surv.multi <- function(pa_mtrx, haplo_names, tx, species_name, time, eve
     ### set the number of tests to peform
     num_pdg <- length(haplo_names) - 1
     
-    cat("Creating output directory in", getwd(),'\n\n')
-    suppressWarnings(dir.create("outputs"))
+    #     MUST CREATE THEIR OWN ### directory for output files
+    #     cat("Creating output directory in", getwd(),'\n\n')
+    #     suppressWarnings(dir.create("outputs"))
+    ifelse(!dir.exists(output_dir), dir.create(output_dir), FALSE)
+    
     
     ### determine the number of COGs per PDG - needed for the subsequent loop
     count <- 0
@@ -676,7 +680,8 @@ analyze.surv.multi <- function(pa_mtrx, haplo_names, tx, species_name, time, eve
       count <- count + length(unlist(strsplit(haplo_names[i],',')))      
     }
     
-    cat("Running Analysis. There is no 'percent complete' update. If you want to estimate how much time it will take, run for a short time with the 'surv' model, estimate time it will take in that model on 1 core. Time with the multiple cores ~ (time on 1 core / # cores)*2 \n")
+    #cat("Running Analysis. There is no 'percent complete' update. If you want to estimate how much time it will take, run for a short time with the 'surv' model, estimate time it will take in that model on 1 core. Time with the multiple cores ~ (time on 1 core / # cores)*2 \n")
+    cat("Running Analysis. There is no 'percent complete' update.\n")
     
     ### make a new phenotype matrix with only the specified data and with assigned names columns (makes the model run better)
     sub <- cbind(haplo_tx[, which(colnames(haplo_tx) == time)], haplo_tx[, which(colnames(haplo_tx) == event)], haplo_tx[, 
@@ -755,18 +760,24 @@ analyze.surv.multi <- function(pa_mtrx, haplo_names, tx, species_name, time, eve
           
           
           ### adding data to output matrix
+          smallfile <- F
           for (j in unlist(strsplit(haplo_names[i],','))) {
               rm(output)
               output <- try(c(j, pval1, pval1_corrected, mean_contain, mean_missing, taxa_contain, taxa_missing), T)
               #write(j, file = "data.csv") MAYBE FROM JOHNNY TESTS? /
-              write(output, file = paste("outputs/", j, ".csv", sep = ""))
+              if (output_dir != NULL)  {
+                smallfile <- T
+                write(output, file = paste(output_dir, j, ".csv", sep = ""))
+              }
           }
           as.vector(output)  
       }
     }))
     cat("Finished!\n")
-    
-    cat("Cleaning Final Output")
+    if (smallfile == T)
+      cat("Output small files to", output_dir, "\n")
+
+    cat("Cleaning Matrix Final Output")
     
     output_clean <- matrix(data = outmulti, ncol = 7, byrow = T)
     output_clean <- output_clean[-1,]
@@ -778,7 +789,7 @@ analyze.surv.multi <- function(pa_mtrx, haplo_names, tx, species_name, time, eve
 }
 
 analyze.surv.censor.multi <- function(pa_mtrx, haplo_names, tx, species_name, time, time2, event, rndm1, rndm2, 
-    fix2, multi, startnum, stopnum) {
+    fix2, multi, startnum, stopnum, output_dir) {
 #     
 #     library(survival)
 #     library(parallel)
@@ -795,9 +806,10 @@ analyze.surv.censor.multi <- function(pa_mtrx, haplo_names, tx, species_name, ti
     ### number of phylogenetic distribution groups (PDG)
     num_pdg <- length(haplo_names) - 1
     
-    ### directory for output files
-    cat("Creating output directory in", getwd(),'\n\n')
-    suppressWarnings(dir.create("outputs"))
+#     MUST CREATE THEIR OWN ### directory for output files
+#     cat("Creating output directory in", getwd(),'\n\n')
+#     suppressWarnings(dir.create("outputs"))
+    ifelse(!dir.exists(output_dir), dir.create(output_dir), FALSE)
     
     ### determine the number of COGs per PDG - needed for the subsequent loop
     count <- 0
@@ -805,7 +817,8 @@ analyze.surv.censor.multi <- function(pa_mtrx, haplo_names, tx, species_name, ti
       count <- count + length(unlist(strsplit(haplo_names[i],',')))      
     }
     
-    cat("Running Analysis. There is no 'percent complete' update. If you want to estimate how much time it will take, run for a short time with the 'surv' model, estimate time it will take in that model on 1 core. Time with the multiple cores ~ (time on 1 core / # cores)*2 \n")
+    #cat("Running Analysis. There is no 'percent complete' update. If you want to estimate how much time it will take, run for a short time with the 'surv' model, estimate time it will take in that model on 1 core. Time with the multiple cores ~ (time on 1 core / # cores)*2 \n")
+    cat("Running Analysis. There is no 'percent complete' update.\n")
     
     ### make a new phenotype matrix with only the specified data and with assigned names columns (makes the model run better)
     sub3 <- cbind(haplo_tx[, which(colnames(haplo_tx) == time)], haplo_tx[, which(colnames(haplo_tx) == time2)],
@@ -859,11 +872,6 @@ analyze.surv.censor.multi <- function(pa_mtrx, haplo_names, tx, species_name, ti
           pval1 <- try(summary(l1.1)$test$pvalues[1], T)  # should this be 2?
           
           
-          #summary(l1.1)$test$pvalues[1], file = "data.csv")  MAYBE FROM JOHNNY TESTS? /
-          #write(summary(l1.1)$test$pvalues[2], file = "data.csv")
-          
-          
-          
           ### calculating meta-data means
           mean_calc <- stats::aggregate(time2 ~ fix, sub3, mean)  #matrix with mean_contain and mean_missing
           mean_calc$fix <- as.numeric(as.character(mean_calc$fix))
@@ -885,19 +893,24 @@ analyze.surv.censor.multi <- function(pa_mtrx, haplo_names, tx, species_name, ti
           try(if (pval1_corrected > 1) {
               pval1_corrected <- 1
           },T)
-          
+          smallfile <- F
           for (j in unlist(strsplit(haplo_names[i],','))) {
               rm(output)
               output <- try(c(j, pval1, pval1_corrected, mean_contain, mean_missing, taxa_contain, taxa_missing), T)
               #write(i, file = "data.csv") #MAYBE FROM JOHNNY TESTS? /
-              write(output, file = paste("outputs/", j,".csv", sep = ""))
+              if (output_dir != NULL)  {
+                smallfile <- T
+                write(output, file = paste(output_dir, j, ".csv", sep = ""))
+              }
           }
           
           as.vector(output)
       }
     }))
     cat("Finished!\n")
-    
+    if (smallfile == T)
+      cat("Output small files to", output_dir, "\n")
+
     cat("Cleaning Final Output\n\n")
     
     output_clean <- matrix(data = outmulti, ncol = 7, byrow = T)

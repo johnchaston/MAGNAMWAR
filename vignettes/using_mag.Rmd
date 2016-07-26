@@ -1,0 +1,113 @@
+---
+title: "Using MAGNAMWAR: a case study with *Drosophila melanogaster*"
+author: "Corinne Penrod"
+date: "July 25, 2016"
+output: html_vignette
+vignette: >
+  %\VignetteIndexEntry{Using MAGNAMWAR: a case study with *Drosophila melanogaster*}
+  %\VignetteEngine{knitr::rmarkdown}
+  \usepackage[utf8]{MAGNAMWAR}
+---
+
+
+## 1. Introduction
+
+This vignette describes the recommended order for function use to take full advantage of MAGNAMWAR. The workflow described below was originally created for use in research of host-microbe interactions of Drosophila melanogaster. The data included in the package are extreme subsets of data collected in a lab. The following functions are in a specific order as each builds on the next.
+
+
+## 2. Prepping For OrthoMCL Clustering Software
+
+### RASTtogbk
+
+If you have fasta files in RAST format, use this function to convert them to gbk format.
+
+### format_MCLfastas
+
+Before using this function, all fasta files of the microbes must be renamed with a 4-letter distinct code followed by “.fasta” i.e. aace.fasta. Within MAGNAMWAR, we have provided examples of fasta files named in this format which are used in the examples of this function. The output of this function is the file MCLformatted_all.fasta which is a concatenated fasta file that is to be used as input for the [OrthoMCL clustering software](www.orthomcl.org) !MAYBE reference here. 
+
+
+```{r}
+summary(cars)
+```
+
+## 3. Running OrthoMCL Clustering Software
+
+After formatting fasta files, run OrthoMCL clustering software either locally or online. MORE FROM JOHNNY. 
+
+More information about OrthoMCL clustering software can be found at: <http://www.orthomcl.org/>
+
+
+You can also embed plots, for example:
+
+```{r, echo=FALSE}
+plot(cars)
+```
+
+## 3. After Using OrthoMCL Clustering Software
+
+### format_afterOrtho
+
+Take the direct output from OrthoMCL and input it into format_afterOrtho, specifying the second argument as whether the software was run online (“ortho”) or locally (“groups”). The software defaults to assume an online run of OrthoMCL (“ortho”).
+
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+
+
+### analyzeOrthoMCL
+
+This function is the actual implementation of statistical tests. It requires the R object output of the format_afterOrtho function and an R object of a phenotype file containing all the variables needed to be addressed in your statistical test. You will be asked to specify column names of this data frame in order to use variables in the test. analyzeOrthoMCL provides seven different tests:
+
+* Linear Model
+* Wilcox Test
+* Linear Mixed Effect with one random effect
+* Linear Mixed Effect with two independent random effects
+* Linear Mixed Effect with rndm2 nested in rndm1
+* Linear Mixed Effect with two independent random effects and one additional fixed effect
+* Survival with two independent random effects and one additional fixed effect, run on multiple cores
+* Survival with two independent random effects and one additional fixed effect, including drops on multi cores
+
+Specify different variables using column names of the phenotype file. For thorough examples refer to the analyzeOrthoMCL documentation examples and files.
+
+
+
+## 4. After Statistical Analysis
+
+
+### pick_repseq
+
+This function randomly selects a representative protein annotation and amino acid sequence for each COG in the outputted matrix of analyzeOrthoMCL in order to give an idea of what type of gene is clustered in that COG.
+
+
+### join_repset
+
+Using the output of both pick_repseq and analyzeOrthoMCL, join_repset creates a new joined matrix with a representative protein annotation and amino acid sequence for each COG appended to the original analyzeOrthoMCL output.
+
+
+## 5. After Statistical Analysis
+
+### printCOGseqs
+
+A function that allows the user to output all protein sequences clustered in a particular COG into a single fasta file.
+
+### surv_append_matrix
+
+For specific survival tests in MAGNAMWAR, the output files are small .csv files containing the results of only one test and this function joins all those smaller files into one complete matrix.
+
+
+### write_mcl
+
+Writes the matrix result from analyzeOrthoMCL into a tab separated file.
+
+
+## 5.Graphics
+
+### pdg_v_cog
+
+### pdgplot
+
+### qqplotter
+
+### manhat_grp
+
+### phydataerror
+

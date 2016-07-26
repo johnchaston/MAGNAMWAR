@@ -20,8 +20,11 @@ The path to the representative sequence file in fasta format
 Randomly picks a representative sequence from GenBank fasta files for every OrthoMCL COG
 }
 \examples{
+# Not run ~ directory structure depends on system
+\dontrun{
 dir <- system.file('sample_data', 'fasta_dir', package='MAGNAMWAR')
 dir <- paste(dir,'/',sep='')
 repseqs <- pick_repseq(after_ortho_format, dir, fastaformat = "old")
+}
 }
 

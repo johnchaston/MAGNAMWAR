@@ -18,6 +18,8 @@ The path to the final OrthoMCL compatible fasta file
 Creates the composite fasta file for use in running OrthoMCL and/or submitting to www.orthomcl.org
 }
 \examples{
+
+# Not run ~ directory structure depends on system
 dir <- system.file('sample_data', 'fasta_dir', package='MAGNAMWAR')
 dir <- paste(dir,'/',sep='')
 formatted_file <- format_MCLfastas(dir)
