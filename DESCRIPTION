@@ -13,19 +13,19 @@ Description: Correlates variation within the meta-genome to target species
 License: CC0
 LazyData: true
 Imports:
-    lme4,
-    parallel,
+    ape,
     coxme,
-    survival,
+    doParallel,
+    dplyr,
+    foreach,
+    iterators,
+    lme4,
     multcomp,
-    seqinr,
+    parallel,
     plyr,
     qqman,
-    ape,
-    dplyr,
-    iterators,
-    foreach,
-    doParallel
+    survival,
+    seqinr
 Suggests: knitr, rmarkdown
 VignetteBuilder: knitr
 Depends: R (>= 2.10)

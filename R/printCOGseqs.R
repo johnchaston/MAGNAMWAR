@@ -54,9 +54,8 @@ printCOGseqs <- function(after_ortho, COG, fasta_dir, out_dir = NULL, outfile = 
         if (getwd() != out_dir) {
             setwd(out_dir)
         }
-        seqinr::write.fasta(seqinr::getSequence(myfiles[[numfile]][num_prot[1]]),
-                    sub(">", "", seqinr::getAnnot(myfiles[[numfile]][num_prot[1]])), 
-                    outfile, open = "a")
+        seqinr::write.fasta(seqinr::getSequence(myfiles[[numfile]][num_prot[1]]), sub(">", "", seqinr::getAnnot(myfiles[[numfile]][num_prot[1]])), 
+            outfile, open = "a")
         
     }
 }

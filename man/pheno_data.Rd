@@ -3,11 +3,11 @@
 \docType{data}
 \name{pheno_data}
 \alias{pheno_data}
-\title{Development of fruit flies dataset.}
+\title{Triglyceride (TAG) content of fruit flies dataset.}
 \format{A data frame with 586 rows and 4 variables:
 \describe{
   \item{Treatment}{4-letter taxa designation of associated bacteria}
-  \item{RespVar}{response variable, }
+  \item{RespVar}{response variable, TAG content}
   \item{Vial}{random effect variable, vial number of flies}
   \item{Experiment}{random effect variable, experiment number of flies}
 }}
@@ -15,8 +15,8 @@
 pheno_data
 }
 \description{
-A subset of the development of fruit flies, collected in the Chaston Lab,
-to be used as a brief example for survival tests in analyzeOrthoMCL.
+A subset of the TAG content of fruit flies, collected in the Chaston Lab,
+to be used as a brief example for tests in analyzeOrthoMCL.
 }
 \keyword{datasets}
 

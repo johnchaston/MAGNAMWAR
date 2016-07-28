@@ -5,7 +5,7 @@
 #' @param mcl_matrix analyze_OrthoMCL output
 #' @param species_colname name of column in data file with taxa designations
 #' @param data_colname name of column in data file with data observations
-#' @param GRP optional parameter, a string with the name of chosen group (COG) to be colored
+#' @param COG optional parameter, a string with the name of chosen group (COG) to be colored
 #' @param xlab string to label barplot's x axis
 #' @param ylab string to label barplot's y axis
 #' @param ylimit optional parameter to limit y axis
@@ -19,10 +19,10 @@
 #' @export
 #' 
 
-pdgplot <- function(data, mcl_matrix, GRP = "NONE", species_colname, data_colname, xlab = "Taxa", ylab = "Data", ylimit = NULL, 
-    tree = NULL, order = NULL) {
+pdgplot <- function(data, mcl_matrix, COG = "NONE", species_colname, data_colname, xlab = "Taxa", ylab = "Data", ylimit = NULL, tree = NULL, 
+    order = NULL) {
     
-    grep <- mcl_matrix[grep(GRP, mcl_matrix[, 1]), ]
+    grep <- mcl_matrix[grep(COG, mcl_matrix[, 1]), ]
     l <- unlist(strsplit(as.character(unlist(grep[6])), split = "\\|"))
     if (length(l) == 0) {
         warning("Invalid COG inputted... Printing without specific coloration\n")
@@ -96,7 +96,7 @@ pdgplot <- function(data, mcl_matrix, GRP = "NONE", species_colname, data_colnam
     segments(bp - 0.2, x + stDevs, bp + 0.2, x + stDevs, lwd = 2)
     
     
-    title(xlab = xlab, ylab = ylab, main = GRP, font.main = 2)
+    title(xlab = xlab, ylab = ylab, main = COG, font.main = 2)
     
 }
 
@@ -184,14 +184,13 @@ pdg_v_cog <- function(mcl_data, num = 40, ...) {
         plot <- sums
         rownames(plot) <- NULL
         r_axis <- max(plot$Freq) + 5
-        warning(paste("Number provided for max number of COGs in PDG larger than largest number of COGs in PDG:\n", num, 
-            " > ", nrow(sums)))
+        warning(paste("Number provided for max number of COGs in PDG larger than largest number of COGs in PDG:\n", num, " > ", nrow(sums)))
         
     }
     
     ### Plotting dev.off() # reset margins for labels
-    barplot <- barplot(plot$Freq, names.arg = plot$COGS, ylim = c(-1, r_axis), xlab = expression(paste("COGs PDG"^"-1")), 
-        ylab = "PDGs", ...)
+    barplot <- barplot(plot$Freq, names.arg = plot$COGS, ylim = c(-1, r_axis), xlab = expression(paste("COGs PDG"^"-1")), ylab = "PDGs", 
+        ...)
     axis(1, at = barplot, labels = plot$COGS)
     
     ### Fitting label on top of bar
@@ -213,7 +212,7 @@ pdg_v_cog <- function(mcl_data, num = 40, ...) {
 #' @param species_colname name of column in data file with taxa designations
 #' @param data_colname name of column in data file with data observations
 #' @param color optional parameter, (defaults to NULL) assign colors to individual taxa by providing file (format: Taxa | Color)
-#' @param GRP optional parameter, (defaults to NULL) a string with the names of chosen group to be colored
+#' @param COG optional parameter, (defaults to NULL) a string with the names of chosen group to be colored
 #' @param xlabel string to label barplot's x axis
 #' @param ... argument to be passed from other methods such as parameters from barplot() function
 #' @return A phylogenetic tree with a barplot of the data (with standard error bars) provided matched by taxa.
@@ -221,7 +220,7 @@ pdg_v_cog <- function(mcl_data, num = 40, ...) {
 #' @examples 
 #' file <- system.file('sample_data', 'muscle_tree2.dnd', package='MAGNAMWAR')
 #' phydataerror(file, pheno_data, mcl_mtrx, species_colname = 'Treatment', data_colname = 'RespVar',
-#'  GRP='OG5_126778', xlabel='TAG Content')
+#'  COG='OG5_126778', xlabel='TAG Content')
 #' #dev.off() #reset margins and align bars
 #' @importFrom graphics abline axis barplot par plot segments text title
 #' @importFrom stats aggregate na.omit ppoints sd
@@ -229,8 +228,7 @@ pdg_v_cog <- function(mcl_data, num = 40, ...) {
 #' @export
 
 
-phydataerror <- function(phy, data, mcl_matrix, species_colname, data_colname, color = NULL, GRP = NULL, xlabel = "xlabel", 
-    ...) {
+phydataerror <- function(phy, data, mcl_matrix, species_colname, data_colname, color = NULL, COG = NULL, xlabel = "xlabel", ...) {
     # dev.off() #must reset dev (reset margins) for every run of the function to correctly line up bars and branches
     
     ### building tree
@@ -290,8 +288,8 @@ phydataerror <- function(phy, data, mcl_matrix, species_colname, data_colname, c
     
     if (is.null(color)) {
         
-        if (!is.null(GRP)) {
-            grep <- mcl_matrix[grep(GRP, mcl_matrix[, 1]), ]
+        if (!is.null(COG)) {
+            grep <- mcl_matrix[grep(COG, mcl_matrix[, 1]), ]
             l <- unlist(strsplit(grep[6], split = "\\|"))
             suppressWarnings(if (is.na(l)) {
                 cat("Invalid COG inputted... Printing without specific coloration\n")
@@ -332,8 +330,8 @@ phydataerror <- function(phy, data, mcl_matrix, species_colname, data_colname, c
     
     if (!is.null(dim(x))) 
         x <- t(x)
-    bp <- barplot(x, width = 1, add = F, horiz = TRUE, offset = x0, axes = FALSE, axisnames = FALSE, space = (0.2), xlim = c(0, 
-        45), col = col, ...)
+    bp <- barplot(x, width = 1, add = F, horiz = TRUE, offset = x0, axes = FALSE, axisnames = FALSE, space = (0.2), xlim = c(0, 45), col = col, 
+        ...)
     
     ### error bars
     segments(x - stDevs + x0, bp, x + stDevs + x0, bp, lwd = 2)
@@ -434,11 +432,10 @@ manhat_grp <- function(mcl_data, mcl_mtrx, tree = NULL) {
     
     taxsub <- subset(finalkey, grepl(paste(taxa_names, collapse = "|"), finalkey[, 3]))
     
-    taxsub2 <- taxsub[order(taxsub$TAXA, taxsub$protein_id),]
+    taxsub2 <- taxsub[order(taxsub$TAXA, taxsub$protein_id), ]
     row.names(taxsub2) <- NULL
     
-    #old version dplyr
-    #taxsub2 <- arrange(taxsub, TAXA, protein_id)
+    # old version dplyr taxsub2 <- arrange(taxsub, TAXA, protein_id)
     
     ### PROBLEM: WHAT TO DO WHEN finalkey DOESN'T HAVE THE TAXA INCLUDED IN tree?  ex. efOG v efog
     

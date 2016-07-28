@@ -33,12 +33,12 @@ surv_append_matrix <- function(work_dir, out_name = "surv_matrix.csv", out_dir =
     out_starve <- matrix(c(rep(1, 7)), ncol = 7)
     for (i in filenames) {
         data <- read.csv(paste(i, sep = ""), header = F)
-        if (grepl("Error",(data[1]))) {
+        if (grepl("Error", (data[1]))) {
             break
         } else {
             for (k in 1:ncol(data)) {
-                final_data <- c(as.character(data[1, k]), as.character(data[2, 1]), as.character(data[3, 1]), as.character(data[4, 
-                  1]), as.character(data[5, 1]), as.character(data[6, 1]), as.character(data[7, 1]))
+                final_data <- c(as.character(data[1, k]), as.character(data[2, 1]), as.character(data[3, 1]), as.character(data[4, 1]), 
+                  as.character(data[5, 1]), as.character(data[6, 1]), as.character(data[7, 1]))
                 out_starve <- rbind(out_starve, final_data)
             }
         }

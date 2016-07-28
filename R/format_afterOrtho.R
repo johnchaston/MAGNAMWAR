@@ -14,9 +14,9 @@
 #' @export
 
 format_afterOrtho <- function(file, format = "ortho") {
-    cat(file)
+    #cat(file)
     
-    cat("\n\nreading in OrthoMCL data...")
+    cat("reading in OrthoMCL data...")
     if (format == "ortho") {
         
         input <- read.table(file, header = F, sep = "\t")

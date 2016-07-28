@@ -4,7 +4,7 @@
 \alias{pdgplot}
 \title{Plot of a PDG and Data with Standard Error Bars}
 \usage{
-pdgplot(data, mcl_matrix, GRP = "NONE", species_colname, data_colname,
+pdgplot(data, mcl_matrix, COG = "NONE", species_colname, data_colname,
   xlab = "Taxa", ylab = "Data", ylimit = NULL, tree = NULL,
   order = NULL)
 }
@@ -13,7 +13,7 @@ pdgplot(data, mcl_matrix, GRP = "NONE", species_colname, data_colname,
 
 \item{mcl_matrix}{analyze_OrthoMCL output}
 
-\item{GRP}{optional parameter, a string with the name of chosen group (COG) to be colored}
+\item{COG}{optional parameter, a string with the name of chosen group (COG) to be colored}
 
 \item{species_colname}{name of column in data file with taxa designations}
 

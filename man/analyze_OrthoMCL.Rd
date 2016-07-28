@@ -14,7 +14,7 @@ analyze_OrthoMCL(mcl_data, pheno_data, model, species_name, resp = NULL,
 
 \item{pheno_data}{R object with column names of the following variables}
 
-\item{model}{Linear Model with gene presence as fixed effect (lm),Linear Mixed Effect models with gene presence as fixed effect and additional variables specified as: one random effect (lmeR1); two independent random effects (lmeR2ind); two random effects with rndm2 nested in rndm1 (lmeR2nest); or two independent random effects with one additional fixed effect (lmeF2), Wilcox Test with gene presence as fixed effect (wx), Survival Test with support for multi core design}
+\item{model}{Linear Model with gene presence as fixed effect (lm),Linear Mixed Effect models with gene presence as fixed effect and additional variables specified as: one random effect (lmeR1); two independent random effects (lmeR2ind); two random effects with rndm2 nested in rndm1 (lmeR2nest); or two independent random effects with one additional fixed effect (lmeF2), Wilcox Test with gene presence as fixed effect (wx), Survival Test with support for multi core design (survmulti), and with (survmulticensor)}
 
 \item{species_name}{Column name in pheno_data containing 4-letter species designations}
 

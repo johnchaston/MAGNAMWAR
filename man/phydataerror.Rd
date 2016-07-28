@@ -5,7 +5,7 @@
 \title{Phylogenetic Tree with Attached Bar Plot and Standard Error Bars}
 \usage{
 phydataerror(phy, data, mcl_matrix, species_colname, data_colname,
-  color = NULL, GRP = NULL, xlabel = "xlabel", ...)
+  color = NULL, COG = NULL, xlabel = "xlabel", ...)
 }
 \arguments{
 \item{phy}{Path to tree file}
@@ -20,7 +20,7 @@ phydataerror(phy, data, mcl_matrix, species_colname, data_colname,
 
 \item{color}{optional parameter, (defaults to NULL) assign colors to individual taxa by providing file (format: Taxa | Color)}
 
-\item{GRP}{optional parameter, (defaults to NULL) a string with the names of chosen group to be colored}
+\item{COG}{optional parameter, (defaults to NULL) a string with the names of chosen group to be colored}
 
 \item{xlabel}{string to label barplot's x axis}
 
@@ -35,7 +35,7 @@ Presents data for each taxa including standard error bars next to a phylogenetic
 \examples{
 file <- system.file('sample_data', 'muscle_tree2.dnd', package='MAGNAMWAR')
 phydataerror(file, pheno_data, mcl_mtrx, species_colname = 'Treatment', data_colname = 'RespVar',
- GRP='OG5_126778', xlabel='TAG Content')
+ COG='OG5_126778', xlabel='TAG Content')
 #dev.off() #reset margins and align bars
 }
 \references{

@@ -43,14 +43,12 @@ format_MCLfastas <- function(fa_dir, genbnk_id = 4) {
                 
                 info <- seqinr::getAnnot(reps_fa[[j]])
                 prot_id <- strsplit(info, split = " ")
-                # other_info <- paste(prot_id[[1]][2:length(prot_id[[1]])], collapse = ' ') #how to get the annotation off new fasta
-                # files
+                # other_info <- paste(prot_id[[1]][2:length(prot_id[[1]])], collapse = ' ') #how to get the annotation off new fasta files
                 mcl_info <- paste(c(id[[1]][1], prot_id[[1]][1]), collapse = "|")
                 
                 # DEPRECATED WITH NEW FASTA HEADERS
                 
-                # info <- strsplit(getAnnot(reps_fa[[j]]), split='\\|') mcl_info <- paste(c(id[[1]][1], info[[1]][genbnk_id]),
-                # collapse='|')
+                # info <- strsplit(getAnnot(reps_fa[[j]]), split='\\|') mcl_info <- paste(c(id[[1]][1], info[[1]][genbnk_id]), collapse='|')
                 
                 # Check for duplicate protein ids
                 
@@ -62,11 +60,10 @@ format_MCLfastas <- function(fa_dir, genbnk_id = 4) {
                   cat("Duplicate protein id found: ", mcl_info, "\n")
                 }
                 
-                # DEPRECATED IF : Ability to save duplicate protein ids in this form: NP_12345_1 flawed because what if more than 2 of
-                # same id?
+                # DEPRECATED IF : Ability to save duplicate protein ids in this form: NP_12345_1 flawed because what if more than 2 of same id?
                 
-                # else { new_id <- paste(info[[1]][genbnk_id],'_1', sep='') mcl_info <- paste(id[[1]][1], new_id, sep='|') info_vec <-
-                # c(info_vec, mcl_info) seq_vec <- c(seq_vec,reps_fa[[j]][1]) }
+                # else { new_id <- paste(info[[1]][genbnk_id],'_1', sep='') mcl_info <- paste(id[[1]][1], new_id, sep='|') info_vec <- c(info_vec,
+                # mcl_info) seq_vec <- c(seq_vec,reps_fa[[j]][1]) }
                 
             }
         }

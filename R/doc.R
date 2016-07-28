@@ -10,7 +10,7 @@
 #'   \item{pa_matrix}{matrix showing taxa presence/absence in COG}
 #'   \item{proteins}{matrix listing protein_id contained in each COG}
 #' }
-'after_ortho_format'
+"after_ortho_format"
 
 
 #' Formatted output of OrthoMCL.
@@ -23,7 +23,7 @@
 #'   \item{pa_matrix}{matrix showing taxa presence/absence in COG}
 #'   \item{proteins}{matrix listing protein_id contained in each COG}
 #' }
-'after_ortho_format_grps'
+"after_ortho_format_grps"
 
 #' Final output of join_repset.
 #'
@@ -44,7 +44,7 @@
 #'   \item{rep_annot}{fasta annotation, from randomly selected representative taxa}
 #'   \item{rep_seq}{AA sequence, from randomly selected representative taxa}
 #' }
-'joined_mtrx'
+"joined_mtrx"
 
 #' Final output of join_repset.
 #'
@@ -65,7 +65,7 @@
 #'   \item{rep_annot}{fasta annotation, from randomly selected representative taxa}
 #'   \item{rep_seq}{AA sequence, from randomly selected representative taxa}
 #' }
-'joined_mtrx_grps'
+"joined_mtrx_grps"
 
 
 #' Final output of analyzeOrthoMCL
@@ -82,7 +82,7 @@
 #'   \item{taxa_contain}{taxa in that cluster}
 #'   \item{taxa_miss}{taxa not in that cluster}
 #' }
-'mcl_mtrx'
+"mcl_mtrx"
 
 #' Final output of analyzeOrthoMCL
 #'
@@ -98,43 +98,22 @@
 #'   \item{taxa_contain}{taxa in that cluster}
 #'   \item{taxa_miss}{taxa not in that cluster}
 #' }
-'mcl_mtrx_grps'
+"mcl_mtrx_grps"
 
 
-#' Development of fruit flies dataset.
+#' Triglyceride (TAG) content of fruit flies dataset.
 #'
-#' A subset of the development of fruit flies, collected in the Chaston Lab,
-#' to be used as a brief example for survival tests in analyzeOrthoMCL.
+#' A subset of the TAG content of fruit flies, collected in the Chaston Lab,
+#' to be used as a brief example for tests in analyzeOrthoMCL.
 #'
 #' @format A data frame with 586 rows and 4 variables:
 #' \describe{
 #'   \item{Treatment}{4-letter taxa designation of associated bacteria}
-#'   \item{RespVar}{response variable, }
+#'   \item{RespVar}{response variable, TAG content}
 #'   \item{Vial}{random effect variable, vial number of flies}
 #'   \item{Experiment}{random effect variable, experiment number of flies}
 #' }
-'pheno_data'
-
-#' Output of pick_repseq.
-#'
-#' An intermediate step in creating the joined matrix.
-#'
-#' @format A matrix with 34 rows and 1 variables:
-#' \describe{
-#'   \item{NULL}{data to be used in joinrepset}
-#' }
-'repseqs'
-
-#' Output of pick_repseq.
-#'
-#' An intermediate step in creating the joined matrix.
-#'
-#' @format A matrix with 34 rows and 1 variables:
-#' \describe{
-#'   \item{NULL}{data to be used in joinrepset}
-#' }
-'repseqs_grps'
-
+"pheno_data"
 
 #' Starvation rate of fruit flies dataset.
 #'
@@ -151,4 +130,4 @@
 #'   \item{t2}{time 2}
 #'   \item{event}{event}
 #' }
-'starv_pheno_data'
+"starv_pheno_data"
