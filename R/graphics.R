@@ -12,7 +12,6 @@
 #' @param tree optional parameter (defaults to NULL) Path to tree file, orders the taxa by phylogenetic distribution, else it defaults to alphabetical
 #' @param order vector with order of taxa names for across the x axis (defaults to alpha ordering)
 #' @return a barplot with taxa vs phenotypic data complete with standard error bars
-#' @references Some sort of reference
 #' @examples 
 #' #dev.off()
 #' pdgplot(pheno_data, mcl_mtrx, 'OG5_126778', 'Treatment', 'RespVar', ylimit=12)
@@ -110,7 +109,6 @@ pdgplot <- function(data, mcl_matrix, COG = "NONE", species_colname, data_colnam
 #' @param num an integer indicating where the x axis should end and be compiled
 #' @param ... args to be passed to barplot
 #' @return a barplot with a height determined by the second column and the first column abbreviated to accomodate visual spacing
-#' @references Some sort of reference
 #' @examples 
 #' pdg_v_cog(after_ortho_format_grps,2)
 #' #dev.off() #reset margins
@@ -218,7 +216,7 @@ pdg_v_cog <- function(mcl_data, num = 40, ...) {
 #' @return A phylogenetic tree with a barplot of the data (with standard error bars) provided matched by taxa.
 #' @references Some sort of reference
 #' @examples 
-#' file <- system.file('sample_data', 'muscle_tree2.dnd', package='MAGNAMWAR')
+#' file <- system.file('extdata', 'muscle_tree2.dnd', package='MAGNAMWAR')
 #' phydataerror(file, pheno_data, mcl_mtrx, species_colname = 'Treatment', data_colname = 'RespVar',
 #'  COG='OG5_126778', xlabel='TAG Content')
 #' #dev.off() #reset margins and align bars

@@ -33,7 +33,7 @@ A phylogenetic tree with a barplot of the data (with standard error bars) provid
 Presents data for each taxa including standard error bars next to a phylogenetic tree.
 }
 \examples{
-file <- system.file('sample_data', 'muscle_tree2.dnd', package='MAGNAMWAR')
+file <- system.file('extdata', 'muscle_tree2.dnd', package='MAGNAMWAR')
 phydataerror(file, pheno_data, mcl_mtrx, species_colname = 'Treatment', data_colname = 'RespVar',
  COG='OG5_126778', xlabel='TAG Content')
 #dev.off() #reset margins and align bars

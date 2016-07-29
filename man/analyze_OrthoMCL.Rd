@@ -93,7 +93,4 @@ mcl_mtrx <- analyze_OrthoMCL(after_ortho_format, starv_pheno_data, 'TRT', model=
  }
 #to be appended with surv_append_matrix
 }
-\references{
-Some sort of reference
-}
 

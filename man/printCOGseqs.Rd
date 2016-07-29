@@ -28,7 +28,7 @@ Print all protein sequences and annotations in a given COG
 # Not run ~ directory structure depends on system
 \dontrun{
 COG <- 'OG5_126968'
-dir <- system.file('sample_data', 'fasta_dir', package='MAGNAMWAR')
+dir <- system.file('extdata', 'fasta_dir', package='MAGNAMWAR')
 dir <- paste(dir,'/',sep='')
 
 printCOGseqs(after_ortho_format, COG, dir)

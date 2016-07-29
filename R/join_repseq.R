@@ -8,7 +8,7 @@
 #' @return Returns the original OrthoMCL output matrix with additional columns: representative sequence taxon, representative sequence id, representative sequence annotation, representative sequence 
 #' @examples
 #' 
-#' dir <- system.file('sample_data', 'fasta_dir', package='MAGNAMWAR')
+#' dir <- system.file('extdata', 'fasta_dir', package='MAGNAMWAR')
 #' dir <- paste(dir,'/',sep='')
 #' joined_mtrx_grps <- join_repseq(after_ortho_format_grps, dir, mcl_mtrx_grps, fastaformat = 'old')
 #' 
@@ -21,6 +21,8 @@ join_repseq <- function(mcl_data, fa_dir, mcl_mtrx, fastaformat = "new") {
     
     files <- dir(fa_dir, pattern = ".fasta")
     files <- files[!files %in% "MCLformatted_all.fasta"]
+    
+    orig_directory <- getwd()
     
     if (getwd() != fa_dir) {
         setwd(fa_dir)
@@ -37,8 +39,14 @@ join_repseq <- function(mcl_data, fa_dir, mcl_mtrx, fastaformat = "new") {
             if (fastaformat == "new") {
                 prot_id <- strsplit(seqinr::getAnnot(var2[[j]]), split = " ")
                 other_info <- paste(prot_id[[1]][2:length(prot_id[[1]])], collapse = " ")
-                var3[j, ] <- c(prot_id, other_info, var2[[j]][1])
                 
+                # ERROR CHECKING FOR WRONG FASTA
+                if (grepl("\\|", prot_id[[1]][1])) {
+                  stop("Problem with reading fasta files, must use old version of fasta: add parameter ' fastaformat=\"old\" '")
+                }
+                
+                var3[j, ] <- c(prot_id, other_info, var2[[j]][1])
+
             } else if (fastaformat == "old") {
                 info <- strsplit(strsplit(seqinr::getAnnot(var2[[j]]), "[", T)[[1]][1], "|", T)
                 var3[j, ] <- c(info[[1]][4], info[[1]][5], var2[[j]][1])
@@ -108,6 +116,8 @@ join_repseq <- function(mcl_data, fa_dir, mcl_mtrx, fastaformat = "new") {
     }
     
     mcl_reps <- merge(mcl_mtrx, fa_mtrx, by = "COG", all = F)
+    
+    setwd(orig_directory)
     
     return(mcl_reps)
     

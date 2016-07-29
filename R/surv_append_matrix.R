@@ -5,12 +5,11 @@
 #' @param out_name file name of outputted matrix
 #' @param out_dir the directory where the outputted matrix is placed
 #' @return A csv file containing a matrix with the following columns: COG, p-values, Bonferroni corrected p-values, mean phenotype of COG-containing taxa, mean pheotype of COG-lacking taxa, taxa included in COG, taxa not included in COG
-#' @references Some sort of reference
 #' @examples 
 #' 
 #' # Not run ~ directory structure depends on system
 #' \dontrun{
-#' file <- system.file('sample_data', 'outputs', package='MAGNAMWAR')
+#' file <- system.file('extdata', 'outputs', package='MAGNAMWAR')
 #' directory <- paste(file, '/', sep = '')
 #' surv_append_matrix(directory)
 #' }
@@ -23,7 +22,9 @@ surv_append_matrix <- function(work_dir, out_name = "surv_matrix.csv", out_dir =
     if (is.null(out_dir)) {
         out_dir = work_dir
     }
-    
+  
+    orig_directory <- getwd()
+  
     if (getwd() != work_dir) {
         setwd(work_dir)
     }
@@ -54,5 +55,6 @@ surv_append_matrix <- function(work_dir, out_name = "surv_matrix.csv", out_dir =
     wd <- getwd()
     cat(paste("Wrote:", out_name, "to", wd))
     
+    setwd(orig_directory)
     
 }

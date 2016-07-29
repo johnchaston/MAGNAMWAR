@@ -23,13 +23,10 @@ Function used to append all .csv files that are outputted from analyze_OrthoMCL 
 
 # Not run ~ directory structure depends on system
 \dontrun{
-file <- system.file('sample_data', 'outputs', package='MAGNAMWAR')
+file <- system.file('extdata', 'outputs', package='MAGNAMWAR')
 directory <- paste(file, '/', sep = '')
 surv_append_matrix(directory)
 }
 
-}
-\references{
-Some sort of reference
 }
 

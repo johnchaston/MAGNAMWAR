@@ -15,6 +15,7 @@ vignette: >
 ```{r,echo = F}
 library(MAGNAMWAR)
 ```
+
 ## Introduction
 
 This vignette describes the recommended order for function use to take full advantage of MAGNAMWAR. The workflow described below was originally created for use in research of host-microbe interactions of *Drosophila melanogaster*. The data included in the package and used in documentation examples are extreme subsets of data collected in a lab. The following functions are in a specific order as each builds on the next.
@@ -42,9 +43,9 @@ OrthoMCL software has certain requirements for running clustering analysis such 
 For fasta files in RAST format, use this function to convert them to gbk format before using `format_MCLfastas`. An example of using this function is shown below:
 
 ```{r}
-lfrc_fasta <- system.file('sample_data', 'RASTtogbk//lfrc.fasta', package='MAGNAMWAR')
-lfrc_reference <- system.file('sample_data', 'RASTtogbk//lfrc_lookup.csv', package='MAGNAMWAR')
-lfrc_path <- system.file('sample_data', 'RASTtogbk//lfrc_out.fasta', package='MAGNAMWAR')
+lfrc_fasta <- system.file('extdata', 'RASTtogbk//lfrc.fasta', package='MAGNAMWAR')
+lfrc_reference <- system.file('extdata', 'RASTtogbk//lfrc_lookup.csv', package='MAGNAMWAR')
+lfrc_path <- system.file('extdata', 'RASTtogbk//lfrc_out.fasta', package='MAGNAMWAR')
 
 RASTtogbk(lfrc_fasta,lfrc_reference,lfrc_path)
 ```
@@ -66,7 +67,7 @@ More information about OrthoMCL clustering software can be found at: <http://www
 Take the direct output from OrthoMCL and input it into `format_afterOrtho`, specifying the second argument as whether the software was run online ("ortho") or locally ("groups"). The software defaults to assume an online run of OrthoMCL ("ortho"). In the case study, we ran OrthoMCL clustering locally and therefore  will specify that option.
 
 ```{r}
-file_grps <- system.file('sample_data', 'groups_example_r.txt', package='MAGNAMWAR')
+file_grps <- system.file('extdata', 'groups_example_r.txt', package='MAGNAMWAR')
 
 parsed_data <- format_afterOrtho(file_grps, "groups")
 ```
@@ -144,7 +145,7 @@ This function randomly selects a representative protein annotation and amino aci
 `join_repseq` requires the output of `format_afterOrtho`, the fasta directory of the 4-letter abbreviated fasta files, and the matrix outputted from `analyzeOrthoMCL`. The following function call is the case study application of this function:
 
 ```{r}
-dir <- system.file('sample_data', 'fasta_dir', package='MAGNAMWAR')
+dir <- system.file('extdata', 'fasta_dir', package='MAGNAMWAR')
 dir <- paste(dir,'/',sep='')
 joined_matrix <- join_repseq(after_ortho_format_grps, dir, mcl_mtrx_grps, fastaformat = 'old')
 ```
@@ -187,7 +188,7 @@ pdgplot(pheno_data, mcl_matrix, COG = 'ex_r00002', species_colname = 'Treatment'
 Although this plot seems to be informative, we can also specify a phylogenetic tree file in order to order the taxa along the x axis by relatedness rather than in alphabetical order (Note that any taxa in `pheno_data` that are not in the tree file will be omitted).
 
 ```{r, fig.width=8, fig.height=4}
-tree <- system.file('sample_data', 'muscle_tree2.dnd', package='MAGNAMWAR')
+tree <- system.file('extdata', 'muscle_tree2.dnd', package='MAGNAMWAR')
 
 pdgplot(pheno_data, mcl_matrix, 'ex_r00002', 'Treatment', 'RespVar', ylab = "TAG Content", tree = tree)
 ```

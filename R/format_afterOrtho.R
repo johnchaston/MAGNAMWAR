@@ -5,10 +5,10 @@
 #' @param format Defaults to 'ortho' for output from orthomcl.org. Other option is 'groups' for output from local run of OrthoMCL software.
 #' @return value
 #' @examples
-#' file <- system.file('sample_data', 'orthologGroups.txt', package='MAGNAMWAR')
+#' file <- system.file('extdata', 'orthologGroups.txt', package='MAGNAMWAR')
 #' after_ortho_format <- format_afterOrtho(file)
 #' 
-#' file_grps <- system.file('sample_data', 'groups_example_r.txt', package='MAGNAMWAR')
+#' file_grps <- system.file('extdata', 'groups_example_r.txt', package='MAGNAMWAR')
 #' after_ortho_format_grps <- format_afterOrtho(file_grps, format = 'groups')
 #' 
 #' @export

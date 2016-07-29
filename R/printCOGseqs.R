@@ -12,7 +12,7 @@
 #' # Not run ~ directory structure depends on system
 #' \dontrun{
 #' COG <- 'OG5_126968'
-#' dir <- system.file('sample_data', 'fasta_dir', package='MAGNAMWAR')
+#' dir <- system.file('extdata', 'fasta_dir', package='MAGNAMWAR')
 #' dir <- paste(dir,'/',sep='')
 #' 
 #' printCOGseqs(after_ortho_format, COG, dir)
@@ -24,6 +24,8 @@ printCOGseqs <- function(after_ortho, COG, fasta_dir, out_dir = NULL, outfile = 
     
     COG_proteins <- after_ortho$proteins[, COG]
     COG_proteins <- COG_proteins[COG_proteins != ""]
+    
+    orig_directory <- getwd()
     
     if (getwd() != fasta_dir) {
         setwd(fasta_dir)
@@ -58,5 +60,7 @@ printCOGseqs <- function(after_ortho, COG, fasta_dir, out_dir = NULL, outfile = 
             outfile, open = "a")
         
     }
+    
+    setwd(orig_directory)
 }
 

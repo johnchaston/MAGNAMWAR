@@ -17,7 +17,6 @@
 #' @param stopnum number of test to stop on
 #' @param output_dir if using survival tests, where small output files will be placed before using surv_append_matrix. Must specify a directory if choosign to output small files, else only written as a matrix
 #' @return A matrix with the following columns: COG, p-values, Bonferroni corrected p-values, mean phenotype of COG-containing taxa, mean pheotype of COG-lacking taxa, taxa included in COG, taxa not included in COG
-#' @references Some sort of reference
 #' @examples 
 #' #Linear Model
 #' mcl_mtrx <- analyze_OrthoMCL(after_ortho_format, pheno_data, 'lm',

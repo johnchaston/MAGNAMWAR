@@ -23,7 +23,4 @@ Barplot that indicates the number of PDGs vs COGs(clustered orthologous groups) 
 pdg_v_cog(after_ortho_format_grps,2)
 #dev.off() #reset margins
 }
-\references{
-Some sort of reference
-}
 

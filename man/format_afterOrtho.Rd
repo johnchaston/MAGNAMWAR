@@ -18,10 +18,10 @@ value
 After running OrthoMCL and/or submitting to www.orthomcl.org, formats the output file to be used in analyzeOrthoMCL
 }
 \examples{
-file <- system.file('sample_data', 'orthologGroups.txt', package='MAGNAMWAR')
+file <- system.file('extdata', 'orthologGroups.txt', package='MAGNAMWAR')
 after_ortho_format <- format_afterOrtho(file)
 
-file_grps <- system.file('sample_data', 'groups_example_r.txt', package='MAGNAMWAR')
+file_grps <- system.file('extdata', 'groups_example_r.txt', package='MAGNAMWAR')
 after_ortho_format_grps <- format_afterOrtho(file_grps, format = 'groups')
 
 }

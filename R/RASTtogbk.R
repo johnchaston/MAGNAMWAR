@@ -6,9 +6,9 @@
 #' @param out_name_path name and path of the file to write to
 #' @examples 
 #'
-#' lfrc_fasta <- system.file('sample_data', 'RASTtogbk//lfrc.fasta', package='MAGNAMWAR')
-#' lfrc_reference <- system.file('sample_data', 'RASTtogbk//lfrc_lookup.csv', package='MAGNAMWAR')
-#' lfrc_path <- system.file('sample_data', 'RASTtogbk//lfrc_out.fasta', package='MAGNAMWAR')
+#' lfrc_fasta <- system.file('extdata', 'RASTtogbk//lfrc.fasta', package='MAGNAMWAR')
+#' lfrc_reference <- system.file('extdata', 'RASTtogbk//lfrc_lookup.csv', package='MAGNAMWAR')
+#' lfrc_path <- system.file('extdata', 'RASTtogbk//lfrc_out.fasta', package='MAGNAMWAR')
 #'
 #' RASTtogbk(lfrc_fasta,lfrc_reference,lfrc_path)
 #' 

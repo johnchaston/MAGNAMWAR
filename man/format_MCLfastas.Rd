@@ -20,7 +20,7 @@ Creates the composite fasta file for use in running OrthoMCL and/or submitting t
 \examples{
 
 # Not run ~ directory structure depends on system
-dir <- system.file('sample_data', 'fasta_dir', package='MAGNAMWAR')
+dir <- system.file('extdata', 'fasta_dir', package='MAGNAMWAR')
 dir <- paste(dir,'/',sep='')
 formatted_file <- format_MCLfastas(dir)
 }
