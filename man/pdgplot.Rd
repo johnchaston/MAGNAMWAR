@@ -6,7 +6,7 @@
 \usage{
 pdgplot(data, mcl_matrix, COG = "NONE", species_colname, data_colname,
   xlab = "Taxa", ylab = "Data", ylimit = NULL, tree = NULL,
-  order = NULL)
+  order = NULL, main_title = NULL)
 }
 \arguments{
 \item{data}{R object of phenotype data}
@@ -15,9 +15,9 @@ pdgplot(data, mcl_matrix, COG = "NONE", species_colname, data_colname,
 
 \item{COG}{optional parameter, a string with the name of chosen group (COG) to be colored}
 
-\item{species_colname}{name of column in data file with taxa designations}
+\item{species_colname}{name of column in phenotypic data file with taxa designations}
 
-\item{data_colname}{name of column in data file with data observations}
+\item{data_colname}{name of column in phenotypic data file with data observations}
 
 \item{xlab}{string to label barplot's x axis}
 
@@ -28,6 +28,8 @@ pdgplot(data, mcl_matrix, COG = "NONE", species_colname, data_colname,
 \item{tree}{optional parameter (defaults to NULL) Path to tree file, orders the taxa by phylogenetic distribution, else it defaults to alphabetical}
 
 \item{order}{vector with order of taxa names for across the x axis (defaults to alpha ordering)}
+
+\item{main_title}{string for title of the plot (defaults to COG)}
 }
 \value{
 a barplot with taxa vs phenotypic data complete with standard error bars

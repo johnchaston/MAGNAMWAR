@@ -3,14 +3,15 @@
 #' Bar plot of PDG vs phenotype data with presence of taxa in PDG indicated by color
 #' @param data R object of phenotype data
 #' @param mcl_matrix analyze_OrthoMCL output
-#' @param species_colname name of column in data file with taxa designations
-#' @param data_colname name of column in data file with data observations
+#' @param species_colname name of column in phenotypic data file with taxa designations
+#' @param data_colname name of column in phenotypic data file with data observations
 #' @param COG optional parameter, a string with the name of chosen group (COG) to be colored
 #' @param xlab string to label barplot's x axis
 #' @param ylab string to label barplot's y axis
 #' @param ylimit optional parameter to limit y axis
 #' @param tree optional parameter (defaults to NULL) Path to tree file, orders the taxa by phylogenetic distribution, else it defaults to alphabetical
 #' @param order vector with order of taxa names for across the x axis (defaults to alpha ordering)
+#' @param main_title string for title of the plot (defaults to COG)
 #' @return a barplot with taxa vs phenotypic data complete with standard error bars
 #' @examples 
 #' #dev.off()
@@ -19,12 +20,15 @@
 #' 
 
 pdgplot <- function(data, mcl_matrix, COG = "NONE", species_colname, data_colname, xlab = "Taxa", ylab = "Data", ylimit = NULL, tree = NULL, 
-    order = NULL) {
-    
-    grep <- mcl_matrix[grep(COG, mcl_matrix[, 1]), ]
-    l <- unlist(strsplit(as.character(unlist(grep[6])), split = "\\|"))
-    if (length(l) == 0) {
-        warning("Invalid COG inputted... Printing without specific coloration\n")
+    order = NULL, main_title = NULL) {
+  
+  
+    grep <- mcl_matrix[grep(paste("^",COG,"$", sep =''), mcl_matrix[, 1]), ]
+    if (anyNA(grep[6])) {
+      warning("Invalid COG inputted... Printing without specific coloration\n")
+      l <- unlist(strsplit(as.character(unlist(grep[6])), split = "\\|"))
+    } else {
+      l <- unlist(strsplit(as.character(unlist(grep[6])), split = "\\|"))
     }
     
     ### Calculating st dev and means
@@ -94,8 +98,21 @@ pdgplot <- function(data, mcl_matrix, COG = "NONE", species_colname, data_colnam
     segments(bp - 0.2, x - stDevs, bp + 0.2, x - stDevs, lwd = 2)
     segments(bp - 0.2, x + stDevs, bp + 0.2, x + stDevs, lwd = 2)
     
+    if (is.null(main_title)) {
+      
+      if (COG != "NONE" && !anyNA(grep[6])) {
+          main_title = COG
+          title(xlab = xlab, ylab = ylab, main = main_title, font.main = 2)
+      } else {
+        title(xlab = xlab, ylab = ylab, font.main = 2)
+      }
+      
+    } else {
+      
+      title(xlab = xlab, ylab = ylab, main = main_title, font.main = 2)
+      
+    }
     
-    title(xlab = xlab, ylab = ylab, main = COG, font.main = 2)
     
 }
 

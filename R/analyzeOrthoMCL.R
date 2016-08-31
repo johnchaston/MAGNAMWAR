@@ -2,7 +2,7 @@
 #' 
 #' Main function for analyzing the statistical association of PDG (phylogenetic distribution group) presence with phenotype data
 #' @param mcl_data output of format_afterOrtho --list of 2 things-- 1: binary matrix indicating the presence / absence of genes in each COG and 2: vector of names of COGs
-#' @param pheno_data R object with column names of the following variables
+#' @param pheno_data a data frame with column names of the following variables
 #' @param model Linear Model with gene presence as fixed effect (lm),Linear Mixed Effect models with gene presence as fixed effect and additional variables specified as: one random effect (lmeR1); two independent random effects (lmeR2ind); two random effects with rndm2 nested in rndm1 (lmeR2nest); or two independent random effects with one additional fixed effect (lmeF2), Wilcox Test with gene presence as fixed effect (wx), Survival Test with support for multi core design (survmulti), and with (survmulticensor)
 #' @param species_name Column name in pheno_data containing 4-letter species designations
 #' @param resp Column name in pheno_data containing response variable
