@@ -49,7 +49,7 @@
 #'  'Treatment', resp='RespVar')
 #'
 #' # Not run ~ 5 minutes
-#' #Survival with two independent random effects and one additional fixed effect, run on multiple cores
+#' #Survival with two independent random effects, run on multiple cores
 #' \dontrun{
 #' mcl_mtrx <- analyze_OrthoMCL(after_ortho_format, starv_pheno_data, 'TRT', model='survmulti',
 #'  time='t2', event='event', rndm1='EXP', rndm2='VIAL', multi=1)

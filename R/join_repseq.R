@@ -79,8 +79,12 @@ join_repseq <- function(mcl_data, fa_dir, mcl_mtrx, fastaformat = "new") {
     
     
     for (i in 2:dim(mcl_data)[2]) {
-        
+      
+      
         total_seq <- sum(mcl_data[, i] != "")
+        
+        if (total_seq != 0) {
+        
         rndm_seq <- sample(1:total_seq, 1)
         rep_info <- strsplit(mcl_data[rndm_seq, i], split = "\\|")
         
@@ -100,13 +104,13 @@ join_repseq <- function(mcl_data, fa_dir, mcl_mtrx, fastaformat = "new") {
             cat(paste(round(((i - 1)/dim(mcl_data)[2] * 100), digits = 2), "%__", sep = ""))
         }
         rm(var2, var3, var4, var5, annotations, total_seq, rndm_seq, rep_info)
-        
+        }
     }
     
     
     fa_mtrx <- matrix(nrow = length(out_reps)/2, ncol = 5)
     colnames(fa_mtrx) <- c("COG", "rep_taxon", "rep_id", "rep_annot", "rep_seq")
-    out_reps <- lapply(out_reps, function(x) sub(",", "", x))
+    fa_out_reps <- lapply(out_reps, function(x) sub(",", "", x))
     
     count <- 1
     for (i in seq(1, length(out_reps), by = 2)) {

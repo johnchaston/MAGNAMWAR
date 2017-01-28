@@ -23,8 +23,14 @@ pdgplot <- function(data, mcl_matrix, COG = "NONE", species_colname, data_colnam
     order = NULL, main_title = NULL) {
   
   
+  if(species_colname %in% colnames(data) && data_colname %in% colnames(data)) { } else {
+      stop("Invalid column names specified for phenotype data file\n\tSpecies Column Name: ", species_colname, "\n\tData Column Name: ", data_colname)
+  }
+  
     grep <- mcl_matrix[grep(paste("^",COG,"$", sep =''), mcl_matrix[, 1]), ]
-    if (anyNA(grep[6])) {
+    if (COG == "NONE") {
+      warning("No COG inputted... Printing without specific coloration\n")
+    } else if (anyNA(grep[6])) {
       warning("Invalid COG inputted... Printing without specific coloration\n")
       l <- unlist(strsplit(as.character(unlist(grep[6])), split = "\\|"))
     } else {
