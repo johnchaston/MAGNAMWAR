@@ -4,7 +4,7 @@
 #' @param work_dir the directory where the output files of analyze_OrthoMCL are located
 #' @param out_name file name of outputted matrix
 #' @param out_dir the directory where the outputted matrix is placed
-#' @return A csv file containing a matrix with the following columns: COG, p-values, Bonferroni corrected p-values, mean phenotype of COG-containing taxa, mean pheotype of COG-lacking taxa, taxa included in COG, taxa not included in COG
+#' @return A csv file containing a matrix with the following columns: OG, p-values, Bonferroni corrected p-values, mean phenotype of OG-containing taxa, mean pheotype of OG-lacking taxa, taxa included in OG, taxa not included in OG
 #' @examples 
 #' 
 #' # Not run ~ directory structure depends on system
@@ -48,7 +48,7 @@ surv_append_matrix <- function(work_dir, out_name = "surv_matrix.csv", out_dir =
     
     row.names(out_starve) = NULL
     
-    colnames(out_starve) = c("COG", "p-val", "corrected_p-val", "mean_COGContain", "mean_COGLack", "taxa_contain", "taxa_miss")
+    colnames(out_starve) = c("OG", "p-val", "corrected_p-val", "mean_OGContain", "mean_OGLack", "taxa_contain", "taxa_miss")
     
     write.csv(out_starve, out_name)
     

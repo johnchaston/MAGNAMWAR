@@ -12,7 +12,7 @@ format_afterOrtho(file, format = "ortho")
 \item{format}{Specification of the method by which file was obtained: defaults to 'ortho' for output from orthomcl.org. Other option is 'groups' for output from local run of OrthoMCL software.}
 }
 \value{
-a list of matrices; (1) a presence/absence matrix of taxa per COG, (2) a list of the specific protein ids within each COG
+a list of matrices; (1) a presence/absence matrix of taxa per OG, (2) a list of the specific protein ids within each OG
 }
 \description{
 After running OrthoMCL and/or submitting to www.orthomcl.org, formats the output file to be used in analyzeOrthoMCL

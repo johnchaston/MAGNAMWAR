@@ -4,7 +4,7 @@
 \alias{pdgplot}
 \title{Plot of a PDG and Data with Standard Error Bars}
 \usage{
-pdgplot(data, mcl_matrix, COG = "NONE", species_colname, data_colname,
+pdgplot(data, mcl_matrix, OG = "NONE", species_colname, data_colname,
   xlab = "Taxa", ylab = "Data", ylimit = NULL, tree = NULL,
   order = NULL, main_title = NULL)
 }
@@ -13,7 +13,7 @@ pdgplot(data, mcl_matrix, COG = "NONE", species_colname, data_colname,
 
 \item{mcl_matrix}{analyze_OrthoMCL output}
 
-\item{COG}{optional parameter, a string with the name of chosen group (COG) to be colored}
+\item{OG}{optional parameter, a string with the name of chosen group (OG) to be colored}
 
 \item{species_colname}{name of column in phenotypic data file with taxa designations}
 
@@ -29,7 +29,7 @@ pdgplot(data, mcl_matrix, COG = "NONE", species_colname, data_colname,
 
 \item{order}{vector with order of taxa names for across the x axis (defaults to alpha ordering)}
 
-\item{main_title}{string for title of the plot (defaults to COG)}
+\item{main_title}{string for title of the plot (defaults to OG)}
 }
 \value{
 a barplot with taxa vs phenotypic data complete with standard error bars

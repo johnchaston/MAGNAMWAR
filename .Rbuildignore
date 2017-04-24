@@ -1,0 +1,6 @@
+^.*\.Rproj$
+^\.Rproj\.user$
+^data-raw$
+^\.travis\.yml$
+^cran-comments\.md$
+^revdep$

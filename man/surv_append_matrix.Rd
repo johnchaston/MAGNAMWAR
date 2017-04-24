@@ -14,7 +14,7 @@ surv_append_matrix(work_dir, out_name = "surv_matrix.csv", out_dir = NULL)
 \item{out_dir}{the directory where the outputted matrix is placed}
 }
 \value{
-A csv file containing a matrix with the following columns: COG, p-values, Bonferroni corrected p-values, mean phenotype of COG-containing taxa, mean pheotype of COG-lacking taxa, taxa included in COG, taxa not included in COG
+A csv file containing a matrix with the following columns: OG, p-values, Bonferroni corrected p-values, mean phenotype of OG-containing taxa, mean pheotype of OG-lacking taxa, taxa included in OG, taxa not included in OG
 }
 \description{
 Function used to append all .csv files that are outputted from analyze_OrthoMCL into one matrix.

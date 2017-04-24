@@ -5,13 +5,13 @@
 #' @param mcl_matrix analyze_OrthoMCL output
 #' @param species_colname name of column in phenotypic data file with taxa designations
 #' @param data_colname name of column in phenotypic data file with data observations
-#' @param COG optional parameter, a string with the name of chosen group (COG) to be colored
+#' @param OG optional parameter, a string with the name of chosen group (OG) to be colored
 #' @param xlab string to label barplot's x axis
 #' @param ylab string to label barplot's y axis
 #' @param ylimit optional parameter to limit y axis
 #' @param tree optional parameter (defaults to NULL) Path to tree file, orders the taxa by phylogenetic distribution, else it defaults to alphabetical
 #' @param order vector with order of taxa names for across the x axis (defaults to alpha ordering)
-#' @param main_title string for title of the plot (defaults to COG)
+#' @param main_title string for title of the plot (defaults to OG)
 #' @return a barplot with taxa vs phenotypic data complete with standard error bars
 #' @examples 
 #' #dev.off()
@@ -19,7 +19,7 @@
 #' @export
 #' 
 
-pdgplot <- function(data, mcl_matrix, COG = "NONE", species_colname, data_colname, xlab = "Taxa", ylab = "Data", ylimit = NULL, tree = NULL, 
+pdgplot <- function(data, mcl_matrix, OG = "NONE", species_colname, data_colname, xlab = "Taxa", ylab = "Data", ylimit = NULL, tree = NULL, 
     order = NULL, main_title = NULL) {
   
   
@@ -27,11 +27,11 @@ pdgplot <- function(data, mcl_matrix, COG = "NONE", species_colname, data_colnam
       stop("Invalid column names specified for phenotype data file\n\tSpecies Column Name: ", species_colname, "\n\tData Column Name: ", data_colname)
   }
   
-    grep <- mcl_matrix[grep(paste("^",COG,"$", sep =''), mcl_matrix[, 1]), ]
-    if (COG == "NONE") {
-      warning("No COG inputted... Printing without specific coloration\n")
+    grep <- mcl_matrix[grep(paste("^",OG,"$", sep =''), mcl_matrix[, 1]), ]
+    if (OG == "NONE") {
+      warning("No OG inputted... Printing without specific coloration\n")
     } else if (anyNA(grep[6])) {
-      warning("Invalid COG inputted... Printing without specific coloration\n")
+      warning("Invalid OG inputted... Printing without specific coloration\n")
       l <- unlist(strsplit(as.character(unlist(grep[6])), split = "\\|"))
     } else {
       l <- unlist(strsplit(as.character(unlist(grep[6])), split = "\\|"))
@@ -106,8 +106,8 @@ pdgplot <- function(data, mcl_matrix, COG = "NONE", species_colname, data_colnam
     
     if (is.null(main_title)) {
       
-      if (COG != "NONE" && !anyNA(grep[6])) {
-          main_title = COG
+      if (OG != "NONE" && !anyNA(grep[6])) {
+          main_title = OG
           title(xlab = xlab, ylab = ylab, main = main_title, font.main = 2)
       } else {
         title(xlab = xlab, ylab = ylab, font.main = 2)
@@ -125,53 +125,53 @@ pdgplot <- function(data, mcl_matrix, COG = "NONE", species_colname, data_colnam
 # *************************************************************************************************************************************
 
 
-#' Number of PDGs vs COGs/PDG
+#' Number of PDGs vs OGs/PDG
 #' 
-#' Barplot that indicates the number of PDGs vs COGs(clustered orthologous groups) in a PDG
+#' Barplot that indicates the number of PDGs vs OGs(clustered orthologous groups) in a PDG
 #' @param mcl_data format_afterOrtho output
 #' @param num an integer indicating where the x axis should end and be compiled
 #' @param ... args to be passed to barplot
 #' @return a barplot with a height determined by the second column and the first column abbreviated to accomodate visual spacing
 #' @examples 
-#' pdg_v_cog(after_ortho_format_grps,2)
+#' pdg_v_OG(after_ortho_format_grps,2)
 #' #dev.off() #reset margins
 #' @export
 
-pdg_v_cog <- function(mcl_data, num = 40, ...) {
+pdg_v_OG <- function(mcl_data, num = 40, ...) {
     
     cgs <- mcl_data[[1]]
     names <- row.names(cgs)
     
     
-    ### Number of COGS
+    ### Number of OGS
     
     mcl_data <- as.data.frame(cgs)
     mcl_data = cbind(mcl_data, X.NAMES = names)
     
     mcl_data$X.NAMES <- as.character(mcl_data$X.NAMES)
     chk <- strsplit(mcl_data$X.NAMES, ",")
-    COGS <- lapply(chk, function(x) length(x))
-    COGS <- as.numeric(COGS)
+    OGS <- lapply(chk, function(x) length(x))
+    OGS <- as.numeric(OGS)
     
     
-    ### Number of COGs/PDGs
+    ### Number of OGs/PDGs
     
-    graph <- as.data.frame(table(COGS), stringsAsFactors = FALSE)
-    graph$COGS <- as.numeric(graph$COGS)
+    graph <- as.data.frame(table(OGS), stringsAsFactors = FALSE)
+    graph$OGS <- as.numeric(graph$OGS)
     
-    sequential <- 1:graph[length(graph$COGS), 1]
+    sequential <- 1:graph[length(graph$OGS), 1]
     
     
     ### add zeros to columns without any PDGs
     
-    zeros <- setdiff(sequential, graph$COGS)
+    zeros <- setdiff(sequential, graph$OGS)
     
     if (length(zeros) != 0) {
         zeros2 <- as.data.frame(zeros)
         zeros2$Freq <- 0
         
-        colnames(zeros2) <- c("COGS", "Freq")
-        zeros2$COGS <- as.numeric(zeros2$COGS)
+        colnames(zeros2) <- c("OGS", "Freq")
+        zeros2$OGS <- as.numeric(zeros2$OGS)
         
         sums <- as.data.frame(graph, stringsAsFactors = FALSE)
         sums <- rbind(sums, zeros2)
@@ -184,14 +184,14 @@ pdg_v_cog <- function(mcl_data, num = 40, ...) {
     
     sums <- sums[order(sums[, 1]), ]
     
-    ### Sum of last PDGs that have over a given amount of COGS (num)
+    ### Sum of last PDGs that have over a given amount of OGS (num)
     
     if (nrow(sums) > num) {
-        # if the number of COG limit provided is smaller than the largest number of COGS in PDG
+        # if the number of OG limit provided is smaller than the largest number of OGS in PDG
         
         sum <- (colSums(sums[c(num:nrow(sums)), ])[2])
         
-        ### Compiling all PDGs with COGs > num and appending to plot
+        ### Compiling all PDGs with OGs > num and appending to plot
         plot <- sums[1:num, ]
         rownames(plot) <- NULL
         plot[, 1] <- as.numeric(plot[, 1])
@@ -205,14 +205,14 @@ pdg_v_cog <- function(mcl_data, num = 40, ...) {
         plot <- sums
         rownames(plot) <- NULL
         r_axis <- max(plot$Freq) + 5
-        warning(paste("Number provided for max number of COGs in PDG larger than largest number of COGs in PDG:\n", num, " > ", nrow(sums)))
+        warning(paste("Number provided for max number of OGs in PDG larger than largest number of OGs in PDG:\n", num, " > ", nrow(sums)))
         
     }
     
     ### Plotting dev.off() # reset margins for labels
-    barplot <- barplot(plot$Freq, names.arg = plot$COGS, ylim = c(-1, r_axis), xlab = expression(paste("COGs PDG"^"-1")), ylab = "PDGs", 
+    barplot <- barplot(plot$Freq, names.arg = plot$OGS, ylim = c(-1, r_axis), xlab = expression(paste("OGs PDG"^"-1")), ylab = "PDGs", 
         ...)
-    axis(1, at = barplot, labels = plot$COGS)
+    axis(1, at = barplot, labels = plot$OGS, las = 1)
     
     ### Fitting label on top of bar
     par(new = T, mar = c(2, 2, 2, 2))
@@ -233,7 +233,7 @@ pdg_v_cog <- function(mcl_data, num = 40, ...) {
 #' @param species_colname name of column in data file with taxa designations
 #' @param data_colname name of column in data file with data observations
 #' @param color optional parameter, (defaults to NULL) assign colors to individual taxa by providing file (format: Taxa | Color)
-#' @param COG optional parameter, (defaults to NULL) a string with the names of chosen group to be colored
+#' @param OG optional parameter, (defaults to NULL) a string with the names of chosen group to be colored
 #' @param xlabel string to label barplot's x axis
 #' @param ... argument to be passed from other methods such as parameters from barplot() function
 #' @return A phylogenetic tree with a barplot of the data (with standard error bars) provided matched by taxa.
@@ -241,7 +241,7 @@ pdg_v_cog <- function(mcl_data, num = 40, ...) {
 #' @examples 
 #' file <- system.file('extdata', 'muscle_tree2.dnd', package='MAGNAMWAR')
 #' phydataerror(file, pheno_data, mcl_mtrx, species_colname = 'Treatment', data_colname = 'RespVar',
-#'  COG='OG5_126778', xlabel='TAG Content')
+#'  OG='OG5_126778', xlabel='TAG Content')
 #' #dev.off() #reset margins and align bars
 #' @importFrom graphics abline axis barplot par plot segments text title
 #' @importFrom stats aggregate na.omit ppoints sd
@@ -249,11 +249,11 @@ pdg_v_cog <- function(mcl_data, num = 40, ...) {
 #' @export
 
 
-phydataerror <- function(phy, data, mcl_matrix, species_colname, data_colname, color = NULL, COG = NULL, xlabel = "xlabel", ...) {
+phydataerror <- function(phy, data, mcl_matrix, species_colname, data_colname, color = NULL, OG = NULL, xlabel = "xlabel", ...) {
     # dev.off() #must reset dev (reset margins) for every run of the function to correctly line up bars and branches
     
     ### building tree
-    
+  
     phy = ape::read.tree(phy)
     
     ### .matchDataPhylo from ape library
@@ -272,6 +272,9 @@ phydataerror <- function(phy, data, mcl_matrix, species_colname, data_colname, c
         x
     }
     
+    if (xlabel == "xlabel") {
+      xlabel = data_colname
+    }
     ### Calculating means and sd
     data <- data[, c(species_colname, data_colname)]
     colnames(data) <- c("one", "two")
@@ -309,11 +312,11 @@ phydataerror <- function(phy, data, mcl_matrix, species_colname, data_colname, c
     
     if (is.null(color)) {
         
-        if (!is.null(COG)) {
-            grep <- mcl_matrix[grep(COG, mcl_matrix[, 1]), ]
+        if (!is.null(OG)) {
+            grep <- mcl_matrix[grep(OG, mcl_matrix[, 1]), ]
             l <- unlist(strsplit(grep[6], split = "\\|"))
             suppressWarnings(if (is.na(l)) {
-                cat("Invalid COG inputted... Printing without specific coloration\n")
+                cat("Invalid OG inputted... Printing without specific coloration\n")
             })
             
             coldata <- as.data.frame(x)
@@ -433,7 +436,7 @@ manhat_grp <- function(mcl_data, mcl_mtrx, tree = NULL) {
     colnames(DF) <- c("Taxa", "Protein ID", "Gene")
     row.names(DF) <- NULL
     
-    pvalue <- data.frame(Gene = mcl_mtrx[, "COG"], PValue = (mcl_mtrx[, 3]))
+    pvalue <- data.frame(Gene = mcl_mtrx[, "OG"], PValue = (mcl_mtrx[, 3]))
     spl <- strsplit(as.character(pvalue$Gene), split = ",")
     pvalue <- data.frame(Gene = unlist(spl), PValue = rep(pvalue$PValue, sapply(spl, length)))
     
@@ -452,6 +455,7 @@ manhat_grp <- function(mcl_data, mcl_mtrx, tree = NULL) {
     }
     
     taxsub <- subset(finalkey, grepl(paste(taxa_names, collapse = "|"), finalkey[, 3]))
+    taxsub$TAXA <- factor(taxsub$TAXA)
     
     taxsub2 <- taxsub[order(taxsub$TAXA, taxsub$protein_id), ]
     row.names(taxsub2) <- NULL
@@ -479,8 +483,15 @@ manhat_grp <- function(mcl_data, mcl_mtrx, tree = NULL) {
         TAXA = chk3$TAXA)
     plot <- na.omit(plot)
     cat("creating manhattan plot...\n")
-    qqman::manhattan(plot, chrlabs = as.character(taxa_names$TAXA), las = 2, xlab = "", cex = 0.25, suggestiveline = -log10((0.05)/dim(mcl_mtrx)[1]), 
-        genomewideline = FALSE)
+    
+    #cat(paste(nrow(plot), '\n'))
+
+    final_taxa_names <- unique(plot$TAXA)
+    fin_taxa <- taxa_names$TAXA[taxa_names$TAXA %in% final_taxa_names]
+    fin_taxa <- factor(fin_taxa)
+    #taxa_names$TAXA las = 2 chrlabs = as.character(fin_taxa) las = 3, cex = 1, genomewideline = FALSE  xlab = "" 
+    # , suggestiveline = -log10((0.05)/dim(mcl_mtrx)[1]), chrlabs = as.character(fin_taxa)
+    qqman::manhattan(plot,  xlab = "", chrlabs = as.character(fin_taxa), las = 2, genomewideline = FALSE, suggestiveline = -log10((0.05)/dim(mcl_mtrx)[1]))
     cat("finished.\n")
 }
 

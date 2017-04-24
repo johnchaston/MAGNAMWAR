@@ -7,7 +7,7 @@
 join_repseq(mcl_data, fa_dir, mcl_mtrx, fastaformat = "new")
 }
 \arguments{
-\item{mcl_data}{output of format_afterOrtho() --list of 2 things-- 1: binary matrix indicating the presence / absence of genes in each COG and 2: vector of names of COGs}
+\item{mcl_data}{output of format_afterOrtho() --list of 2 things-- 1: binary matrix indicating the presence / absence of genes in each OG and 2: vector of names of OGs}
 
 \item{fa_dir}{Path to the directory where all raw GenBank files are stored. Note, all file names must be changed to a 4-letter code representing each species and have '.fasta' file descriptor}
 

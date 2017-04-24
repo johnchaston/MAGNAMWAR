@@ -7,10 +7,10 @@
 analyze_OrthoMCL(mcl_data, pheno_data, model, species_name, resp = NULL,
   fix2 = NULL, rndm1 = NULL, rndm2 = NULL, multi = 1, time = NULL,
   event = NULL, time2 = NULL, startnum = 1, stopnum = "end",
-  output_dir = NULL)
+  output_dir = NULL, sig_digits = NULL)
 }
 \arguments{
-\item{mcl_data}{output of format_afterOrtho --list of 2 things-- 1: binary matrix indicating the presence / absence of genes in each COG and 2: vector of names of COGs}
+\item{mcl_data}{output of format_afterOrtho --list of 2 things-- 1: binary matrix indicating the presence / absence of genes in each OG and 2: vector of names of OGs}
 
 \item{pheno_data}{a data frame with column names of the following variables}
 
@@ -39,9 +39,11 @@ analyze_OrthoMCL(mcl_data, pheno_data, model, species_name, resp = NULL,
 \item{stopnum}{number of test to stop on}
 
 \item{output_dir}{if using survival tests, where small output files will be placed before using surv_append_matrix. Must specify a directory if choosign to output small files, else only written as a matrix}
+
+\item{sig_digits}{amount of digits to display for p-values and means of data; default to no rounding}
 }
 \value{
-A matrix with the following columns: COG, p-values, Bonferroni corrected p-values, mean phenotype of COG-containing taxa, mean pheotype of COG-lacking taxa, taxa included in COG, taxa not included in COG
+A matrix with the following columns: OG, p-values, Bonferroni corrected p-values, mean phenotype of OG-containing taxa, mean pheotype of OG-lacking taxa, taxa included in OG, taxa not included in OG
 }
 \description{
 Main function for analyzing the statistical association of PDG (phylogenetic distribution group) presence with phenotype data

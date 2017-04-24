@@ -1,7 +1,7 @@
 #' Join Representative Sequences
 #' 
 #' Joins the OrthoMCL output matrix to representative sequences
-#' @param mcl_data output of format_afterOrtho() --list of 2 things-- 1: binary matrix indicating the presence / absence of genes in each COG and 2: vector of names of COGs
+#' @param mcl_data output of format_afterOrtho() --list of 2 things-- 1: binary matrix indicating the presence / absence of genes in each OG and 2: vector of names of OGs
 #' @param fa_dir Path to the directory where all raw GenBank files are stored. Note, all file names must be changed to a 4-letter code representing each species and have '.fasta' file descriptor
 #' @param fastaformat options: new & old; defaults to old; takes care of NCBI updated fasta headers
 #' @param mcl_mtrx OrthoMCL output matrix from analyze_OrthoMCL()
@@ -109,7 +109,7 @@ join_repseq <- function(mcl_data, fa_dir, mcl_mtrx, fastaformat = "new") {
     
     
     fa_mtrx <- matrix(nrow = length(out_reps)/2, ncol = 5)
-    colnames(fa_mtrx) <- c("COG", "rep_taxon", "rep_id", "rep_annot", "rep_seq")
+    colnames(fa_mtrx) <- c("OG", "rep_taxon", "rep_id", "rep_annot", "rep_seq")
     fa_out_reps <- lapply(out_reps, function(x) sub(",", "", x))
     
     count <- 1
@@ -119,7 +119,7 @@ join_repseq <- function(mcl_data, fa_dir, mcl_mtrx, fastaformat = "new") {
         count <- count + 1
     }
     
-    mcl_reps <- merge(mcl_mtrx, fa_mtrx, by = "COG", all = F)
+    mcl_reps <- merge(mcl_mtrx, fa_mtrx, by = "OG", all = F)
     
     setwd(orig_directory)
     

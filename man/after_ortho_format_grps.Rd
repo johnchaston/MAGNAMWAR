@@ -6,8 +6,8 @@
 \title{Formatted output of OrthoMCL.}
 \format{List of 2: (1) presence absence matrix, (2) protein ids:
 \describe{
-  \item{pa_matrix}{matrix showing taxa presence/absence in COG}
-  \item{proteins}{matrix listing protein_id contained in each COG}
+  \item{pa_matrix}{matrix showing taxa presence/absence in OG}
+  \item{proteins}{matrix listing protein_id contained in each OG}
 }}
 \usage{
 after_ortho_format_grps

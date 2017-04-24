@@ -6,11 +6,11 @@
 \title{Final output of analyzeOrthoMCL}
 \format{A matrix with 17 rows and 7 variables:
 \describe{
-  \item{COG}{taxa cluster id, as defined by OrthoMCL}
+  \item{OG}{taxa cluster id, as defined by OrthoMCL}
   \item{pval1}{p-value, based on presence absence}
   \item{corrected_pval1}{Bonferroni p-value, corrected by number of tests}
-  \item{mean_COGContain}{mean of all taxa phenotypes in that COG}
-  \item{mean_COGLack}{mean of all taxa phenotypes not in that COG}
+  \item{mean_OGContain}{mean of all taxa phenotypes in that OG}
+  \item{mean_OGLack}{mean of all taxa phenotypes not in that OG}
   \item{taxa_contain}{taxa in that cluster}
   \item{taxa_miss}{taxa not in that cluster}
 }}

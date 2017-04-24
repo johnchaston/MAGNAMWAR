@@ -130,7 +130,7 @@ To run `analyzeOrthoMCL`, the following parameters are required:
 *In order to create a data frame for your phenotypic data use the following command where `file_path` is the path to your phenotypic data file:
 *(the `file_path` used in this case study is not available because `pheno_data` exists as an .rda file)*
 
-`pheno_data <- read.table(file_path, header = TRUE)`
+`pheno_data <- read.table(file_path, header = TRUE, sep = ',')`
 
 A subset of the phenotypic file for TAG content `pheno_data` is shown below:
 
