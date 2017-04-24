@@ -28,4 +28,3 @@ dir <- paste(dir,'/',sep='')
 joined_mtrx_grps <- join_repseq(after_ortho_format_grps, dir, mcl_mtrx_grps, fastaformat = 'old')
 
 }
-

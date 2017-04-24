@@ -17,4 +17,3 @@ A list created by inputting the output of OrthoMCL clusters
 into the format_afterOrtho function.
 }
 \keyword{datasets}
-

@@ -21,4 +21,3 @@ mcl_mtrx
 A matrix containing the final results of statistical analysis.
 }
 \keyword{datasets}
-

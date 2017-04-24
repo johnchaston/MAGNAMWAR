@@ -41,4 +41,3 @@ phydataerror(file, pheno_data, mcl_mtrx, species_colname = 'Treatment', data_col
 \references{
 Some sort of reference
 }
-

@@ -25,4 +25,3 @@ file_grps <- system.file('extdata', 'groups_example_r.txt', package='MAGNAMWAR')
 after_ortho_format_grps <- format_afterOrtho(file_grps, format = 'groups')
 
 }
-

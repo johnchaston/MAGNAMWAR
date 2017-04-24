@@ -14,7 +14,6 @@
 #' @export
 
 format_afterOrtho <- function(file, format = "ortho") {
-    #cat(file)
     
     cat("reading in OrthoMCL data...")
     if (format == "ortho") {
@@ -108,7 +107,7 @@ format_afterOrtho <- function(file, format = "ortho") {
     colnames(pa_mtrx) <- taxa
     class(pa_mtrx) <- "character"
     
-    pa_rows = c()
+    pa_rows <- c()
     
     for (j in 1:dim(taxa_protein_OG)[2]) {
         # for each column OG
@@ -125,7 +124,7 @@ format_afterOrtho <- function(file, format = "ortho") {
         
         ## check for repeat PDGs
         if (!(pa_string %in% pa_rows)) {
-            pa_rows = c(pa_rows, pa_string)
+            pa_rows <- c(pa_rows, pa_string)
             ind <- which(pa_rows == pa_string)
             names(pa_rows)[ind] <- colnames(taxa_protein_OG)[j]
         } else {

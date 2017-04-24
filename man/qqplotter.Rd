@@ -21,4 +21,3 @@ qqplotter(mcl_mtrx)
 \references{
 Some sore of reference
 }
-

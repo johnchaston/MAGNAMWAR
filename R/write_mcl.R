@@ -9,9 +9,9 @@
 #' #mcl_mtrx previously derived from analyze_OrthoMCL() or join_repset()
 #' @export
 write_mcl <- function(mtrx, filename) {
-    
+
     write.csv(mtrx, filename, quote = F, row.names = F)
-    
+
     wd <- getwd()
     file <- paste(wd, filename, sep = "/")
     cat("wrote matrix to", file, "\n")

@@ -71,8 +71,8 @@
 
 
 
-analyze_OrthoMCL <- function(mcl_data, pheno_data, model, species_name, resp = NULL, fix2 = NULL, rndm1 = NULL, rndm2 = NULL, multi = 1, 
-    time = NULL, event = NULL, time2 = NULL, startnum = 1, stopnum = "end", output_dir = NULL, sig_digits = NULL) {
+analyze_OrthoMCL <- function(mcl_data, pheno_data, model, species_name, resp = NULL, fix2 = NULL, rndm1 = NULL, rndm2 = NULL, 
+    multi = 1, time = NULL, event = NULL, time2 = NULL, startnum = 1, stopnum = "end", output_dir = NULL, sig_digits = NULL) {
     
     cat("Importing Data\n")
     
@@ -81,100 +81,68 @@ analyze_OrthoMCL <- function(mcl_data, pheno_data, model, species_name, resp = N
     haplo_names <- row.names(mcl_data$pa_matrix)
     
     # error checking and model selection
-   
-    if (model == "lm")
-    {
-      if(!(species_name %in% colnames(pheno_data)) || !(resp %in% colnames(pheno_data))) { 
-        stop("Invalid column names specified for phenotype data file\n\tSpecies Column Name: ",
-             species_name,
-             "\n\tResponse Variable Column Name: ", resp)
-      }
-        mtrx <- analyze.f(pa_mtrx, haplo_names, pheno_data, species_name, resp, sig_digits) 
-    }
-    else if (model == "lmeR1") 
-    {
-      if(!(species_name %in% colnames(pheno_data)) || !(resp %in% colnames(pheno_data)) || !(rndm1 %in% colnames(pheno_data))) { 
-        stop("Invalid column names specified for phenotype data file\n\tSpecies Column Name: ",
-             species_name,
-             "\n\tResponse Variable Column Name: ", resp,
-             "\n\tRandom1 Variable Column Name: ", rndm1)
-      }
-        mtrx <- analyze.fr(pa_mtrx, haplo_names, pheno_data, species_name, resp, rndm1, sig_digits) 
-    }
-    else if (model == "lmeR2ind") 
-    {
-      if(!(species_name %in% colnames(pheno_data)) || !(resp %in% colnames(pheno_data)) || !(rndm1 %in% colnames(pheno_data)) || !(rndm2 %in% colnames(pheno_data))) { 
-        stop("Invalid column names specified for phenotype data file\n\tSpecies Column Name: ",
-             species_name,
-             "\n\tResponse Variable Column Name: ", resp,
-             "\n\tRandom1 Variable Column Name: ", rndm1,
-             "\n\tRandom2 Variable Column Name: ", rndm2)
-      }
-        mtrx <- analyze.frr.plus(pa_mtrx, haplo_names, pheno_data, species_name, resp, rndm1, rndm2, sig_digits) 
-    }
-    else if (model == "lmeR2nest") 
-    {
-      if(!(species_name %in% colnames(pheno_data)) || !(resp %in% colnames(pheno_data)) || !(rndm1 %in% colnames(pheno_data)) || !(rndm2 %in% colnames(pheno_data))) { 
-        stop("Invalid column names specified for phenotype data file\n\tSpecies Column Name: ",
-             species_name,
-             "\n\tResponse Variable Column Name: ", resp,
-             "\n\tRandom1 Variable Column Name: ", rndm1,
-             "\n\tRandom2 Variable Column Name: ", rndm2)
-      }
+    
+    if (model == "lm") {
+        if (!(species_name %in% colnames(pheno_data)) || !(resp %in% colnames(pheno_data))) {
+            stop("Invalid column names specified for phenotype data file\n\tSpecies Column Name: ", species_name, "\n\tResponse Variable Column Name: ", 
+                resp)
+        }
+        mtrx <- analyze.f(pa_mtrx, haplo_names, pheno_data, species_name, resp, sig_digits)
+    } else if (model == "lmeR1") {
+        if (!(species_name %in% colnames(pheno_data)) || !(resp %in% colnames(pheno_data)) || !(rndm1 %in% colnames(pheno_data))) {
+            stop("Invalid column names specified for phenotype data file\n\tSpecies Column Name: ", species_name, "\n\tResponse Variable Column Name: ", 
+                resp, "\n\tRandom1 Variable Column Name: ", rndm1)
+        }
+        mtrx <- analyze.fr(pa_mtrx, haplo_names, pheno_data, species_name, resp, rndm1, sig_digits)
+    } else if (model == "lmeR2ind") {
+        if (!(species_name %in% colnames(pheno_data)) || !(resp %in% colnames(pheno_data)) || !(rndm1 %in% colnames(pheno_data)) || 
+            !(rndm2 %in% colnames(pheno_data))) {
+            stop("Invalid column names specified for phenotype data file\n\tSpecies Column Name: ", species_name, "\n\tResponse Variable Column Name: ", 
+                resp, "\n\tRandom1 Variable Column Name: ", rndm1, "\n\tRandom2 Variable Column Name: ", rndm2)
+        }
+        mtrx <- analyze.frr.plus(pa_mtrx, haplo_names, pheno_data, species_name, resp, rndm1, rndm2, sig_digits)
+    } else if (model == "lmeR2nest") {
+        if (!(species_name %in% colnames(pheno_data)) || !(resp %in% colnames(pheno_data)) || !(rndm1 %in% colnames(pheno_data)) || 
+            !(rndm2 %in% colnames(pheno_data))) {
+            stop("Invalid column names specified for phenotype data file\n\tSpecies Column Name: ", species_name, "\n\tResponse Variable Column Name: ", 
+                resp, "\n\tRandom1 Variable Column Name: ", rndm1, "\n\tRandom2 Variable Column Name: ", rndm2)
+        }
         mtrx <- analyze.frr.div(pa_mtrx, haplo_names, pheno_data, species_name, resp, rndm1, rndm2, sig_digits)
-    }
-    else if (model == "lmeF2") 
-    {
-      if(!(species_name %in% colnames(pheno_data)) || !(resp %in% colnames(pheno_data)) || !(rndm1 %in% colnames(pheno_data)) || !(rndm2 %in% colnames(pheno_data))) { 
-        stop("Invalid column names specified for phenotype data file\n\tSpecies Column Name: ",
-             species_name,
-             "\n\tResponse Variable Column Name: ", resp,
-             "\n\tRandom1 Variable Column Name: ", rndm1,
-             "\n\tRandom2 Variable Column Name: ", rndm2,
-             "\n\tFix2 Variable Column Name: ", fix2)
-      }
-        mtrx <- analyze.ffrr(pa_mtrx, haplo_names, pheno_data, species_name, resp, fix2, rndm1, rndm2, sig_digits) 
-    }
-    else if (model == "wx") 
-    {
-      if(!(species_name %in% colnames(pheno_data)) || !(resp %in% colnames(pheno_data))) { 
-        stop("Invalid column names specified for phenotype data file\n\tSpecies Column Name: ",
-             species_name,
-             "\n\tResponse Variable Column Name: ", resp)
-      }
-        mtrx <- analyze.wilcox(pa_mtrx, haplo_names, pheno_data, species_name, resp, sig_digits) 
-    }
-    else if (model == "survmulti") 
-    {
-      if(!(species_name %in% colnames(pheno_data)) || !(resp %in% colnames(pheno_data)) || !(rndm1 %in% colnames(pheno_data)) || !(rndm2 %in% colnames(pheno_data)) || !(event %in% colnames(pheno_data)) || !(time %in% colnames(pheno_data))) { 
-        stop("Invalid column names specified for phenotype data file\n\tSpecies Column Name: ",
-             species_name,
-             "\n\tResponse Variable Column Name: ", resp,
-             "\n\tRandom1 Variable Column Name: ", rndm1,
-             "\n\tRandom2 Variable Column Name: ", rndm2,
-             "\n\tEvent Variable Column Name: ", event,
-             "\n\tTime Variable Column Name: ", time)
-      }
-        mtrx <- analyze.surv.multi(pa_mtrx, haplo_names, pheno_data, species_name, time,
-                                   event, rndm1, rndm2, multi, startnum, stopnum, output_dir, sig_digits) 
-    }
-    else if (model == "survmulticensor") 
-    {
-      if(!(species_name %in% colnames(pheno_data)) || !(resp %in% colnames(pheno_data)) || !(rndm1 %in% colnames(pheno_data)) || !(rndm2 %in% colnames(pheno_data)) || !(event %in% colnames(pheno_data)) || !(time %in% colnames(pheno_data)) || !(time2 %in% colnames(pheno_data)) || !(fix2 %in% colnames(pheno_data))) { 
-        stop("Invalid column names specified for phenotype data file\n\tSpecies Column Name: ",
-             species_name,
-             "\n\tResponse Variable Column Name: ", resp,
-             "\n\tRandom1 Variable Column Name: ", rndm1,
-             "\n\tRandom2 Variable Column Name: ", rndm2,
-             "\n\tFix2 Variable Column Name: ", fix2,
-             "\n\tEvent Variable Column Name: ", event,
-             "\n\tTime Variable Column Name: ", time,
-             "\n\tTime2 Variable Column Name: ", time2)
-      }
-        mtrx <- analyze.surv.censor.multi(pa_mtrx, haplo_names, pheno_data, species_name, time,
-                                          time2, event, rndm1, rndm2, fix2, multi, startnum, stopnum, output_dir, sig_digits)
-    }
-    else stop("Error: Could not find a correct match for your model declaration\n")
+    } else if (model == "lmeF2") {
+        if (!(species_name %in% colnames(pheno_data)) || !(resp %in% colnames(pheno_data)) || !(rndm1 %in% colnames(pheno_data)) || 
+            !(rndm2 %in% colnames(pheno_data))) {
+            stop("Invalid column names specified for phenotype data file\n\tSpecies Column Name: ", species_name, "\n\tResponse Variable Column Name: ", 
+                resp, "\n\tRandom1 Variable Column Name: ", rndm1, "\n\tRandom2 Variable Column Name: ", rndm2, "\n\tFix2 Variable Column Name: ", 
+                fix2)
+        }
+        mtrx <- analyze.ffrr(pa_mtrx, haplo_names, pheno_data, species_name, resp, fix2, rndm1, rndm2, sig_digits)
+    } else if (model == "wx") {
+        if (!(species_name %in% colnames(pheno_data)) || !(resp %in% colnames(pheno_data))) {
+            stop("Invalid column names specified for phenotype data file\n\tSpecies Column Name: ", species_name, "\n\tResponse Variable Column Name: ", 
+                resp)
+        }
+        mtrx <- analyze.wilcox(pa_mtrx, haplo_names, pheno_data, species_name, resp, sig_digits)
+    } else if (model == "survmulti") {
+        if (!(species_name %in% colnames(pheno_data)) || !(resp %in% colnames(pheno_data)) || !(rndm1 %in% colnames(pheno_data)) || 
+            !(rndm2 %in% colnames(pheno_data)) || !(event %in% colnames(pheno_data)) || !(time %in% colnames(pheno_data))) {
+            stop("Invalid column names specified for phenotype data file\n\tSpecies Column Name: ", species_name, "\n\tResponse Variable Column Name: ", 
+                resp, "\n\tRandom1 Variable Column Name: ", rndm1, "\n\tRandom2 Variable Column Name: ", rndm2, "\n\tEvent Variable Column Name: ", 
+                event, "\n\tTime Variable Column Name: ", time)
+        }
+        mtrx <- analyze.surv.multi(pa_mtrx, haplo_names, pheno_data, species_name, time, event, rndm1, rndm2, multi, 
+            startnum, stopnum, output_dir, sig_digits)
+    } else if (model == "survmulticensor") {
+        if (!(species_name %in% colnames(pheno_data)) || !(resp %in% colnames(pheno_data)) || !(rndm1 %in% colnames(pheno_data)) || 
+            !(rndm2 %in% colnames(pheno_data)) || !(event %in% colnames(pheno_data)) || !(time %in% colnames(pheno_data)) || 
+            !(time2 %in% colnames(pheno_data)) || !(fix2 %in% colnames(pheno_data))) {
+            stop("Invalid column names specified for phenotype data file\n\tSpecies Column Name: ", species_name, "\n\tResponse Variable Column Name: ", 
+                resp, "\n\tRandom1 Variable Column Name: ", rndm1, "\n\tRandom2 Variable Column Name: ", rndm2, "\n\tFix2 Variable Column Name: ", 
+                fix2, "\n\tEvent Variable Column Name: ", event, "\n\tTime Variable Column Name: ", time, "\n\tTime2 Variable Column Name: ", 
+                time2)
+        }
+        mtrx <- analyze.surv.censor.multi(pa_mtrx, haplo_names, pheno_data, species_name, time, time2, event, rndm1, 
+            rndm2, fix2, multi, startnum, stopnum, output_dir, sig_digits)
+    } else stop("Error: Could not find a correct match for your model declaration\n")
     
     return(mtrx)
 }
@@ -237,7 +205,7 @@ analyze.f <- function(pa_mtrx, haplo_names, tx, species_name, resp_var, sig_digi
             try(if (pval_corrected > 1) {
                 pval_corrected <- 1
             }, T)
-        
+            
             
             ### adding data to output matrix
             for (j in unlist(strsplit(haplo_names[i], ","))) {
@@ -250,8 +218,8 @@ analyze.f <- function(pa_mtrx, haplo_names, tx, species_name, resp_var, sig_digi
             }
         }
         ### printing progress
-        if (((i - 1)%%100) == 0) 
-            cat(paste(round(((i - 1)/num_pdg * 100), digits = 2), "%__", sep = ""))
+        if (((i - 1) %% 100) == 0) 
+            cat(paste(round(((i - 1) / num_pdg * 100), digits = 2), "%__", sep = ""))
     }
     cat("Finished!\n")
     
@@ -261,13 +229,13 @@ analyze.f <- function(pa_mtrx, haplo_names, tx, species_name, resp_var, sig_digi
     
     
     if (!is.null(sig_digits)) {
-      options(digits = sig_digits)
-    ### significant digits rounding
-      options(digits = sig_digits)
-      output_clean[,2] <- as.character(format(as.numeric(output_clean[,2]),sig_digits), scientific = T)
-      output_clean[,3] <- as.character(format(as.numeric(output_clean[,3]),sig_digits), scientific = T)
-      output_clean[,4] <- as.character(format(as.numeric(output_clean[,4]),sig_digits), scientific = T)
-      output_clean[,5] <- as.character(format(as.numeric(output_clean[,5]),sig_digits), scientific = T)
+        options(digits = sig_digits)
+        ### significant digits rounding
+        options(digits = sig_digits)
+        output_clean[, 2] <- as.character(format(as.numeric(output_clean[, 2]), sig_digits), scientific = T)
+        output_clean[, 3] <- as.character(format(as.numeric(output_clean[, 3]), sig_digits), scientific = T)
+        output_clean[, 4] <- as.character(format(as.numeric(output_clean[, 4]), sig_digits), scientific = T)
+        output_clean[, 5] <- as.character(format(as.numeric(output_clean[, 5]), sig_digits), scientific = T)
     }
     return(output_clean)
 }
@@ -347,8 +315,8 @@ analyze.fr <- function(pa_mtrx, haplo_names, tx, species_name, resp_var, rndm1, 
             }
         }
         ### printing progress
-        if (((i - 1)%%100) == 0) 
-            cat(paste(round(((i - 1)/num_pdg * 100), digits = 2), "%__", sep = ""))
+        if (((i - 1) %% 100) == 0) 
+            cat(paste(round(((i - 1) / num_pdg * 100), digits = 2), "%__", sep = ""))
     }
     cat("Finished!\n")
     
@@ -358,12 +326,12 @@ analyze.fr <- function(pa_mtrx, haplo_names, tx, species_name, resp_var, rndm1, 
     
     ### significant digits rounding
     if (!is.null(sig_digits)) {
-      ### significant digits rounding
-      options(digits = sig_digits)
-      output_clean[,2] <- as.character(format(as.numeric(output_clean[,2]),sig_digits), scientific = T)
-      output_clean[,3] <- as.character(format(as.numeric(output_clean[,3]),sig_digits), scientific = T)
-      output_clean[,4] <- as.character(format(as.numeric(output_clean[,4]),sig_digits), scientific = T)
-      output_clean[,5] <- as.character(format(as.numeric(output_clean[,5]),sig_digits), scientific = T)
+        ### significant digits rounding
+        options(digits = sig_digits)
+        output_clean[, 2] <- as.character(format(as.numeric(output_clean[, 2]), sig_digits), scientific = T)
+        output_clean[, 3] <- as.character(format(as.numeric(output_clean[, 3]), sig_digits), scientific = T)
+        output_clean[, 4] <- as.character(format(as.numeric(output_clean[, 4]), sig_digits), scientific = T)
+        output_clean[, 5] <- as.character(format(as.numeric(output_clean[, 5]), sig_digits), scientific = T)
     }
     return(output_clean)
 }
@@ -387,8 +355,8 @@ analyze.frr.plus <- function(pa_mtrx, haplo_names, tx, species_name, resp_var, r
     output <- matrix(, nrow = count, ncol = 7)
     
     ### create a good matrix changed it to a data frame (2/10/16)
-    sub <- cbind(haplo_tx[, which(colnames(haplo_tx) == resp_var)], haplo_tx[, which(colnames(haplo_tx) == rndm1)], haplo_tx[, which(colnames(haplo_tx) == 
-        rndm2)])
+    sub <- cbind(haplo_tx[, which(colnames(haplo_tx) == resp_var)], haplo_tx[, which(colnames(haplo_tx) == rndm1)], haplo_tx[, 
+        which(colnames(haplo_tx) == rndm2)])
     sub <- as.data.frame(sub)
     colnames(sub) <- c("resp_var", "rndm1", "rndm2")
     
@@ -447,8 +415,8 @@ analyze.frr.plus <- function(pa_mtrx, haplo_names, tx, species_name, resp_var, r
             }
         }
         ### printing progress
-        if (((i - 1)%%100) == 0) 
-            cat(paste(round(((i - 1)/num_pdg * 100), digits = 2), "%__", sep = ""))
+        if (((i - 1) %% 100) == 0) 
+            cat(paste(round(((i - 1) / num_pdg * 100), digits = 2), "%__", sep = ""))
     }
     cat("Finished!\n")
     
@@ -458,12 +426,12 @@ analyze.frr.plus <- function(pa_mtrx, haplo_names, tx, species_name, resp_var, r
     
     ### significant digits rounding
     if (!is.null(sig_digits)) {
-      ### significant digits rounding
-      options(digits = sig_digits)
-      output_clean[,2] <- as.character(format(as.numeric(output_clean[,2]),sig_digits), scientific = T)
-      output_clean[,3] <- as.character(format(as.numeric(output_clean[,3]),sig_digits), scientific = T)
-      output_clean[,4] <- as.character(format(as.numeric(output_clean[,4]),sig_digits), scientific = T)
-      output_clean[,5] <- as.character(format(as.numeric(output_clean[,5]),sig_digits), scientific = T)
+        ### significant digits rounding
+        options(digits = sig_digits)
+        output_clean[, 2] <- as.character(format(as.numeric(output_clean[, 2]), sig_digits), scientific = T)
+        output_clean[, 3] <- as.character(format(as.numeric(output_clean[, 3]), sig_digits), scientific = T)
+        output_clean[, 4] <- as.character(format(as.numeric(output_clean[, 4]), sig_digits), scientific = T)
+        output_clean[, 5] <- as.character(format(as.numeric(output_clean[, 5]), sig_digits), scientific = T)
     }
     
     return(output_clean)
@@ -487,8 +455,8 @@ analyze.frr.div <- function(pa_mtrx, haplo_names, tx, species_name, resp_var, rn
     output <- matrix(, nrow = count, ncol = 7)
     
     ### create a matrix
-    sub <- cbind(haplo_tx[, which(colnames(haplo_tx) == resp_var)], haplo_tx[, which(colnames(haplo_tx) == rndm1)], haplo_tx[, which(colnames(haplo_tx) == 
-        rndm2)])
+    sub <- cbind(haplo_tx[, which(colnames(haplo_tx) == resp_var)], haplo_tx[, which(colnames(haplo_tx) == rndm1)], haplo_tx[, 
+        which(colnames(haplo_tx) == rndm2)])
     sub <- as.data.frame(sub)
     colnames(sub) <- c("resp_var", "rndm1", "rndm2")  # connected to lines 337-338
     
@@ -545,8 +513,8 @@ analyze.frr.div <- function(pa_mtrx, haplo_names, tx, species_name, resp_var, rn
             }
         }
         ### printing progress
-        if (((i - 1)%%100) == 0) 
-            cat(paste(round(((i - 1)/num_pdg * 100), digits = 2), "%__", sep = ""))
+        if (((i - 1) %% 100) == 0) 
+            cat(paste(round(((i - 1) / num_pdg * 100), digits = 2), "%__", sep = ""))
     }
     cat("Finished!\n")
     
@@ -556,12 +524,12 @@ analyze.frr.div <- function(pa_mtrx, haplo_names, tx, species_name, resp_var, rn
     
     ### significant digits rounding
     if (!is.null(sig_digits)) {
-      ### significant digits rounding
-      options(digits = sig_digits)
-      output_clean[,2] <- as.character(format(as.numeric(output_clean[,2]),sig_digits), scientific = T)
-      output_clean[,3] <- as.character(format(as.numeric(output_clean[,3]),sig_digits), scientific = T)
-      output_clean[,4] <- as.character(format(as.numeric(output_clean[,4]),sig_digits), scientific = T)
-      output_clean[,5] <- as.character(format(as.numeric(output_clean[,5]),sig_digits), scientific = T)
+        ### significant digits rounding
+        options(digits = sig_digits)
+        output_clean[, 2] <- as.character(format(as.numeric(output_clean[, 2]), sig_digits), scientific = T)
+        output_clean[, 3] <- as.character(format(as.numeric(output_clean[, 3]), sig_digits), scientific = T)
+        output_clean[, 4] <- as.character(format(as.numeric(output_clean[, 4]), sig_digits), scientific = T)
+        output_clean[, 5] <- as.character(format(as.numeric(output_clean[, 5]), sig_digits), scientific = T)
     }
     
     return(output_clean)
@@ -585,8 +553,8 @@ analyze.ffrr <- function(pa_mtrx, haplo_names, tx, species_name, resp_var, fix_v
     cat("Running Analysis\n")
     output <- matrix(, nrow = count, ncol = 9)
     
-    sub <- cbind(haplo_tx[, which(colnames(haplo_tx) == resp_var)], haplo_tx[, which(colnames(haplo_tx) == fix_var2)], haplo_tx[, which(colnames(haplo_tx) == 
-        rndm1)], haplo_tx[, which(colnames(haplo_tx) == rndm2)])
+    sub <- cbind(haplo_tx[, which(colnames(haplo_tx) == resp_var)], haplo_tx[, which(colnames(haplo_tx) == fix_var2)], 
+        haplo_tx[, which(colnames(haplo_tx) == rndm1)], haplo_tx[, which(colnames(haplo_tx) == rndm2)])
     sub <- as.data.frame(sub)
     colnames(sub) <- c("resp_var", "fix2", "rndm1", "rndm2")
     
@@ -647,15 +615,15 @@ analyze.ffrr <- function(pa_mtrx, haplo_names, tx, species_name, resp_var, fix_v
             ### adding data to output matrix
             for (j in unlist(strsplit(haplo_names[i], ","))) {
                 if (class(pval1) != "try-error") {
-                  output[out_cnt, ] <- c(j, pval1, pval1_corrected, pval2, pval2_corrected, mean_contain, mean_missing, taxa_contain, 
-                    taxa_missing)
+                  output[out_cnt, ] <- c(j, pval1, pval1_corrected, pval2, pval2_corrected, mean_contain, mean_missing, 
+                    taxa_contain, taxa_missing)
                   out_cnt <- out_cnt + 1
                 }
             }
         }
         ### printing progress
-        if (((i - 1)%%100) == 0) 
-            cat(paste(round(((i - 1)/num_pdg * 100), digits = 2), "%__", sep = ""))
+        if (((i - 1) %% 100) == 0) 
+            cat(paste(round(((i - 1) / num_pdg * 100), digits = 2), "%__", sep = ""))
     }
     cat("Finished!\n")
     
@@ -663,18 +631,18 @@ analyze.ffrr <- function(pa_mtrx, haplo_names, tx, species_name, resp_var, fix_v
     
     cat("Cleaning Final Output")
     output_clean <- output[rowSums(is.na(output)) != 9, ]
-    colnames(output_clean) <- c("OG", "pval1", "corrected_pval1", "pval2", "pval2_corrected", "mean_OGContain", "mean_OGLack", "taxa_contain", 
-        "taxa_miss")
+    colnames(output_clean) <- c("OG", "pval1", "corrected_pval1", "pval2", "pval2_corrected", "mean_OGContain", "mean_OGLack", 
+        "taxa_contain", "taxa_miss")
     
     ### significant digits rounding
     if (!is.null(sig_digits)) {
-      options(digits = sig_digits)
-      output_clean[,2] <- as.character(format(as.numeric(output_clean[,2]),sig_digits), scientific = T)
-      output_clean[,3] <- as.character(format(as.numeric(output_clean[,3]),sig_digits), scientific = T)
-      output_clean[,4] <- as.character(format(as.numeric(output_clean[,4]),sig_digits), scientific = T)
-      output_clean[,5] <- as.character(format(as.numeric(output_clean[,5]),sig_digits), scientific = T)
-      output_clean[,6] <- as.character(format(as.numeric(output_clean[,6]),sig_digits), scientific = T)
-      output_clean[,7] <- as.character(format(as.numeric(output_clean[,7]),sig_digits), scientific = T)
+        options(digits = sig_digits)
+        output_clean[, 2] <- as.character(format(as.numeric(output_clean[, 2]), sig_digits), scientific = T)
+        output_clean[, 3] <- as.character(format(as.numeric(output_clean[, 3]), sig_digits), scientific = T)
+        output_clean[, 4] <- as.character(format(as.numeric(output_clean[, 4]), sig_digits), scientific = T)
+        output_clean[, 5] <- as.character(format(as.numeric(output_clean[, 5]), sig_digits), scientific = T)
+        output_clean[, 6] <- as.character(format(as.numeric(output_clean[, 6]), sig_digits), scientific = T)
+        output_clean[, 7] <- as.character(format(as.numeric(output_clean[, 7]), sig_digits), scientific = T)
     }
     
     return(output_clean)
@@ -748,8 +716,8 @@ analyze.wilcox <- function(pa_mtrx, haplo_names, tx, species_name, resp_var, sig
         }
         
         ### printing progress
-        if (((i - 1)%%100) == 0) 
-            cat(paste(round(((i - 1)/num_pdg * 100), digits = 2), "%__", sep = ""))
+        if (((i - 1) %% 100) == 0) 
+            cat(paste(round(((i - 1) / num_pdg * 100), digits = 2), "%__", sep = ""))
     }
     cat("Finished!\n")
     
@@ -759,19 +727,20 @@ analyze.wilcox <- function(pa_mtrx, haplo_names, tx, species_name, resp_var, sig
     
     ### significant digits rounding
     if (!is.null(sig_digits)) {
-      options(digits = sig_digits)
-      output_clean[,2] <- as.character(format(as.numeric(output_clean[,2]),sig_digits), scientific = T)
-      output_clean[,3] <- as.character(format(as.numeric(output_clean[,3]),sig_digits), scientific = T)
-      output_clean[,4] <- as.character(format(as.numeric(output_clean[,4]),sig_digits), scientific = T)
-      output_clean[,5] <- as.character(format(as.numeric(output_clean[,5]),sig_digits), scientific = T)
+        options(digits = sig_digits)
+        output_clean[, 2] <- as.character(format(as.numeric(output_clean[, 2]), sig_digits), scientific = T)
+        output_clean[, 3] <- as.character(format(as.numeric(output_clean[, 3]), sig_digits), scientific = T)
+        output_clean[, 4] <- as.character(format(as.numeric(output_clean[, 4]), sig_digits), scientific = T)
+        output_clean[, 5] <- as.character(format(as.numeric(output_clean[, 5]), sig_digits), scientific = T)
     }
     return(output_clean)
 }
 
 ### from analyze_surve_0.0.2.R
-analyze.surv.multi <- function(pa_mtrx, haplo_names, tx, species_name, time, event, rndm1, rndm2, multi, startnum, stopnum, output_dir, sig_digits) {
-    # library(survival) library(parallel) library(foreach) library(doParallel) merge the binary matrix with phenotype data; tx =
-    # phenotypes; pa_mtrx=binary matrix produced by 'parse_orthologGroups'
+analyze.surv.multi <- function(pa_mtrx, haplo_names, tx, species_name, time, event, rndm1, rndm2, multi, startnum, stopnum, 
+    output_dir, sig_digits) {
+    # library(survival) library(parallel) library(foreach) library(doParallel) merge the binary matrix with phenotype
+    # data; tx = phenotypes; pa_mtrx=binary matrix produced by 'parse_orthologGroups'
     cat("Merging Files\n")
     haplo_tx <- merge(tx, pa_mtrx, by.y = "row.names", by.x = species_name, all = F)
     
@@ -789,14 +758,16 @@ analyze.surv.multi <- function(pa_mtrx, haplo_names, tx, species_name, time, eve
         count <- count + length(unlist(strsplit(haplo_names[i], ",")))
     }
     
-    # cat('Running Analysis. There is no 'percent complete' update. If you want to estimate how much time it will take, run for a short
-    # time with the 'surv' model, estimate time it will take in that model on 1 core. Time with the multiple cores ~ (time on 1 core / #
-    # cores)*2 \n')
+    # cat('Running Analysis. There is no 'percent complete' update. If you want to estimate how much time it will take,
+    # run for a short time with the 'surv' model, estimate time it will take in that model on 1 core. Time with the
+    # multiple cores ~ (time on 1 core / # cores)*2 \n')
     cat("Running Analysis. There is no 'percent complete' update.\n")
     
-    ### make a new phenotype matrix with only the specified data and with assigned names columns (makes the model run better)
-    sub <- cbind(haplo_tx[, which(colnames(haplo_tx) == time)], haplo_tx[, which(colnames(haplo_tx) == event)], haplo_tx[, which(colnames(haplo_tx) == 
-        species_name)], haplo_tx[, which(colnames(haplo_tx) == rndm1)], haplo_tx[, which(colnames(haplo_tx) == rndm2)])  # values in matrix \t###
+    ### make a new phenotype matrix with only the specified data and with assigned names columns (makes the model run
+    ### better)
+    sub <- cbind(haplo_tx[, which(colnames(haplo_tx) == time)], haplo_tx[, which(colnames(haplo_tx) == event)], haplo_tx[, 
+        which(colnames(haplo_tx) == species_name)], haplo_tx[, which(colnames(haplo_tx) == rndm1)], haplo_tx[, which(colnames(haplo_tx) == 
+        rndm2)])  # values in matrix \t###
     sub <- data.frame(sub)  #make into a dataframe, compatible with subsequent analyses
     colnames(sub) <- c("time", "event", "trt", "rndm1", "rndm2")  # define column names
     sub$S <- survival::Surv(sub$time, sub$event)  # create the response variable, a survival model
@@ -825,7 +796,7 @@ analyze.surv.multi <- function(pa_mtrx, haplo_names, tx, species_name, time, eve
         
         
         # library(coxme) library(multcomp) library(survival)
-        i = i + startnum - 1
+        i <- i + startnum - 1
         
         ### start over with fresh values each iteration
         try(rm(output, name, lmm, l1.1, pval1, mean_contain, mean_missing, taxa_contain, taxa_missing), silent = T)
@@ -837,7 +808,7 @@ analyze.surv.multi <- function(pa_mtrx, haplo_names, tx, species_name, time, eve
         sub$species <- haplo_tx[, which(colnames(haplo_tx) == species_name)]
         
         ### fitting the survival model
-        lmm <- try(coxme::coxme(S ~ fix + (1 | trt) + (1 | rndm1/rndm2), data = sub), T)
+        lmm <- try(coxme::coxme(S ~ fix + (1 | trt) + (1 | rndm1 / rndm2), data = sub), T)
         if (class(lmm) != "try-error") {
             l1.1 <- try(glht(lmm, mcp(fix = "Tukey")), T)
             pval1 <- try(summary(l1.1)$test$pvalues[1], T)
@@ -893,20 +864,20 @@ analyze.surv.multi <- function(pa_mtrx, haplo_names, tx, species_name, time, eve
     
     ### significant digits rounding
     if (!is.null(sig_digits)) {
-      options(digits = sig_digits)
-      ### significant digits rounding
-      output_clean[,2] <- as.character(format(as.numeric(output_clean[,2]),sig_digits), scientific = T)
-      output_clean[,3] <- as.character(format(as.numeric(output_clean[,3]),sig_digits), scientific = T)
-      output_clean[,4] <- as.character(format(as.numeric(output_clean[,4]),sig_digits), scientific = T)
-      output_clean[,5] <- as.character(format(as.numeric(output_clean[,5]),sig_digits), scientific = T)
+        options(digits = sig_digits)
+        ### significant digits rounding
+        output_clean[, 2] <- as.character(format(as.numeric(output_clean[, 2]), sig_digits), scientific = T)
+        output_clean[, 3] <- as.character(format(as.numeric(output_clean[, 3]), sig_digits), scientific = T)
+        output_clean[, 4] <- as.character(format(as.numeric(output_clean[, 4]), sig_digits), scientific = T)
+        output_clean[, 5] <- as.character(format(as.numeric(output_clean[, 5]), sig_digits), scientific = T)
     }
     return(output_clean)
 }
 
-analyze.surv.censor.multi <- function(pa_mtrx, haplo_names, tx, species_name, time, time2, event, rndm1, rndm2, fix2, multi, startnum, 
-    stopnum, output_dir, sig_digits) {
-    # library(survival) library(parallel) library(foreach) library(doParallel) library(coxme) library(multcomp) merge the binary matrix
-    # with phenotype data: tx = phenotypes; pa_mtrx=binary matrix produced by 'parse_orthologGroups'
+analyze.surv.censor.multi <- function(pa_mtrx, haplo_names, tx, species_name, time, time2, event, rndm1, rndm2, fix2, 
+    multi, startnum, stopnum, output_dir, sig_digits) {
+    # library(survival) library(parallel) library(foreach) library(doParallel) library(coxme) library(multcomp) merge the
+    # binary matrix with phenotype data: tx = phenotypes; pa_mtrx=binary matrix produced by 'parse_orthologGroups'
     
     haplo_tx <- merge(tx, pa_mtrx, by.y = "row.names", by.x = species_name, all = F)
     
@@ -923,15 +894,16 @@ analyze.surv.censor.multi <- function(pa_mtrx, haplo_names, tx, species_name, ti
         count <- count + length(unlist(strsplit(haplo_names[i], ",")))
     }
     
-    # cat('Running Analysis. There is no 'percent complete' update. If you want to estimate how much time it will take, run for a short
-    # time with the 'surv' model, estimate time it will take in that model on 1 core. Time with the multiple cores ~ (time on 1 core / #
-    # cores)*2 \n')
+    # cat('Running Analysis. There is no 'percent complete' update. If you want to estimate how much time it will take,
+    # run for a short time with the 'surv' model, estimate time it will take in that model on 1 core. Time with the
+    # multiple cores ~ (time on 1 core / # cores)*2 \n')
     cat("Running Analysis. There is no 'percent complete' update.\n")
     
-    ### make a new phenotype matrix with only the specified data and with assigned names columns (makes the model run better)
-    sub3 <- cbind(haplo_tx[, which(colnames(haplo_tx) == time)], haplo_tx[, which(colnames(haplo_tx) == time2)], haplo_tx[, which(colnames(haplo_tx) == 
-        event)], haplo_tx[, which(colnames(haplo_tx) == species_name)], haplo_tx[, which(colnames(haplo_tx) == rndm1)], haplo_tx[, which(colnames(haplo_tx) == 
-        rndm2)], haplo_tx[, which(colnames(haplo_tx) == fix2)])  # values in matrix \t###
+    ### make a new phenotype matrix with only the specified data and with assigned names columns (makes the model run
+    ### better)
+    sub3 <- cbind(haplo_tx[, which(colnames(haplo_tx) == time)], haplo_tx[, which(colnames(haplo_tx) == time2)], haplo_tx[, 
+        which(colnames(haplo_tx) == event)], haplo_tx[, which(colnames(haplo_tx) == species_name)], haplo_tx[, which(colnames(haplo_tx) == 
+        rndm1)], haplo_tx[, which(colnames(haplo_tx) == rndm2)], haplo_tx[, which(colnames(haplo_tx) == fix2)])  # values in matrix \t###
     sub3 <- data.frame(sub3)  #make into a dataframe, compatible with subsequent analyses
     colnames(sub3) <- c("time1", "time2", "event", "trt", "rndm1", "rndm2", "fix2")  # define column names
     sub3$S <- survival::Surv(as.numeric(as.character(sub3$time1)), as.numeric(as.character(sub3$time2)), as.numeric(as.character(sub3$event)))  # create the response variable, a survival model
@@ -958,7 +930,7 @@ analyze.surv.censor.multi <- function(pa_mtrx, haplo_names, tx, species_name, ti
     outmulti <- c(rep(1, 7), unlist(foreach::foreach(i = iterators::icount(stopnum - startnum + 1)) %dopar% {
         
         # library(coxme) library(multcomp) library(survival)
-        i = i + startnum - 1
+        i <- i + startnum - 1
         
         ### start over with fresh values each iteration
         try(rm(output, name, lmm, l1.1, pval1, mean_contain, mean_missing, taxa_contain, taxa_missing), silent = T)
@@ -970,7 +942,7 @@ analyze.surv.censor.multi <- function(pa_mtrx, haplo_names, tx, species_name, ti
         sub3$species <- haplo_tx[, which(colnames(haplo_tx) == species_name)]
         
         ### fitting the survival model
-        lmm <- try(coxme::coxme(S ~ fix + fix2 + (1 | trt) + (1 | rndm1/rndm2), data = sub3), T)
+        lmm <- try(coxme::coxme(S ~ fix + fix2 + (1 | trt) + (1 | rndm1 / rndm2), data = sub3), T)
         if (class(lmm) != "try-error") {
             l1.1 <- try(glht(lmm, mcp(fix = "Tukey")), T)
             pval1 <- try(summary(l1.1)$test$pvalues[1], T)  # should this be 2?
@@ -1028,4 +1000,3 @@ analyze.surv.censor.multi <- function(pa_mtrx, haplo_names, tx, species_name, ti
     return(output_clean)
     
 }
-

@@ -27,4 +27,3 @@ manhat_grp(after_ortho_format, mcl_mtrx)
 \references{
 Some sort of reference
 }
-

@@ -19,110 +19,113 @@
 #' @export
 #' 
 
-pdgplot <- function(data, mcl_matrix, OG = "NONE", species_colname, data_colname, xlab = "Taxa", ylab = "Data", ylimit = NULL, tree = NULL, 
-    order = NULL, main_title = NULL) {
-  
-  
-  if(species_colname %in% colnames(data) && data_colname %in% colnames(data)) { } else {
-      stop("Invalid column names specified for phenotype data file\n\tSpecies Column Name: ", species_colname, "\n\tData Column Name: ", data_colname)
-  }
-  
-    grep <- mcl_matrix[grep(paste("^",OG,"$", sep =''), mcl_matrix[, 1]), ]
-    if (OG == "NONE") {
-      warning("No OG inputted... Printing without specific coloration\n")
-    } else if (anyNA(grep[6])) {
-      warning("Invalid OG inputted... Printing without specific coloration\n")
-      l <- unlist(strsplit(as.character(unlist(grep[6])), split = "\\|"))
+pdgplot <- function(data, mcl_matrix, OG = "NONE", species_colname,
+                    data_colname, xlab = "Taxa", ylab = "Data",
+                    ylimit = NULL, tree = NULL, order = NULL,
+                    main_title = NULL) {
+
+
+    if (species_colname %in% colnames(data) && data_colname %in% colnames(data)) {
     } else {
-      l <- unlist(strsplit(as.character(unlist(grep[6])), split = "\\|"))
+        stop("Invalid column names specified for phenotype data file
+             \n\tSpecies Column Name: ", species_colname,
+             "\n\tData Column Name: ", data_colname)
     }
-    
+
+    grep <- mcl_matrix[grep(paste("^", OG, "$", sep = ""), mcl_matrix[, 1]), ]
+    if (OG == "NONE") {
+        warning("No OG inputted...
+                 Printing without specific coloration\n")
+    } else if (anyNA(grep[6])) {
+        warning("Invalid OG inputted...
+                 Printing without specific coloration\n")
+        l <- unlist(strsplit(as.character(unlist(grep[6])), split = "\\|"))
+    } else {
+        l <- unlist(strsplit(as.character(unlist(grep[6])), split = "\\|"))
+    }
+
     ### Calculating st dev and means
     data <- data[, c(species_colname, data_colname)]
     colnames(data) <- c("one", "two")
-    
+
     two <- "two"
     sem <- "sem"
-    
+
     ccc <- aggregate(data$one, data["one"], paste, collapse = " ")
     ddd <- aggregate(data$two, data["two"], paste, collapse = " ")
-    
-    means.sem <- plyr::ddply(data, c("one"), dplyr::summarise, mean = mean(two), sem = sd(two)/sqrt(length(two)))
+
+    means.sem <- plyr::ddply(data, c("one"), dplyr::summarise,
+                             mean = mean(two), sem = sd(two) / sqrt(length(two)))
     means.sem <- transform(means.sem, lower = mean - sem, upper = mean + sem)
     mean <- means.sem[, 2]
-    stDevs <- means.sem[, 3]
-    
+    stdevs <- means.sem[, 3]
+
     names(mean) <- means.sem$one
-    names(stDevs) <- means.sem$one
-    
+    names(stdevs) <- means.sem$one
+
     x <- mean
-    
+
     ### ordering by tree, order vector, or alphabetical
-    
+
     if (!is.null(tree)) {
         # order by tree
         tree <- ape::read.tree(tree)
-        
+
         x <- x[tree$tip.label]
-        stDevs <- stDevs[tree$tip.label]
+        stdevs <- stdevs[tree$tip.label]
     } else {
-        
+
         if (!is.null(order)) {
             # order by order vector
-            
+
             x <- x[order]
-            stDevs <- stDevs[order]
-            
+            stdevs <- stdevs[order]
+
             x <- x[!is.na(x)]
-            stDevs <- stDevs[!is.na(stDevs)]
-            
+            stdevs <- stdevs[!is.na(stdevs)]
         } else {
             # order by alpha
-            
             sorted <- sort(names(x))
             x <- x[sorted]
-            stDevs <- stDevs[sorted]
-            
+            stdevs <- stdevs[sorted]
+
         }
-        
     }
-    
+
     if (is.null(ylimit)) {
-        ylimit = max(x) + max(x)/4
+        ylimit <- max(x) + max(x) / 4
     }
-    
+
     ### coloring for graph
-    
+
     col <- names(x) %in% l
     col <- sub("TRUE", "palegreen", col)
     col <- sub("FALSE", "gray", col)
-    
+
     ### plotting
-    bp <- barplot(x, axes = T, axisnames = T, space = (0.2), ylim = c(0, ylimit), las = 2, col = col, names.arg = names(x))
-    
-    segments(bp, x - stDevs, bp, x + stDevs, lwd = 2)
-    segments(bp - 0.2, x - stDevs, bp + 0.2, x - stDevs, lwd = 2)
-    segments(bp - 0.2, x + stDevs, bp + 0.2, x + stDevs, lwd = 2)
-    
+    bp <- barplot(x, axes = T, axisnames = T, space = (0.2),
+                  ylim = c(0, ylimit), las = 2,
+                  col = col, names.arg = names(x))
+
+    segments(bp, x - stdevs, bp, x + stdevs, lwd = 2)
+    segments(bp - 0.2, x - stdevs, bp + 0.2, x - stdevs, lwd = 2)
+    segments(bp - 0.2, x + stdevs, bp + 0.2, x + stdevs, lwd = 2)
+
     if (is.null(main_title)) {
-      
-      if (OG != "NONE" && !anyNA(grep[6])) {
-          main_title = OG
-          title(xlab = xlab, ylab = ylab, main = main_title, font.main = 2)
-      } else {
-        title(xlab = xlab, ylab = ylab, font.main = 2)
-      }
-      
+
+        if (OG != "NONE" && !anyNA(grep[6])) {
+            main_title <- OG
+            title(xlab = xlab, ylab = ylab, main = main_title, font.main = 2)
+        } else {
+            title(xlab = xlab, ylab = ylab, font.main = 2)
+        }
+
     } else {
-      
-      title(xlab = xlab, ylab = ylab, main = main_title, font.main = 2)
-      
+        title(xlab = xlab, ylab = ylab, main = main_title, font.main = 2)
     }
-    
-    
 }
 
-# *************************************************************************************************************************************
+# --------------------------
 
 
 #' Number of PDGs vs OGs/PDG
@@ -138,90 +141,89 @@ pdgplot <- function(data, mcl_matrix, OG = "NONE", species_colname, data_colname
 #' @export
 
 pdg_v_OG <- function(mcl_data, num = 40, ...) {
-    
+
     cgs <- mcl_data[[1]]
     names <- row.names(cgs)
-    
-    
+
     ### Number of OGS
-    
+
     mcl_data <- as.data.frame(cgs)
-    mcl_data = cbind(mcl_data, X.NAMES = names)
-    
+    mcl_data <- cbind(mcl_data, X.NAMES = names)
+
     mcl_data$X.NAMES <- as.character(mcl_data$X.NAMES)
     chk <- strsplit(mcl_data$X.NAMES, ",")
     OGS <- lapply(chk, function(x) length(x))
     OGS <- as.numeric(OGS)
-    
-    
+
     ### Number of OGs/PDGs
-    
+
     graph <- as.data.frame(table(OGS), stringsAsFactors = FALSE)
     graph$OGS <- as.numeric(graph$OGS)
-    
+
     sequential <- 1:graph[length(graph$OGS), 1]
-    
-    
+
+
     ### add zeros to columns without any PDGs
-    
+
     zeros <- setdiff(sequential, graph$OGS)
-    
+
     if (length(zeros) != 0) {
         zeros2 <- as.data.frame(zeros)
         zeros2$Freq <- 0
-        
+
         colnames(zeros2) <- c("OGS", "Freq")
         zeros2$OGS <- as.numeric(zeros2$OGS)
-        
+
         sums <- as.data.frame(graph, stringsAsFactors = FALSE)
         sums <- rbind(sums, zeros2)
-        
+
     } else {
         sums <- as.data.frame(graph, stringsAsFactors = FALSE)
-        
     }
     
-    
     sums <- sums[order(sums[, 1]), ]
-    
+
     ### Sum of last PDGs that have over a given amount of OGS (num)
-    
+
     if (nrow(sums) > num) {
-        # if the number of OG limit provided is smaller than the largest number of OGS in PDG
-        
+        # if the number of OG limit provided is smaller than the
+        # largest number of OGS in PDG
+
         sum <- (colSums(sums[c(num:nrow(sums)), ])[2])
-        
+
         ### Compiling all PDGs with OGs > num and appending to plot
         plot <- sums[1:num, ]
         rownames(plot) <- NULL
         plot[, 1] <- as.numeric(plot[, 1])
         plot[num, 1] <- paste(num, "+", sep = "")
         plot[num, 2] <- sum
-        
+
         r_axis <- plot[1, 2] + 5
-        
+
     } else {
-        
+
         plot <- sums
         rownames(plot) <- NULL
         r_axis <- max(plot$Freq) + 5
-        warning(paste("Number provided for max number of OGs in PDG larger than largest number of OGs in PDG:\n", num, " > ", nrow(sums)))
-        
+        warning(paste("Number provided for max number of OGs in PDG larger
+                      than largest number of OGs in PDG:\n",
+                      num, " > ", nrow(sums)))
     }
-    
+
     ### Plotting dev.off() # reset margins for labels
-    barplot <- barplot(plot$Freq, names.arg = plot$OGS, ylim = c(-1, r_axis), xlab = expression(paste("OGs PDG"^"-1")), ylab = "PDGs", 
-        ...)
+    barplot <- barplot(plot$Freq, names.arg = plot$OGS, ylim = c(-1, r_axis),
+                       xlab = expression(paste("OGs PDG"^"-1")),
+                       ylab = "PDGs", ...)
     axis(1, at = barplot, labels = plot$OGS, las = 1)
-    
+
     ### Fitting label on top of bar
     par(new = T, mar = c(2, 2, 2, 2))
     text(x = barplot[1], y = plot[1, 2], label = paste(plot[1, 2]), pos = 3)
-    
+
 }
 
 
-# *************************************************************************************************************************************
+# --------------------------
 
 
 #' Phylogenetic Tree with Attached Bar Plot and Standard Error Bars
@@ -248,126 +250,131 @@ pdg_v_OG <- function(mcl_data, num = 40, ...) {
 #' @importFrom utils read.csv read.delim read.table write.csv write.table
 #' @export
 
+phydataerror <- function(phy, data, mcl_matrix, species_colname, data_colname,
+                         color = NULL, OG = NULL, xlabel = "xlabel", ...) {
+    # dev.off() #must reset dev (reset margins) for every run of the
+    # function to correctly line up bars and branches
 
-phydataerror <- function(phy, data, mcl_matrix, species_colname, data_colname, color = NULL, OG = NULL, xlabel = "xlabel", ...) {
-    # dev.off() #must reset dev (reset margins) for every run of the function to correctly line up bars and branches
-    
     ### building tree
-  
-    phy = ape::read.tree(phy)
-    
+
+    phy <- ape::read.tree(phy)
+
     ### .matchDataPhylo from ape library
-    
+
     .matchDataPhylo <- function(x, phy) {
         msg <- "'x' has no (row)names: data are assumed to be in the same order than the tips of the tree"
         labs <- phy$tip.label
         if (is.vector(x)) {
             # also for lists
-            if (is.null(names(x))) 
+            if (is.null(names(x)))
                 warning(msg) else x <- x[labs]
         } else {
-            if (is.null(rownames(x))) 
+            if (is.null(rownames(x)))
                 warning(msg) else x <- x[labs, ]
         }
         x
     }
-    
+
     if (xlabel == "xlabel") {
-      xlabel = data_colname
+        xlabel <- data_colname
     }
     ### Calculating means and sd
     data <- data[, c(species_colname, data_colname)]
     colnames(data) <- c("one", "two")
     ccc <- aggregate(data$one, data["one"], paste, collapse = " ")
     ddd <- aggregate(data$two, data["two"], paste, collapse = " ")
-    
+
     two <- "two"
     sem <- "sem"
-    
-    means.sem <- plyr::ddply(data, c("one"), dplyr::summarise, mean = mean(two), sem = sd(two)/sqrt(length(two)))
+
+    means.sem <- plyr::ddply(data, c("one"), dplyr::summarise,
+                             mean = mean(two),
+                             sem = sd(two)/sqrt(length(two)))
     means.sem <- transform(means.sem, lower = mean - sem, upper = mean + sem)
     mean <- means.sem[, 2]
-    stDevs <- means.sem[, 3]
+    stdevs <- means.sem[, 3]
     names(mean) <- means.sem$one
-    names(stDevs) <- means.sem$one
-    
+    names(stdevs) <- means.sem$one
+
     #### plot bar and phylo
-    plottree <- plot(phy, show.tip.label = T, x.lim = 0.5, cex = 0.9, label.offset = 0.002)
-    
+    plottree <- plot(phy, show.tip.label = T, x.lim = 0.5,
+                     cex = 0.9, label.offset = 0.002)
+
     par(new = T, mar = c(4.7, 4, 3.7, 2))  #line up bars
-    offset = 1
+    offset <- 1
     lastPP <- get("last_plot.phylo", envir = .PlotPhyloEnv)
     n <- length(phy$tip.label)
     one2n <- seq_len(n)
     x <- .matchDataPhylo(mean, phy)
-    stDevs <- .matchDataPhylo(stDevs, phy)
+    stdevs <- .matchDataPhylo(stdevs, phy)
     x0 <- max(lastPP$xx[one2n]) + offset + 19
     x1 <- x0 + x
     y1 <- lastPP$yy[one2n]
     o <- order(y1)
-    x <- if (is.vector(x)) 
+    x <- if (is.vector(x))
         x[o] else x[o, ]
-    
+
     ### Deal with color
-    
+
     if (is.null(color)) {
-        
+
         if (!is.null(OG)) {
             grep <- mcl_matrix[grep(OG, mcl_matrix[, 1]), ]
             l <- unlist(strsplit(grep[6], split = "\\|"))
             suppressWarnings(if (is.na(l)) {
-                cat("Invalid OG inputted... Printing without specific coloration\n")
+                cat("Invalid OG inputted... Printing without
+                    specific coloration\n")
             })
-            
+
             coldata <- as.data.frame(x)
             coldata$X1 <- row.names(coldata)
-            
+
             coldata[, 3] <- coldata$X1 %in% l
-            
+
             ### order to match phylo
             vec <- structure(coldata$V3, names = coldata$X1)
             tt <- .matchDataPhylo(vec, phy)
-            
+
             ### assign colors
             tt <- as.character(tt)
             col <- sub("TRUE", "palegreen", tt)
             col <- sub("FALSE", "gray", col)
-            
+
         } else {
-            col = "gray80"
+            col <- "gray80"
         }
     } else {
-        
+
         coldata <- as.data.frame(x)
         coldata$Taxa <- row.names(coldata)
         color <- read.table(color, header = T)
-        
+
         col <- merge(coldata, color)
-        
+
         vec <- structure(col$Color, names = col$Taxa)
         vec <- as.vector(vec)
         names(vec) <- col$Taxa
         tt <- .matchDataPhylo(vec, phy)
         col <- tt
     }
-    
-    
-    if (!is.null(dim(x))) 
+
+    if (!is.null(dim(x)))
         x <- t(x)
-    bp <- barplot(x, width = 1, add = F, horiz = TRUE, offset = x0, axes = FALSE, axisnames = FALSE, space = (0.2), xlim = c(0, 45), col = col, 
-        ...)
-    
+    bp <- barplot(x, width = 1, add = F, horiz = TRUE, offset = x0,
+                  axes = FALSE, axisnames = FALSE, space = (0.2),
+                  xlim = c(0, 45), col = col, ...)
+
     ### error bars
-    segments(x - stDevs + x0, bp, x + stDevs + x0, bp, lwd = 2)
-    segments(x - stDevs + x0, bp - 0.2, x - stDevs + x0, bp + 0.2, lwd = 2)
-    segments(x + stDevs + x0, bp - 0.2, x + stDevs + x0, bp + 0.2, lwd = 2)
+    segments(x - stdevs + x0, bp, x + stdevs + x0, bp, lwd = 2)
+    segments(x - stdevs + x0, bp - 0.2, x - stdevs + x0, bp + 0.2, lwd = 2)
+    segments(x + stdevs + x0, bp - 0.2, x + stdevs + x0, bp + 0.2, lwd = 2)
     px <- pretty(c(0, x + 2))
     axis(1, px + x0, labels = px, line = 0)
     title(xlab = xlabel)
 }
 
 
-# *************************************************************************************************************************************
+# --------------------------
 
 
 
@@ -382,24 +389,25 @@ phydataerror <- function(phy, data, mcl_matrix, species_colname, data_colname, c
 #' @export
 #' 
 qqplotter <- function(mcl_mtrx) {
-    
-    
+
     pvector <- as.numeric(mcl_mtrx[, 2])
-    
     pvector <- pvector[!is.na(pvector) & pvector < 1 & pvector > 0]
-    
-    o = -log10(sort(pvector, decreasing = F))
-    
-    e = -log10(ppoints(length(pvector)))
-    
-    plot(e, o, pch = 19, cex = 0.2, xlab = expression(Expected ~ ~-log[10](italic(p))), ylab = expression(Observed ~ ~-log[10](italic(p))), 
-        xlim = c(0, max(e)), ylim = c(0, max(o)))
-    
+
+    o <- -log10(sort(pvector, decreasing = F))
+
+    e <- -log10(ppoints(length(pvector)))
+
+    plot(e, o, pch = 19, cex = 0.2,
+         xlab = expression(Expected ~ ~-log[10](italic(p))),
+         ylab = expression(Observed ~ ~-log[10](italic(p))),
+         xlim = c(0, max(e)),
+         ylim = c(0, max(o)))
+
     abline(0, 1, col = "red")
 }
 
 
-# *************************************************************************************************************************************
+# --------------------------
 
 
 #' Manhattan Plot of All Taxa
@@ -419,33 +427,35 @@ qqplotter <- function(mcl_mtrx) {
 #' @export
 
 manhat_grp <- function(mcl_data, mcl_mtrx, tree = NULL) {
-    
+
     mcl_data <- mcl_data[[2]]
-    
-    list_name <- unlist(lapply(colnames(mcl_data), FUN = function(x) rep(x, nrow(mcl_data))))
-    
+
+    list_name <- unlist(lapply(colnames(mcl_data),
+                               FUN = function(x) rep(x, nrow(mcl_data))))
+
     taxa_prot <- strsplit(as.character(unique(mcl_data)), split = "\\|")
     list_name_parse <- list_name[lapply(taxa_prot, length) > 0]
     taxa_prot <- taxa_prot[lapply(taxa_prot, length) > 0]
     names(taxa_prot) <- list_name_parse
-    
+
     n <- length(taxa_prot[[1]])
     DF <- t(structure(taxa_prot, row.names = c(NA, -n), class = "data.frame"))
     DF <- cbind(DF, row.names(DF))
     DF <- as.data.frame(DF)
     colnames(DF) <- c("Taxa", "Protein ID", "Gene")
     row.names(DF) <- NULL
-    
+
     pvalue <- data.frame(Gene = mcl_mtrx[, "OG"], PValue = (mcl_mtrx[, 3]))
     spl <- strsplit(as.character(pvalue$Gene), split = ",")
-    pvalue <- data.frame(Gene = unlist(spl), PValue = rep(pvalue$PValue, sapply(spl, length)))
-    
+    pvalue <- data.frame(Gene = unlist(spl),
+                         PValue = rep(pvalue$PValue, sapply(spl, length)))
+
     cat("ordering by protein id within taxa...\n")
     finalkey <- merge(pvalue, DF, all = F)
     colnames(finalkey) <- c("Gene", "PValue", "TAXA", "protein_id")
-    
+
     TAXA <- "TAXA"
-    
+
     ### pulling taxa names
     if (!is.null(tree)) {
         tree_lab <- ape::read.tree(tree)
@@ -453,45 +463,45 @@ manhat_grp <- function(mcl_data, mcl_mtrx, tree = NULL) {
     } else {
         taxa_names <- unique(finalkey[, 3])
     }
-    
-    taxsub <- subset(finalkey, grepl(paste(taxa_names, collapse = "|"), finalkey[, 3]))
+
+    taxsub <- subset(finalkey, grepl(paste(taxa_names, collapse = "|"),
+                                     finalkey[, 3]))
     taxsub$TAXA <- factor(taxsub$TAXA)
-    
+
     taxsub2 <- taxsub[order(taxsub$TAXA, taxsub$protein_id), ]
     row.names(taxsub2) <- NULL
-    
-    # old version dplyr taxsub2 <- arrange(taxsub, TAXA, protein_id)
-    
-    ### PROBLEM: WHAT TO DO WHEN finalkey DOESN'T HAVE THE TAXA INCLUDED IN tree?  ex. efOG v efog
-    
+
+    ### WHAT TO DO WHEN finalkey NOT HAVE TAXA INCLUDED IN tree?ex. efOG v efog
+
     names(taxa_names) <- 1:length(taxa_names)
     taxa_names <- as.data.frame(taxa_names)
     taxa_names$CHR <- row.names(taxa_names)
     colnames(taxa_names) <- c("TAXA", "CHR")
     chk <- merge(taxsub2, taxa_names)
     chk$CHR <- as.numeric(chk$CHR)
-    
+
     ### BP positioning
     names(chk$TAXA) <- NULL
     names(chk$protein_id) <- NULL
     chk <- plyr::ddply(chk, .(TAXA), transform, BP = seq_along(TAXA))
     chk2 <- data.frame(lapply(chk, as.character), stringsAsFactors = F)
     chk3 <- chk2[chk2[, 3] > 0, ]
-    
+
     ### plotting
-    plot <- data.frame(SNP = chk3$Gene, BP = as.numeric(chk3$BP), P = as.numeric(as.character(chk3$PValue)), CHR = as.numeric(chk3$CHR), 
-        TAXA = chk3$TAXA)
+    plot <- data.frame(SNP = chk3$Gene,
+                       BP = as.numeric(chk3$BP),
+                       P = as.numeric(as.character(chk3$PValue)),
+                       CHR = as.numeric(chk3$CHR),
+                       TAXA = chk3$TAXA)
     plot <- na.omit(plot)
     cat("creating manhattan plot...\n")
-    
-    #cat(paste(nrow(plot), '\n'))
 
     final_taxa_names <- unique(plot$TAXA)
     fin_taxa <- taxa_names$TAXA[taxa_names$TAXA %in% final_taxa_names]
     fin_taxa <- factor(fin_taxa)
-    #taxa_names$TAXA las = 2 chrlabs = as.character(fin_taxa) las = 3, cex = 1, genomewideline = FALSE  xlab = "" 
-    # , suggestiveline = -log10((0.05)/dim(mcl_mtrx)[1]), chrlabs = as.character(fin_taxa)
-    qqman::manhattan(plot,  xlab = "", chrlabs = as.character(fin_taxa), las = 2, genomewideline = FALSE, suggestiveline = -log10((0.05)/dim(mcl_mtrx)[1]))
+
+    qqman::manhattan(plot, xlab = "", chrlabs = as.character(fin_taxa),
+                     las = 2, genomewideline = FALSE,
+                     suggestiveline = -log10((0.05) / dim(mcl_mtrx)[1]))
     cat("finished.\n")
 }
-

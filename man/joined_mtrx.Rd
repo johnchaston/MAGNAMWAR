@@ -26,4 +26,3 @@ A data frame containing the final results of statistical analysis with
 protein ids, annotations, and sequences added.
 }
 \keyword{datasets}
-

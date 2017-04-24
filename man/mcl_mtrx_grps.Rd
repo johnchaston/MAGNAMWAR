@@ -21,4 +21,3 @@ mcl_mtrx_grps
 A matrix containing the final results of statistical analysis.
 }
 \keyword{datasets}
-

@@ -24,4 +24,3 @@ dir <- system.file('extdata', 'fasta_dir', package='MAGNAMWAR')
 dir <- paste(dir,'/',sep='')
 formatted_file <- format_MCLfastas(dir)
 }
-

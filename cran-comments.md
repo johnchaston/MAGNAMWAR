@@ -1,5 +1,5 @@
 ## Test environments
-* local OS X install, R 3.3.1
+* local OS X install, R 3.4.0
 * Ubuntu 12.04 (on Travis-CI), R 3.3.1
 * win-builder (devel and release)
 
@@ -16,3 +16,5 @@ New submission
 ## Downstream dependencies
 I have also run R CMD check on downstream dependencies of MAGNAMWAR.
 All packages passed with no ERRORs or WARNINGs.
+
+https://github.com/corinsexton/MAGNAMWAR/tree/master/revdep

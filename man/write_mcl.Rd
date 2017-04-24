@@ -21,4 +21,3 @@ Writes a tab separated version of the analyzed OrthoMCL data with or without the
 write_mcl(mcl_mtrx, 'matrix.tsv')
 #mcl_mtrx previously derived from analyze_OrthoMCL() or join_repset()
 }
-

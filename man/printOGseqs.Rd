@@ -35,4 +35,3 @@ printOGseqs(after_ortho_format, OG, dir)
 }
 
 }
-

@@ -26,4 +26,3 @@ RASTtogbk(lfrc_fasta,lfrc_reference,lfrc_path)
 
 
 }
-
