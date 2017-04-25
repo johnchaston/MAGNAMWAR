@@ -16,5 +16,3 @@ New submission
 ## Downstream dependencies
 I have also run R CMD check on downstream dependencies of MAGNAMWAR.
 All packages passed with no ERRORs or WARNINGs.
-
-https://github.com/corinsexton/MAGNAMWAR/tree/master/revdep
