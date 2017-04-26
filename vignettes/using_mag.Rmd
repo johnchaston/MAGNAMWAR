@@ -258,10 +258,7 @@ Calling `phydataerror` requires the following parameters:
 
 ```{r, fig.width=6, fig.height=6.5, fig.align='center'}
 phydataerror(tree, pheno_data, mcl_matrix, species_colname = 'Treatment', data_colname = 'RespVar', OG='ex_r00002', xlabel='TAG Content')
-#dev.off() #reset margins and align bars
 ```
-
-Be aware that this function changes margins in order to line up the tree exactly with the data and therefore `dev.off()` should be called after every run to reset margins.
 
 #### pdg\_v\_OG
 
@@ -278,8 +275,6 @@ pdg_v_OG(parsed_data,0)
 Because this data is an extreme subset, it isn't very informative. A full data set is shown below. This shows us that in this particular OrthoMCL clustering data, 4822 PDGs exist with only 1 unique OG in the PDG, and around 500 PDGs exist with 2 OGs that share the same presence and absence of taxa and so on.
 
 ![](http://i.imgur.com/KkAETvk.jpg)
-
-Be aware that this function changes margins and therefore `dev.off()` should be called after every run to reset margins.
 
 #### qqplotter
 

@@ -39,7 +39,6 @@ Presents data for each taxa including standard error bars next to a phylogenetic
 file <- system.file('extdata', 'muscle_tree2.dnd', package='MAGNAMWAR')
 phydataerror(file, pheno_data, mcl_mtrx, species_colname = 'Treatment', data_colname = 'RespVar',
  OG='OG5_126778', xlabel='TAG Content')
-#dev.off() #reset margins and align bars
 }
 }
 \references{

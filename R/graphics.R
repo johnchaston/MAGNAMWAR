@@ -16,7 +16,6 @@
 #' @examples
 #' # Not run - changes options
 #' \dontrun{ 
-#' #dev.off()
 #' pdgplot(pheno_data, mcl_mtrx, 'OG5_126778', 'Treatment', 'RespVar', ylimit=12)
 #' }
 #' @export
@@ -142,7 +141,6 @@ pdgplot <- function(data, mcl_matrix, OG = "NONE", species_colname,
 #' # Not run - changes options
 #' \dontrun{
 #' pdg_v_OG(after_ortho_format_grps,2)
-#' #dev.off() #reset margins
 #' }
 #' @export
 
@@ -216,16 +214,17 @@ pdg_v_OG <- function(mcl_data, num = 40, ...) {
                       num, " > ", nrow(sums)))
     }
 
-    ### Plotting dev.off() # reset margins for labels
     barplot <- barplot(plot$Freq, names.arg = plot$OGS, ylim = c(-1, r_axis),
                        xlab = expression(paste("OGs PDG"^"-1")),
                        ylab = "PDGs", ...)
     axis(1, at = barplot, labels = plot$OGS, las = 1)
 
     ### Fitting label on top of bar
+    orig_par <- par()$mar
     par(new = T, mar = c(2, 2, 2, 2))
     text(x = barplot[1], y = plot[1, 2], label = paste(plot[1, 2]), pos = 3)
 
+    par(mar = orig_par, no.readonly = T)
 }
 
 
@@ -253,7 +252,6 @@ pdg_v_OG <- function(mcl_data, num = 40, ...) {
 #' file <- system.file('extdata', 'muscle_tree2.dnd', package='MAGNAMWAR')
 #' phydataerror(file, pheno_data, mcl_mtrx, species_colname = 'Treatment', data_colname = 'RespVar',
 #'  OG='OG5_126778', xlabel='TAG Content')
-#' #dev.off() #reset margins and align bars
 #' }
 #' @importFrom graphics abline axis barplot par plot segments text title
 #' @importFrom stats aggregate na.omit ppoints sd
@@ -262,28 +260,12 @@ pdg_v_OG <- function(mcl_data, num = 40, ...) {
 
 phydataerror <- function(phy, data, mcl_matrix, species_colname, data_colname,
                          color = NULL, OG = NULL, xlabel = "xlabel", ...) {
-    # dev.off() #must reset dev (reset margins) for every run of the
-    # function to correctly line up bars and branches
 
     ### building tree
 
+    orig_par <- par()$mar      # make a copy of current settings
+  
     phy <- ape::read.tree(phy)
-
-    ### .matchDataPhylo from ape library
-
-    .matchDataPhylo <- function(x, phy) {
-        msg <- "'x' has no (row)names: data are assumed to be in the same order than the tips of the tree"
-        labs <- phy$tip.label
-        if (is.vector(x)) {
-            # also for lists
-            if (is.null(names(x)))
-                warning(msg) else x <- x[labs]
-        } else {
-            if (is.null(rownames(x)))
-                warning(msg) else x <- x[labs, ]
-        }
-        x
-    }
 
     if (xlabel == "xlabel") {
         xlabel <- data_colname
@@ -314,12 +296,13 @@ phydataerror <- function(phy, data, mcl_matrix, species_colname, data_colname,
     offset <- 1
     lastPP <- get("last_plot.phylo", envir = .PlotPhyloEnv)
     n <- length(phy$tip.label)
-    one2n <- seq_len(n)
-    x <- .matchDataPhylo(mean, phy)
-    stdevs <- .matchDataPhylo(stdevs, phy)
-    x0 <- max(lastPP$xx[one2n]) + offset + 19
+    leng <- seq_len(n)
+    labels <- phy$tip.label
+    x <- mean[labels]
+    stdevs <- stdevs[labels]
+    x0 <- max(lastPP$xx[leng]) + offset + 19
     x1 <- x0 + x
-    y1 <- lastPP$yy[one2n]
+    y1 <- lastPP$yy[leng]
     o <- order(y1)
     x <- if (is.vector(x))
         x[o] else x[o, ]
@@ -343,7 +326,7 @@ phydataerror <- function(phy, data, mcl_matrix, species_colname, data_colname,
 
             ### order to match phylo
             vec <- structure(coldata$V3, names = coldata$X1)
-            tt <- .matchDataPhylo(vec, phy)
+            tt <- vec[labels]
 
             ### assign colors
             tt <- as.character(tt)
@@ -364,7 +347,7 @@ phydataerror <- function(phy, data, mcl_matrix, species_colname, data_colname,
         vec <- structure(col$Color, names = col$Taxa)
         vec <- as.vector(vec)
         names(vec) <- col$Taxa
-        tt <- .matchDataPhylo(vec, phy)
+        tt <- vec[labels]
         col <- tt
     }
 
@@ -381,6 +364,8 @@ phydataerror <- function(phy, data, mcl_matrix, species_colname, data_colname,
     px <- pretty(c(0, x + 2))
     axis(1, px + x0, labels = px, line = 0)
     title(xlab = xlabel)
+    par(mar = orig_par, no.readonly = T)   # restore original settings
+    
 }
 
 
