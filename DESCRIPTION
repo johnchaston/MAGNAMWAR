@@ -9,7 +9,7 @@ Authors@R: c(
   )
 Description: Correlates variation within the meta-genome to target species
     phenotype variations in meta-genome with association studies.
-License: CC0
+License: MIT + file LICENSE
 LazyData: true
 Imports:
     ape,
