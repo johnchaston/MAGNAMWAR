@@ -38,6 +38,9 @@ a barplot with taxa vs phenotypic data complete with standard error bars
 Bar plot of PDG vs phenotype data with presence of taxa in PDG indicated by color
 }
 \examples{
+# Not run - changes options
+\dontrun{ 
 #dev.off()
 pdgplot(pheno_data, mcl_mtrx, 'OG5_126778', 'Treatment', 'RespVar', ylimit=12)
+}
 }

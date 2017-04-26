@@ -20,6 +20,9 @@ a barplot with a height determined by the second column and the first column abb
 Barplot that indicates the number of PDGs vs OGs(clustered orthologous groups) in a PDG
 }
 \examples{
+# Not run - changes options
+\dontrun{
 pdg_v_OG(after_ortho_format_grps,2)
 #dev.off() #reset margins
+}
 }
