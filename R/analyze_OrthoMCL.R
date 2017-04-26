@@ -24,30 +24,36 @@
 #'  'Treatment', resp='RespVar')
 #'
 #'
+#' # the rest of the examples are not run for time's sake
 #' #Linear Mixed Effect with one random effect
 #' \dontrun{
 #' mcl_mtrx <- analyze_OrthoMCL(after_ortho_format, pheno_data, 'lmeR1',
 #' 'Treatment', resp='RespVar', rndm1='Experiment')
 #' }
 #'
+#' \dontrun{
 #' #Linear Mixed Effect with two independent random effects
 #' mcl_mtrx <- analyze_OrthoMCL(after_ortho_format, pheno_data, 'lmeR2ind',
 #'  'Treatment', resp='RespVar', rndm1='Experiment', rndm2='Vial')
-#'
-#'
+#' }
+#' 
+#' \dontrun{
 #' #Linear Mixed Effect with rndm2 nested in rndm1
 #' mcl_mtrx <- analyze_OrthoMCL(after_ortho_format, pheno_data, 'lmeR2nest',
 #'  'Treatment',  resp='RespVar', rndm1='Experiment', rndm2='Vial')
+#' }
 #'
-#'
+#' \dontrun{
 #' #Linear Mixed Effect with two independent random effects and one additional fixed effect
 #' mcl_mtrx <- analyze_OrthoMCL(after_ortho_format, pheno_data, 'lmeF2',
 #'  'Treatment', resp='RespVar', fix2='Treatment', rndm1='Experiment', rndm2='Vial')
-#'
-#'
+#' }
+#' 
+#' \dontrun{
 #' #Wilcox Test
 #' mcl_mtrx <- analyze_OrthoMCL(after_ortho_format, pheno_data, 'wx',
 #'  'Treatment', resp='RespVar')
+#' }
 #'
 #' # Not run ~ 5 minutes
 #' #Survival with two independent random effects, run on multiple cores
