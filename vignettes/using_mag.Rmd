@@ -1,6 +1,6 @@
 ---
 title: "Using MAGNAMWAR: a case study with *Drosophila melanogaster*"
-author: "Corinne Penrod"
+author: "Corinne Sexton"
 date: "`r Sys.Date()`"
 output: 
   rmarkdown::html_vignette:

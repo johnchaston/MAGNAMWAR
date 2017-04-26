@@ -10,13 +10,13 @@
 |language |(EN)                         |
 |collate  |en_US.UTF-8                  |
 |tz       |America/Denver               |
-|date     |2017-04-24                   |
+|date     |2017-04-26                   |
 
 ## Packages
 
 |package   |*  |version |date       |source                           |
 |:---------|:--|:-------|:----------|:--------------------------------|
-|MAGNAMWAR |*  |1.0     |2017-04-24 |local (corinsexton/MAGNAMWAR@NA) |
+|MAGNAMWAR |   |1.0.0   |2017-04-26 |local (corinsexton/MAGNAMWAR@NA) |
 
 # Check results
 0 packages with problems
