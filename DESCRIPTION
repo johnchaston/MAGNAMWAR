@@ -1,7 +1,7 @@
 Package: MAGNAMWAR
 Title: A Pipeline for Meta-Genome Wide Association
 Version: 1.0.0
-Date: 2017-04-24
+Date: 2017-04-26
 Authors@R: c(
     person("Corinne", "Sexton", role = c("aut"), email="corinsexton@gmail.com"), 
     person("John", "Chaston", role = c("aut", "cre"), email = "john_chaston@byu.edu"),
