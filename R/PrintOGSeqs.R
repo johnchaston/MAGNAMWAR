@@ -2,11 +2,11 @@
 #' 
 #' Print all protein sequences and annotations in a given OG
 #' @param OG name of OG
-#' @param after_ortho output from format_afterOrtho
+#' @param after_ortho output from FormatAfterOrtho
 #' @param fasta_dir directory to fastas
 #' @param out_dir complete path to output directory
 #' @param outfile name of file that will be written to
-#' @return A fasta file with all protein sequnces and ids for a given OG
+#' @return A fasta file with all protein sequences and ids for a given OG
 #' @examples 
 #' 
 #' # Not run ~ directory structure depends on system
@@ -15,12 +15,12 @@
 #' dir <- system.file('extdata', 'fasta_dir', package='MAGNAMWAR')
 #' dir <- paste(dir,'/',sep='')
 #' 
-#' printOGseqs(after_ortho_format, OG, dir)
+#' PrintOGSeqs(after_ortho_format, OG, dir)
 #' }
 #' 
 #' @export
 
-printOGseqs <- function(after_ortho, OG, fasta_dir,
+PrintOGSeqs <- function(after_ortho, OG, fasta_dir,
                         out_dir = NULL, outfile = "none") {
 
     OG_proteins <- after_ortho$proteins[, OG]

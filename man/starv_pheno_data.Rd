@@ -19,6 +19,6 @@ starv_pheno_data
 }
 \description{
 A subset of the Starvation rate of fruit flies, collected in the Chaston Lab,
-to be used as a brief example for survival tests in analyzeOrthoMCL.
+to be used as a brief example for survival tests in AnalyzeOrthoMCL.
 }
 \keyword{datasets}

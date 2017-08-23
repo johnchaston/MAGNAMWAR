@@ -1,22 +1,22 @@
 #' Join Representative Sequences
 #' 
 #' Joins the OrthoMCL output matrix to representative sequences
-#' @param mcl_data output of format_afterOrtho() --list of 2 things-- 1: binary matrix indicating the presence / absence of genes in each OG and 2: vector of names of OGs
+#' @param mcl_data output of FormatAfterOrtho; a list of matrices; (1) a presence/absence matrix of taxa per OG, (2) a list of the specific protein ids within each OG
 #' @param fa_dir Path to the directory where all raw GenBank files are stored. Note, all file names must be changed to a 4-letter code representing each species and have '.fasta' file descriptor
-#' @param fastaformat options: new & old; defaults to old; takes care of NCBI updated fasta headers
-#' @param mcl_mtrx OrthoMCL output matrix from analyze_OrthoMCL()
+#' @param fastaformat options: new & old; new = no GI numbers included; defaults to new
+#' @param mcl_mtrx OrthoMCL output matrix from AnalyzeOrthoMCL()
 #' @return Returns the original OrthoMCL output matrix with additional columns: representative sequence taxon, representative sequence id, representative sequence annotation, representative sequence 
 #' @examples
 #' 
 #' dir <- system.file('extdata', 'fasta_dir', package='MAGNAMWAR')
 #' dir <- paste(dir,'/',sep='')
-#' joined_mtrx_grps <- join_repseq(after_ortho_format_grps, dir, mcl_mtrx_grps, fastaformat = 'old')
+#' joined_mtrx_grps <- JoinRepSeq(after_ortho_format_grps, dir, mcl_mtrx_grps, fastaformat = 'old')
 #' 
 #' @export
 
-join_repseq <- function(mcl_data, fa_dir, mcl_mtrx, fastaformat = "new") {
+JoinRepSeq <- function(mcl_data, fa_dir, mcl_mtrx, fastaformat = "new") {
 
-    ### must feed it a formatted mcl_data file from format_afterOrtho
+    ### must feed it a formatted mcl_data file from FormatAfterOrtho
     mcl_data <- mcl_data$proteins
 
     files <- dir(fa_dir, pattern = ".fasta")

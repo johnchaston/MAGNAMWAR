@@ -18,7 +18,9 @@ library(MAGNAMWAR)
 
 ## Introduction
 
-This vignette describes a recommended workflow to take full advantage of MAGNAMWAR. The data are from a study on bacterial determinants of *Drosophila melanogaster* triglyceride content, and are representative of any number of datasets that associate one phenotype with one bacterial species. The data included in the package and used in documentation examples are highly subsetted (2 orders of magnitude smaller) from the original dataset to increase speed of the example analyses. Most analyses can be run on a standard laptop computer, although we recommend a desktop computer with at least 16GB RAM for large (>500 phenotype measures) datasets. The functions are presented in their recommended order of operations using the case study fruit fly triglyceride data included in the package.
+MAGNAMWAR is a software package for bacterial genome wide association (GWA). Relative to standard approaches for GWA, e.g. in humans, bacterial genomes and phenotyping experiments have unique characteristics that suggest the use of different variant calling and statistical approaches may improve the association analysis (reviewed in Power, et al, 2017; Pubmed ID 27840430). MAGNAMWAR enables GWA based on bacterial gene presence or gene variant, permits the use of different statistical modelling approaches, and incorporates population structure into models based on user-defined parameters. Genes are clustered into orthologous groups (OGs) using the OrthoMCL gene clustering software, and can be statistically associated with raw or aggregate (e.g. mean) phenotype data. MAGNAMWAR is especially useful for performing associations when the phenotypes of phylogenetically disparate taxa are analyzed, and the calling of fine-scale variants (e.g. SNPs) is challenging or inappropriate. On the other hand, OrthoMCL gene clustering software may lack resolution when comparing phenotypes between strains from the same bacterial species, and OrthoMCL becomes computationally prohibitive as the number of sampled taxa increases above several hundred isolates. For such implementations, we recommend users consider other existing software reviewed in Power, et al. 2017 that are designed for processing hundreds or thousands of samples; or for performing SNP-based comparisons where it may be more appropriate to consider factors such as linkage.
+
+This vignette describes a recommended workflow to take full advantage of MAGNAMWAR. The data are from a study on bacterial determinants of *Drosophila melanogaster* triglyceride content, and are representative of any number of datasets that associate one phenotype with one bacterial species. The data included in the package and used in documentation examples are highly subsetted (2 orders of magnitude smaller) from the original dataset to increase speed of the example analyses. Most analyses can be run on a standard laptop computer, although we recommend a desktop computer with at least 16GB RAM for large (\>500 phenotype measures) datasets. The functions are presented in their recommended order of operations using the case study fruit fly triglyceride data included in the package.
 
 ## 1. A Brief Outline
 
@@ -28,41 +30,41 @@ Function | Purpose | Input | Output | Case Study Input | Case Study Output
 -------- | ------- | ----- | ------ | ---------------- | -----------------
 format\_MCLfastas | prep amino acid fasta files for OrthoMCL analysis | 4-letter abbreviated amino acid fasta files of every host-mono-associated organism | concatenated fasta file of all inputs, removes any duplicate ids | fastas in extdata/fasta\_dir/ | MCLformatted\_all.fasta
 format\_afterOrtho | format output of OrthoMCL clusters to be used with analyses | groups file from OrthoMCL | Parsed data contained in a list of 2 objects (presence absence matrix, protein ids) | extdata/groups\_ example\_r.txt | after\_ortho\_format_grps
-analyzeOrthoMCL | main analysis of data | format\_afterOrtho output; phenotypic data | a matrix with 7 variables (cluster group, p-value, corrected p-value...) | after\_ortho\_format_grps; pheno\_data | mcl\_mtrx\_grps
-join\_repseq | appends representative sequences with analyzeOrthoMCL matrix | format\_afterOrtho output; fasta files; output matrix of analyzeOrthoMCL | a data frame of the joined matrix | after\_ortho\_format\_grps; extdata/fasta\_dir/;  mcl\_mtrx\_grps | joined\_mtrx_grps
+AnalyzeOrthoMCL | main analysis of data | format\_afterOrtho output; phenotypic data | a matrix with 7 variables (cluster group, p-value, corrected p-value...) | after\_ortho\_format_grps; pheno\_data | mcl\_mtrx\_grps
+join\_repseq | appends representative sequences with AnalyzeOrthoMCL matrix | format\_afterOrtho output; fasta files; output matrix of AnalyzeOrthoMCL | a data frame of the joined matrix | after\_ortho\_format\_grps; extdata/fasta\_dir/;  mcl\_mtrx\_grps | joined\_mtrx_grps
 
 
 ## 2. Format For OrthoMCL Gene Clustering
 
-The first step is to assign each gene to a cluster of orthologous groups. This pipeline uses OrthoMCL for clustering, either through a local install (requires extensive RAM; see supplementary data) or web-based executable ([http://orthomcl.org/orthomcl/](http://orthomcl.org/orthomcl/); max 100,000 sequences). OrthoMCL software requires specific fasta sequence header formats and that there are no duplicate protein ids. The fasta header format contains 2 pipe-separated pieces of information: a unique 3-4 alphanumeric taxon designation and a unique protein ID classifier, e.g.  >apoc|WP\_000129691. Two functions aid in file formatting: `format_MCLfastas`, which formats genbank files, and `RASTtogbk`, which formats files from RAST.
+The first step is to assign each gene to a cluster of orthologous groups. This pipeline uses OrthoMCL for clustering, either through a local install (requires extensive RAM; see supplementary data) or web-based executable ([http://orthomcl.org/orthomcl/](http://orthomcl.org/orthomcl/); max 100,000 sequences). OrthoMCL software requires specific fasta sequence header formats and that there are no duplicate protein ids. The fasta header format contains 2 pipe-separated pieces of information: a unique 3-4 alphanumeric taxon designation and a unique protein ID classifier, e.g.  \>apoc|WP\_000129691. Two functions aid in file formatting: `FormatMCLFastas`, which formats genbank files, and `RASTtoGBK`, which formats files from RAST.
 
-### format_MCLfastas
+### FormatMCLFastas
 
-`format_MCLfastas` converts amino-acid fasta files to an OrthoMCL compliant format and combines them into a concatenated file called "MCLformatted\_all.fasta". All amino acid fasta files must first be placed in a user-specified directory and given a 3-4 letter alphanumeric name, beginning with a non-numeric character (e.g. aac1.fasta). Example fasta files are included in the MAGNAMWAR package. The output "MCLformatted_all.fasta" file is the input for the [OrthoMCL clustering software](www.orthomcl.org).
+`FormatMCLFastas` converts amino-acid fasta files to an OrthoMCL compliant format and combines them into a concatenated file called "MCLformatted\_all.fasta". All amino acid fasta files must first be placed in a user-specified directory and given a 3-4 letter alphanumeric name, beginning with a non-numeric character (e.g. aac1.fasta). Example fasta files are included in the MAGNAMWAR package. The output "MCLformatted_all.fasta" file is the input for the [OrthoMCL clustering software](www.orthomcl.org).
 
-### RASTtogbk
+### RASTtoGBK
 
-For fasta files that are not in the NCBI format, they should be converted in a separate folder to an NCBI-compatible format before running `format_MCLfastas`. For example, files in the RAST format have the initial header >fig|unique\_identifer; not >ref|xxxx|xxxx|unique_identifier|annotation. To convert these or any other files to NCBI-compatible format, use the `RASTtogbk` function to merge the annotation using the unique identifier as a lookup, specifying the name of the fasta file (with a 3-4 letter alphanumeric name beginning with a non-numeric character), path to the reference file containing the annotation, and the folder bearing the .If the reference file bearing the annotation is from RAST the lookup file can be downloaded as the 'spreadsheet (tab separated text format)'. If the reference file is from a different source, format it so that the unique identifier is in the 2nd column and the reference annotation is in the 8th column.
+For fasta files that are not in the NCBI format, they should be converted in a separate folder to an NCBI-compatible format before running `FormatMCLFastas`. For example, files in the RAST format have the initial header \>fig|unique\_identifer; not \>ref|xxxx|xxxx|unique_identifier|annotation. To convert these or any other files to NCBI-compatible format, use the `RASTtoGBK` function to merge the annotation using the unique identifier as a lookup, specifying the name of the fasta file (with a 3-4 letter alphanumeric name beginning with a non-numeric character), path to the reference file containing the annotation, and the folder bearing the .If the reference file bearing the annotation is from RAST the lookup file can be downloaded as the 'spreadsheet (tab separated text format)'. If the reference file is from a different source, format it so that the unique identifier is in the 2nd column and the reference annotation is in the 8th column.
 
 ```{r}
-lfrc_fasta <- system.file('extdata', 'RASTtogbk//lfrc.fasta', package='MAGNAMWAR')
-lfrc_reference <- system.file('extdata', 'RASTtogbk//lfrc_lookup.csv', package='MAGNAMWAR')
-lfrc_path <- system.file('extdata', 'RASTtogbk//lfrc_out.fasta', package='MAGNAMWAR')
+lfrc_fasta <- system.file('extdata', 'RASTtoGBK//lfrc.fasta', package='MAGNAMWAR')
+lfrc_reference <- system.file('extdata', 'RASTtoGBK//lfrc_lookup.csv', package='MAGNAMWAR')
+lfrc_path <- system.file('extdata', 'RASTtoGBK//lfrc_out.fasta', package='MAGNAMWAR')
 
-RASTtogbk(lfrc_fasta,lfrc_reference,lfrc_path)
+RASTtoGBK(lfrc_fasta,lfrc_reference,lfrc_path)
 ```
 
 ## 2.5 Call Gene Clusters with OrthoMCL Software
 
-After formatting fasta files, run OrthoMCL clustering software either locally or online.
+After formatting fasta files, run OrthoMCL clustering software either locally or online. OrthoMCL documentation describes how local installations can vary the inflation factor parameter to adjust the resolution of gene clustering.
 
 More information about OrthoMCL clustering software can be found at: [http://www.orthomcl.org/](http://www.orthomcl.org/).
 
 ## 3. Format Clusters for Statistical Analysis
 
-### format_afterOrtho
+### FormatAfterOrtho
 
-The `format_afterOrtho` function reformats the direct output from OrthoMCL for the MAGNAMWAR pipeline. To use the command, call `format_afterOrtho`, specifying the location of the OrthoMCL clusters file (online: OrthologGroups file; local: output of orthomclMclToGroups command) and whether the software was run online ("ortho"; default) or locally ("groups"). The following sample data were derived using local clustering. 
+The `FormatAfterOrtho` function reformats the direct output from OrthoMCL for the MAGNAMWAR pipeline. To use the command, call `FormatAfterOrtho`, specifying the location of the OrthoMCL clusters file (online: OrthologGroups file; local: output of orthomclMclToGroups command) and whether the software was run online ("ortho"; default) or locally ("groups"). The following sample data were derived using local clustering. 
 
 ```{r, echo=FALSE}
 file_groups <- system.file('extdata', 'groups_example_r.txt', package='MAGNAMWAR')
@@ -71,7 +73,7 @@ file_groups <- system.file('extdata', 'groups_example_r.txt', package='MAGNAMWAR
 ```{r, results="hide"}
 # file_groups is the file path to your output file from OrthoMCL
 
-parsed_data <- format_afterOrtho(file_groups, "groups")
+parsed_data <- FormatAfterOrtho(file_groups, "groups")
 ```
 
 The new stored variable is a list of matrices. The first matrix is a presence/absence matrix of taxa that bear each cluster of orthologous groups (OGs). The second matrix lists the specific protein ids within each cluster group. The data in each can be accessed by calling `parsed_data[[1]]` or `parsed_data[[2]]`, respectively, although this is not necessary for subsequent pipeline steps. Because it contains the specific protein ids for each OG, this list is a key input for most subsequent functions.
@@ -96,9 +98,9 @@ parsed_data[[2]][,1:2]
 
 ## 4. Perform Metagenome-wide Association
 
-### analyzeOrthoMCL
+### AnalyzeOrthoMCL
 
-The `analyzeOrthoMCL` function performs the statistical tests to compare the phenotypes of taxa bearing or lacking each OG. It requires the R object output of the `format_afterOrtho` function and a phenotype matrix containing the variables for the statistical tests. Seven different tests are supported, each deriving the significance of OG presence/absence on a response variable, and specified by the following codes:
+The `AnalyzeOrthoMCL` function performs the statistical tests to compare the phenotypes of taxa bearing or lacking each OG. It requires the R object output of the `FormatAfterOrtho` function and a phenotype matrix containing the variables for the statistical tests. Seven different tests are supported, each deriving the significance of OG presence/absence on a response variable, and specified by the following codes:
 
 * <span style="color:blue">__lm__</span>: Linear model
 * <span style="color:blue">__wx__</span>: Wilcox test
@@ -109,9 +111,9 @@ The `analyzeOrthoMCL` function performs the statistical tests to compare the phe
 * <span style="color:blue">__survmulti__</span>: Survival model with one additional fixed effect and two independent random effects, run on multiple cores
 * <span style="color:blue">__survmulticensor__</span>: Right-and-left-censored survival model with an additional fixed effect and two independent random effects, run on multiple cores
 
-To run `analyzeOrthoMCL`, the following parameters are required:
+To run `AnalyzeOrthoMCL`, the following parameters are required:
 
-1. the output of `format_afterOrtho`
+1. the output of `FormatAfterOrtho`
 2. a data frame *(NOT a path)* of phenotypic data*
 3. model name (as described above)
 4. name of column containing 4-letter taxa designations
@@ -138,16 +140,16 @@ A subset of the phenotypic file for TAG content `pheno_data` is shown below:
 head(pheno_data,n = 5)
 ```
 
-To run `analyze_OrthoMCL` use the headers within `pheno_data` to specify variables:
+To run `AnalyzeOrthoMCL` use the headers within `pheno_data` to specify variables:
 
-It is not necessary to specify the OG presence/absence variable, which is automatically populated from the `format_afterOrtho` output. All other variables must be specified using column names in the phenotype matrix.
+It is not necessary to specify the OG presence/absence variable, which is automatically populated from the `FormatAfterOrtho` output. All other variables must be specified using column names in the phenotype matrix.
 
-We will thus populate `analyzeOrthoMCL` using the headers within `pheno_data` to specify variables:
+We will thus populate `AnalyzeOrthoMCL` using the headers within `pheno_data` to specify variables:
 
 For example, to test the effect of gene presence/absence on fat content using a mixed model with nested random effects, the following command should be used:
 
 ```{r, results="hide"}
-mcl_matrix <- analyze_OrthoMCL(parsed_data, 
+mcl_matrix <- AnalyzeOrthoMCL(parsed_data, 
                                pheno_data, 
                                model = 'lmeR2nest', 
                                species_name = 'Treatment',  
@@ -156,9 +158,11 @@ mcl_matrix <- analyze_OrthoMCL(parsed_data,
                                rndm2 = 'Vial')
 ```
 
+An optional but highly recommended parameter of `AnalyzeOrthoMCL` is the `princ_coord` parameter, which allows the user to  incorporate population structure. The options for this parameter are 1, 2, 3, or a decimal. Numbers 1-3 specify how many principal coordinates to include as fixed effects in the model and a decimal specifies to use as many principal coordinates as needed for that decimal percentage of the variance to be accounted for. When a user specifies one of these options, the software automatically calculates a principal coordinates matrix from the `FormatAfterOrtho` presence absence matrix, and incorporated the specified number of principal coordinates into the model See below in the QQ Plot section to see an example of plotted analyses using principal coordinates in the model, and how incorporating population structure into the models can improve the statistical distribution of the results.
+
 The resulting output matrix contains 7 columns:
 
-1. **OG** - Clustered Orthologous Group from OrthoMCL
+1. **OG** - Clustered orthologous group name from OrthoMCL
 2. **pval1** - p-value of test
 3. **corrected_pval1** - Bonferroni corrected p-value
 4. **mean\_OGContain** - mean of phenotypic data value of all taxa in OG
@@ -172,11 +176,28 @@ The resulting output matrix contains 7 columns:
 mcl_matrix[,1:3]
 ```
 
+#### Survival analysis example
+
+`AnalyzeOrthoMCL` also provides for analysis using a survival model. A survival analysis is a method for calculating the difference between two treatments on time-series data, which may not always be normally distributed and is most likely to be relevant to host, but perhaps not bacterial, phenotypes. Users should provide a data frame of their phenotypic data, similar to the data frame described above for the other models. For more information see the `survival` package, which includes several useful guides and vignettes (https://cran.r-project.org/web/packages/survival/index.html). 
+
+Briefly, for each individual in a population that reaches a benchmark event, such as death, the time of death is recorded in the 'time' column, and a '1' is recorded in the 'event' column, indicating the individual died at time X. If an individual left an experiment prematurely (e.g. moved away from a location where a study was conducted, a fly escaped from a vial before death), the event column is labelled '0' to indicate it survived until that point in the experiment. Other metadata, including the sample name, are included on the same row as these 2 data points under other columns in a matrix.
+ 
+```{r, echo=F}
+starv_pheno_data[1:3,]
+```
+ 
+Because each individual is specified individually, survival analyses are often conducted on large datasets with thousands of measurements. To expedite the use of survival analyses in iterative BGWA testing, our survival analysis can be multi-threaded to run on multiple cores, using the `multi` option. The `survmulticensor` option is included to break up the tests for further parallelization. This function allows the user to optionally input a `startnum` and `stopnum` signifying which and how many tests to run. The output of those certain tests can then be written into the `output_dir` where the `SurvAppendMatrix` function can be used to concatenate all small tests together.
+
+
+```{r eval=FALSE}
+mcl_mtrx <- AnalyzeOrthoMCL(after_ortho_format, starv_pheno_data, species_name = 'TRT', model='survmulti', time='t2', event='event', rndm1='EXP', rndm2='VIAL', multi=1)
+```
+
 ## 5. Post-statistical analysis
 
-### join_repseq
+### JoinRepSeq
 
-`join_repseq` randomly selects a representative protein annotation and amino acid sequence from each OG and appends it to the `analyzeOrthoMCL` output matrix. The purpose is to identify OG function. The result is a data frame bearing 4 additional  variables:
+`JoinRepSeq` randomly selects a representative protein annotation and amino acid sequence from each OG and appends it to the `AnalyzeOrthoMCL` output matrix. The purpose is to identify OG function. The result is a data frame bearing 4 additional  variables:
 
 1. **rep\_taxon** - taxon that contains the representative sequence
 2. **rep\_id** - representative protein id
@@ -185,15 +206,15 @@ mcl_matrix[,1:3]
 
 Four inputs are specified for `join\_repseq`:
 
-1. The list produced by `format_afterOrtho`
+1. The list produced by `FormatAfterOrtho`
 2. The fasta directory of the 4-letter abbreviated fasta files
-3. The matrix produced by `analyzeOrthoMCL`
+3. The matrix produced by `AnalyzeOrthoMCL`
 4. The NCBI sequence format ("old"(default) or "new")
 
 ```{r}
 dir <- system.file('extdata', 'fasta_dir', package='MAGNAMWAR')
 dir <- paste(dir,'/',sep='')
-joined_matrix <- join_repseq(after_ortho_format_grps, dir, mcl_mtrx_grps, fastaformat = 'old')
+joined_matrix <- JoinRepSeq(after_ortho_format_grps, dir, mcl_mtrx_grps, fastaformat = 'old')
 ```
 
 `joined_matrix[1,8:10]` An example of three of the appended columns are shown below:
@@ -208,33 +229,33 @@ MAGNAMWAR statistical analysis can be exported into either tab-separated matrice
 
 ### 6a. Matrices
 
-#### printOGseqs
+#### PrintOGSeqs
 
 Allows the user to output all protein sequences in a specified OG in fasta format.
 
-#### surv\_append\_matrix
+#### SurvAppendMatrix
 
-When survival models are used in the MGWA a single .csv file is printed for each test. `surv_append_matrix` joins each individual file into one complete matrix.
+When survival models are used in the MGWA a single .csv file is printed for each test. `SurvAppendMatrix` joins each individual file into one complete matrix.
 
-#### write_mcl
+#### WriteMCL
 
-Writes the matrix result from `analyzeOrthoMCL` into a tab-separated file.
+Writes the matrix result from `AnalyzeOrthoMCL` into a tab-separated file.
 
 
 ### 6b. Graphics
 
 MAGNAMWAR also offers several options for graphical outputs. The several ways to visualize data are explained in detail below.
 
-#### pdgplot
+#### PDGPlot
 
-`pdgplot` visualizes the phenotypic effect of bearing a OG. The phenotype matrix is presented as a bar chart, and gene presence/absence is represented by different bar shading. 
+`PDGPlot` visualizes the phenotypic effect of bearing a OG. The phenotype matrix is presented as a bar chart, and gene presence/absence is represented by different bar shading. 
 
-Calling `pdgplot` requires the same `pheno_data` variable as `analyzeOrthoMCL` and similarly takes advantage of the user specified column names from the `pheno_data` data frame. It also requires the `mcl_matrix` object and specification of which OG to highlight.
+Calling `PDGPlot` requires the same `pheno_data` variable as `AnalyzeOrthoMCL` and similarly takes advantage of the user specified column names from the `pheno_data` data frame. It also requires the `mcl_matrix` object and specification of which OG to highlight.
 
 For example, to visualize the means and standard deviations of the taxa which are present in OG "ex_r00002", the OG with the lowest corrected p-value ("0.00186"). Green and gray bars represent taxa that do or do not contain a gene in the OG, respectively.
 
 ```{r, fig.width=8, fig.height=4}
-pdgplot(pheno_data, mcl_matrix, OG = 'ex_r00002', species_colname = 'Treatment', data_colname = 'RespVar', ylab = "TAG Content")
+PDGPlot(pheno_data, mcl_matrix, OG = 'ex_r00002', species_colname = 'Treatment', data_colname = 'RespVar', ylab = "TAG Content")
 ```
 
 The different taxa can be ordered alphabetically, as above, or by specifying the order with either the `tree` parameter (for phylogenetic sorting) or the `order` parameter, which takes a vector to determine order. For example, the taxa can be ordered by phylogeny by calling a phylogenetic tree file with the taxon names as leaves (note any taxa in `pheno_data` that are not in the tree file will be omitted).
@@ -242,56 +263,60 @@ The different taxa can be ordered alphabetically, as above, or by specifying the
 ```{r, fig.width=8, fig.height=4}
 tree <- system.file('extdata', 'muscle_tree2.dnd', package='MAGNAMWAR')
 
-pdgplot(pheno_data, mcl_matrix, 'ex_r00002', 'Treatment', 'RespVar', ylab = "TAG Content", tree = tree)
+PDGPlot(pheno_data, mcl_matrix, 'ex_r00002', 'Treatment', 'RespVar', ylab = "TAG Content", tree = tree)
 ```
 
-#### phydataerror
+#### PhyDataError
 
-`phydataerror` is similar to pdgplot and adds visualization of phylogenetic tree with the phenotypic means and standard deviation.
+`PhyDataError` is similar to PDGPlot and adds visualization of phylogenetic tree with the phenotypic means and standard deviation.
 
-Calling `phydataerror` requires the following parameters:
+Calling `PhyDataError` requires the following parameters:
 
 * a phylogenetic tree
-* the same `pheno_data` variable as `analyzeOrthoMCL` (and its column names)
+* the same `pheno_data` variable as `AnalyzeOrthoMCL` (and its column names)
 * the `mcl_matrix` object
 * a specification of which OG to highlight
 
 ```{r, fig.width=6, fig.height=6.5, fig.align='center'}
-phydataerror(tree, pheno_data, mcl_matrix, species_colname = 'Treatment', data_colname = 'RespVar', OG='ex_r00002', xlabel='TAG Content')
+PhyDataError(tree, pheno_data, mcl_matrix, species_colname = 'Treatment', data_colname = 'RespVar', OG='ex_r00002', xlabel='TAG Content')
 ```
 
 #### pdg\_v\_OG
 
-`pdg_v_OG` produces a histogram of the number of OGs in each phylogenetic distribution group (PDG). A PDG is the set of OGs present and absent in the exact same set of bacterial taxa. The main purpose of the graph is to determine the fraction of OGs that are present in unique or shared sets of taxa, since the phenotypic effect of any OGs in the same PDG cannot be discriminated from each other. 
+`PDGvOG` produces a histogram of the number of OGs in each phylogenetic distribution group (PDG). A PDG is the set of OGs present and absent in the exact same set of bacterial taxa. The main purpose of the graph is to determine the fraction of OGs that are present in unique or shared sets of taxa, since the phenotypic effect of any OGs in the same PDG cannot be discriminated from each other. 
 
-To run `pdg_v_OG`, provide the output of `format_afterOrtho`.  The `num` parameter (default 40) is used to specify the amount of OGs per PDG that should be included on the x axis.
+To run `PDGvOG`, provide the output of `FormatAfterOrtho`.  The `num` parameter (default 40) is used to specify the amount of OGs per PDG that should be included on the x axis.
 
 For example, in the graph below there are 11 PDGs only contain one OG, meaning that 11 PDGs have one group that has a unique distribution of taxa present and absent.
 
 ```{r}
-pdg_v_OG(parsed_data,0)
+PDGvOG(parsed_data,0)
 ```
 
 Because this data is an extreme subset, it isn't very informative. A full data set is shown below. This shows us that in this particular OrthoMCL clustering data, 4822 PDGs exist with only 1 unique OG in the PDG, and around 500 PDGs exist with 2 OGs that share the same presence and absence of taxa and so on.
 
 ![](http://i.imgur.com/KkAETvk.jpg)
 
-#### qqplotter
+#### QQPlotter
 
-A simple quartile-quartile plot function that is generated using the matrix of `analyzeOrthoMCL`. To run `qqplotter`, provide the output matrix of `analyzeOrthoMcl`.
+A simple quartile-quartile plot function that is generated using the matrix of `AnalyzeOrthoMCL`. To run `QQPlotter`, provide the output matrix of `AnalyzeOrthoMcl`.
 
 ```{r, fig.width=4, fig.height=4, fig.align='center'}
-qqplotter(mcl_matrix)
+QQPlotter(mcl_matrix)
 ```
 
-#### manhat_grp
+Using this function, we provide a visualization of the use of the `princ_coord` parameter in `AnalyzeOrthoMCL`. Notice how each additional principal coordinate reduces statistical inflation. In practice it is usually computationally inexpensive to run several iterations of the analysis with a different number of principal coordinates to test how their incorporation improves the statistical fit.
 
-`manhat_grp` produces a manhattan plot for visual analysis of the output of `analyzeOrthoMCL`. In a traditional genome wide association study, a Manhattan plot is a visualization tool to identify significant p-values and potential linkage disequilibrium blocks. A traditional Manhattan plot sorts p-value by the SNPs along the 23 chromosomes. In our Manhattan plot, we sort by taxa instead of by chromosome number as shown below. The lines that emerge in our plot show the clustered proteins across taxa (which because they are in the same OG would have the same p-value).
+![](http://i.imgur.com/1DHs8zN.jpg)
 
-To run `manhat_grp`, provide the output of `format_afterOrtho` and the output of `analyzeOrthoMCL` as shown below.
+#### ManhatGrp
+
+`ManhatGrp` produces a manhattan plot for visual analysis of the output of `AnalyzeOrthoMCL`. In a traditional genome wide association study, a Manhattan plot is a visualization tool to identify significant p-values and potential linkage disequilibrium blocks. A traditional Manhattan plot sorts p-value by the SNPs along the 23 chromosomes. In our Manhattan plot, we sort by taxa instead of by chromosome number as shown below. The lines that emerge in our plot show the clustered proteins across taxa (which because they are in the same OG would have the same p-value).
+
+To run `ManhatGrp`, provide the output of `FormatAfterOrtho` and the output of `AnalyzeOrthoMCL` as shown below.
 
 ```{r, fig.width=6, fig.height=3, fig.align='center'}
-manhat_grp(parsed_data, mcl_matrix)
+ManhatGrp(parsed_data, mcl_matrix)
 ```
 
 Again because this data is an extreme subset, it isn't very informative. Another full data set example is shown below.

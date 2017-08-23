@@ -14,6 +14,6 @@ after_ortho_format_grps
 }
 \description{
 A list created by inputting the output of OrthoMCL clusters
-into the format_afterOrtho function.
+into the FormatAfterOrtho function.
 }
 \keyword{datasets}
