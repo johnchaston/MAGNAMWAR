@@ -3,7 +3,7 @@
 #' Formatted output of OrthoMCL.
 #'
 #' A list created by inputting the output of OrthoMCL clusters
-#' into the format_afterOrtho function.
+#' into the FormatAfterOrtho function.
 #'
 #' @format List of 2: (1) presence absence matrix, (2) protein ids:
 #' \describe{
@@ -16,7 +16,7 @@
 #' Formatted output of OrthoMCL.
 #'
 #' A list created by inputting the output of OrthoMCL clusters
-#' into the format_afterOrtho function.
+#' into the FormatAfterOrtho function.
 #'
 #' @format List of 2: (1) presence absence matrix, (2) protein ids:
 #' \describe{
@@ -68,7 +68,7 @@
 "joined_mtrx_grps"
 
 
-#' Final output of analyzeOrthoMCL
+#' Final output of AnalyzeOrthoMCL
 #'
 #' A matrix containing the final results of statistical analysis.
 #'
@@ -84,7 +84,7 @@
 #' }
 "mcl_mtrx"
 
-#' Final output of analyzeOrthoMCL
+#' Final output of AnalyzeOrthoMCL
 #'
 #' A matrix containing the final results of statistical analysis.
 #'
@@ -104,7 +104,7 @@
 #' Triglyceride (TAG) content of fruit flies dataset.
 #'
 #' A subset of the TAG content of fruit flies, collected in the Chaston Lab,
-#' to be used as a brief example for tests in analyzeOrthoMCL.
+#' to be used as a brief example for tests in AnalyzeOrthoMCL.
 #'
 #' @format A data frame with 586 rows and 4 variables:
 #' \describe{
@@ -118,7 +118,7 @@
 #' Starvation rate of fruit flies dataset.
 #'
 #' A subset of the Starvation rate of fruit flies, collected in the Chaston Lab,
-#' to be used as a brief example for survival tests in analyzeOrthoMCL.
+#' to be used as a brief example for survival tests in AnalyzeOrthoMCL.
 #'
 #' @format A matrix with 543 rows and 7 variables:
 #' \describe{

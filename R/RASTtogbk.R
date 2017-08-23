@@ -6,17 +6,17 @@
 #' @param out_name_path name and path of the file to write to
 #' @examples 
 #'
-#' lfrc_fasta <- system.file('extdata', 'RASTtogbk//lfrc.fasta', package='MAGNAMWAR')
-#' lfrc_reference <- system.file('extdata', 'RASTtogbk//lfrc_lookup.csv', package='MAGNAMWAR')
-#' lfrc_path <- system.file('extdata', 'RASTtogbk//lfrc_out.fasta', package='MAGNAMWAR')
+#' lfrc_fasta <- system.file('extdata', 'RASTtoGBK//lfrc.fasta', package='MAGNAMWAR')
+#' lfrc_reference <- system.file('extdata', 'RASTtoGBK//lfrc_lookup.csv', package='MAGNAMWAR')
+#' lfrc_path <- system.file('extdata', 'RASTtoGBK//lfrc_out.fasta', package='MAGNAMWAR')
 #'
-#' RASTtogbk(lfrc_fasta,lfrc_reference,lfrc_path)
+#' RASTtoGBK(lfrc_fasta,lfrc_reference,lfrc_path)
 #' 
 #' 
 #' @import seqinr
 #' @export
 
-RASTtogbk <- function(input_fasta, input_reference, out_name_path) {
+RASTtoGBK <- function(input_fasta, input_reference, out_name_path) {
     # library(seqinr) in_fasta is a read.fasta product of the package (seqinr)
     in_fasta <- seqinr::read.fasta(paste(input_fasta, sep = ""),
                                    seqtype = "AA", as.string = T,

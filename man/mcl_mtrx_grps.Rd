@@ -3,7 +3,7 @@
 \docType{data}
 \name{mcl_mtrx_grps}
 \alias{mcl_mtrx_grps}
-\title{Final output of analyzeOrthoMCL}
+\title{Final output of AnalyzeOrthoMCL}
 \format{A matrix with 10 rows and 7 variables:
 \describe{
   \item{OG}{taxa cluster id, as defined by OrthoMCL}

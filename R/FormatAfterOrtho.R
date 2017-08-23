@@ -1,19 +1,19 @@
-#' Format file from output of OrthoMCL algorithm before use in analyzeOrthoMCL
+#' Format file from output of OrthoMCL algorithm before use in AnalyzeOrthoMCL
 #' 
-#' After running OrthoMCL and/or submitting to www.orthomcl.org, formats the output file to be used in analyzeOrthoMCL
-#' @param file Path to the orthoMCL output file
+#' After running OrthoMCL and/or submitting to www.orthomcl.org, formats the output file to be used in AnalyzeOrthoMCL
+#' @param file Path to the OrthoMCL output file
 #' @param format Specification of the method by which file was obtained: defaults to 'ortho' for output from orthomcl.org. Other option is 'groups' for output from local run of OrthoMCL software.
 #' @return   a list of matrices; (1) a presence/absence matrix of taxa per OG, (2) a list of the specific protein ids within each OG
 #' @examples
 #' file <- system.file('extdata', 'orthologGroups.txt', package='MAGNAMWAR')
-#' after_ortho_format <- format_afterOrtho(file)
+#' after_ortho_format <- FormatAfterOrtho(file)
 #' 
 #' file_grps <- system.file('extdata', 'groups_example_r.txt', package='MAGNAMWAR')
-#' after_ortho_format_grps <- format_afterOrtho(file_grps, format = 'groups')
+#' after_ortho_format_grps <- FormatAfterOrtho(file_grps, format = 'groups')
 #' 
 #' @export
 
-format_afterOrtho <- function(file, format = "ortho") {
+FormatAfterOrtho <- function(file, format = "ortho") {
     
     cat("reading in OrthoMCL data...")
     if (format == "ortho") {

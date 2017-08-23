@@ -1,7 +1,7 @@
 #' Append Survival Test Outputs
 #' 
-#' Function used to append all .csv files that are outputted from analyze_OrthoMCL into one matrix.
-#' @param work_dir the directory where the output files of analyze_OrthoMCL are located
+#' Function used to append all .csv files that are outputted from AnalyzeOrthoMCL into one matrix.
+#' @param work_dir the directory where the output files of AnalyzeOrthoMCL are located
 #' @param out_name file name of outputted matrix
 #' @param out_dir the directory where the outputted matrix is placed
 #' @return A csv file containing a matrix with the following columns: OG, p-values, Bonferroni corrected p-values, mean phenotype of OG-containing taxa, mean pheotype of OG-lacking taxa, taxa included in OG, taxa not included in OG
@@ -11,13 +11,13 @@
 #' \dontrun{
 #' file <- system.file('extdata', 'outputs', package='MAGNAMWAR')
 #' directory <- paste(file, '/', sep = '')
-#' surv_append_matrix(directory)
+#' SurvAppendMatrix(directory)
 #' }
 #'
 #' @export
 
 
-surv_append_matrix <- function(work_dir, out_name = "surv_matrix.csv",
+SurvAppendMatrix <- function(work_dir, out_name = "surv_matrix.csv",
                                out_dir = NULL) {
 
     if (is.null(out_dir)) {

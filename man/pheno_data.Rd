@@ -16,6 +16,6 @@ pheno_data
 }
 \description{
 A subset of the TAG content of fruit flies, collected in the Chaston Lab,
-to be used as a brief example for tests in analyzeOrthoMCL.
+to be used as a brief example for tests in AnalyzeOrthoMCL.
 }
 \keyword{datasets}
