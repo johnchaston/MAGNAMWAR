@@ -1,10 +1,10 @@
 Package: MAGNAMWAR
 Title: A Pipeline for Meta-Genome Wide Association
 Version: 2.0.0
-Date: 2017-04-26
+Date: 2017-08-24
 Authors@R: c(
-    person("Corinne", "Sexton", role = c("aut", "cre"), email="corinsexton@gmail.com"), 
-    person("John", "Chaston", role = c("aut"), email = "john_chaston@byu.edu"),
+    person("Corinne", "Sexton", role = c("aut"), email="corinsexton@gmail.com"), 
+    person("John", "Chaston", role = c("aut", "cre"), email = "john_chaston@byu.edu"),
     person("Hayden", "Smith", role = "ctb")
   )
 Description: Correlates variation within the meta-genome to target species
