@@ -15,9 +15,8 @@
 #' @return a barplot with taxa vs phenotypic data complete with standard error bars
 #' @examples
 #' 
-#' \dontrun{ 
 #' PDGPlot(pheno_data, mcl_mtrx, 'OG5_126778', 'Treatment', 'RespVar', ylimit=12)
-#' }
+#' 
 #' @export
 #' 
 
@@ -138,10 +137,9 @@ PDGPlot <- function(data, mcl_matrix, OG = "NONE", species_colname,
 #' @param ... args to be passed to barplot
 #' @return a barplot with a height determined by the second column and the first column abbreviated to accomodate visual spacing
 #' @examples 
-#' # Not run - changes options
-#' \dontrun{
+#' 
 #' PDGvOG(after_ortho_format_grps,2)
-#' }
+#' 
 #' @export
 
 PDGvOG <- function(mcl_data, num = 40, ...) {
@@ -247,12 +245,10 @@ PDGvOG <- function(mcl_data, num = 40, ...) {
 #' @references Some sort of reference
 #' @examples 
 #' 
-#'
-#' \dontrun{
 #' file <- system.file('extdata', 'muscle_tree2.dnd', package='MAGNAMWAR')
 #' PhyDataError(file, pheno_data, mcl_mtrx, species_colname = 'Treatment', data_colname = 'RespVar',
 #'  OG='OG5_126778', xlabel='TAG Content')
-#' }
+#' 
 #' @importFrom graphics abline axis barplot par plot segments text title
 #' @importFrom stats aggregate na.omit ppoints sd
 #' @importFrom utils read.csv read.delim read.table write.csv write.table

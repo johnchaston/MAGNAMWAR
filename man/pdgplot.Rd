@@ -39,7 +39,6 @@ Bar plot of PDG vs phenotype data with presence of taxa in PDG indicated by colo
 }
 \examples{
 
-\dontrun{ 
 PDGPlot(pheno_data, mcl_mtrx, 'OG5_126778', 'Treatment', 'RespVar', ylimit=12)
-}
+
 }
