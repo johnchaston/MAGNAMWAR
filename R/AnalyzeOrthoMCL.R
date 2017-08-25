@@ -42,7 +42,7 @@
 #' \donttest{
 #' mcl_mtrx <- AnalyzeOrthoMCL(after_ortho_format, pheno_data, 'lmeR2nest',
 #'  'Treatment',  resp='RespVar', rndm1='Experiment', rndm2='Vial')
-#' }
+#' 
 #'
 #' 
 #' #Linear Mixed Effect with two independent random effects and one additional fixed effect
