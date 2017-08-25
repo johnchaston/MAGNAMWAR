@@ -27,22 +27,24 @@
 #'
 #' # the rest of the examples are not run for time's sake
 #' #Linear Mixed Effect with one random effect
+#' \donttest{
 #' mcl_mtrx <- AnalyzeOrthoMCL(after_ortho_format, pheno_data, 'lmeR1',
 #' 'Treatment', resp='RespVar', rndm1='Experiment')
-#' 
+#' }
 #'
 #' 
 #' #Linear Mixed Effect with two independent random effects
+#' \donttest{
 #' mcl_mtrx <- AnalyzeOrthoMCL(after_ortho_format, pheno_data, 'lmeR2ind',
 #'  'Treatment', resp='RespVar', rndm1='Experiment', rndm2='Vial')
-#' 
+#' }
 #' 
 #' 
 #' #Linear Mixed Effect with rndm2 nested in rndm1
 #' \donttest{
 #' mcl_mtrx <- AnalyzeOrthoMCL(after_ortho_format, pheno_data, 'lmeR2nest',
 #'  'Treatment',  resp='RespVar', rndm1='Experiment', rndm2='Vial')
-#' }
+#' 
 #'
 #' 
 #' #Linear Mixed Effect with two independent random effects and one additional fixed effect
