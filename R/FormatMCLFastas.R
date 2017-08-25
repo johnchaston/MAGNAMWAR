@@ -6,7 +6,6 @@
 #' @return Returns nothing, but prints the path to the final OrthoMCL compatible fasta file
 #' @examples
 #' 
-#' # Not run ~ directory structure depends on system
 #' dir <- system.file('extdata', 'fasta_dir', package='MAGNAMWAR')
 #' dir <- paste(dir,'/',sep='')
 #' formatted_file <- FormatMCLFastas(dir)

@@ -25,13 +25,12 @@ Print all protein sequences and annotations in a given OG
 }
 \examples{
 
-# Not run ~ directory structure depends on system
-\dontrun{
+
 OG <- 'OG5_126968'
 dir <- system.file('extdata', 'fasta_dir', package='MAGNAMWAR')
 dir <- paste(dir,'/',sep='')
 
 PrintOGSeqs(after_ortho_format, OG, dir)
-}
+
 
 }
