@@ -54,10 +54,11 @@
 #' }
 #' 
 #' 
-#' #Wilcox Test
+#' #Wilcoxon Test
+#' \donttest{
 #' mcl_mtrx <- AnalyzeOrthoMCL(after_ortho_format, pheno_data, 'wx',
 #'  'Treatment', resp='RespVar')
-#' 
+#' }
 #'
 #' # ~ 5 minutes
 #' #Survival with two independent random effects, run on multiple cores
