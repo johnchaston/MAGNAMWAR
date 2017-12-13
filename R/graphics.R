@@ -211,14 +211,17 @@ PDGvOG <- function(mcl_data, num = 40, ...) {
                       than largest number of OGs in PDG:\n",
                       num, " > ", nrow(sums)))
     }
+    orig_par <- par()$mar
+    par(mar=c(5,5,4,1)+.1)
 
-    barplot <- barplot(plot$Freq, names.arg = plot$OGS, ylim = c(-1, r_axis),
+    barplot <- barplot(plot$Freq, ylim = c(-1, r_axis),
                        xlab = expression(paste("OGs PDG"^"-1")),
                        ylab = "PDGs", ...)
-    axis(1, at = barplot, labels = plot$OGS, las = 1)
+    axis(1, at = barplot, labels = plot$OGS, las = 1, cex.axis=.75)
 
     ### Fitting label on top of bar
-    orig_par <- par()$mar
+    par(mar = orig_par, no.readonly = T)
+    
     par(new = T, mar = c(2, 2, 2, 2))
     text(x = barplot[1], y = plot[1, 2], label = paste(plot[1, 2]), pos = 3)
 
@@ -381,6 +384,9 @@ PhyDataError <- function(phy, data, mcl_matrix, species_colname, data_colname,
 #' 
 QQPlotter <- function(mcl_mtrx) {
 
+    orig_par <- par()$mar
+    par(mar=c(5,5,4,1)+.1)
+  
     pvector <- as.numeric(mcl_mtrx[, 2])
     pvector <- pvector[!is.na(pvector) & pvector < 1 & pvector > 0]
 
@@ -395,6 +401,7 @@ QQPlotter <- function(mcl_mtrx) {
          ylim = c(0, max(o)))
 
     abline(0, 1, col = "red")
+    par(mar = orig_par, no.readonly = T)
 }
 
 
@@ -497,6 +504,7 @@ ManhatGrp <- function(mcl_data, mcl_mtrx, tree = NULL) {
 
     qqman::manhattan(plot, xlab = "Bacterial Genome", chrlabs = as.character(fin_taxa),
                      las = 2, genomewideline = FALSE,
-                     suggestiveline = -log10((0.05) / dim(mcl_mtrx)[1]), cex.lab = 1.25)
+                     suggestiveline = -log10((0.05) / dim(mcl_mtrx)[1]), cex.lab = 2)
     cat("finished.\n")
+
 }
