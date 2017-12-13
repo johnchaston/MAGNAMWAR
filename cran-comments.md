@@ -4,14 +4,7 @@
 * win-builder (devel and release)
 
 ## R CMD check results
-There were no ERRORs or WARNINGs. 
-
-There was 1 NOTE:
-
-* checking CRAN incoming feasibility ... NOTE
-Maintainer: 'John Chaston <john_chaston@byu.edu>'
-
-New submission
+There were no ERRORs, WARNINGs, or NOTES. 
 
 ## Downstream dependencies
 I have also run R CMD check on downstream dependencies of MAGNAMWAR.
