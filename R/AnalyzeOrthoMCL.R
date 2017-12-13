@@ -80,7 +80,6 @@
 #' @importFrom stats as.formula prcomp var
 #' @export
 
-
 AnalyzeOrthoMCL <- function(mcl_data, pheno_data, model, species_name, resp = NULL, fix2 = NULL, rndm1 = NULL, rndm2 = NULL, 
     multi = 1, time = NULL, event = NULL, time2 = NULL, startnum = 1, stopnum = "end", output_dir = NULL, sig_digits = NULL, princ_coord = 0) {
     
