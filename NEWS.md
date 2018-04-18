@@ -12,3 +12,7 @@ Major release of MAGNAMWAR
 # Version 2.0.1
 
 Minor text changes in the vignette for publication purposes
+
+# Version 2.0.3
+
+Examples don't write to the user's file system

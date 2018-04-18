@@ -9,13 +9,13 @@
 #' @return A fasta file with all protein sequences and ids for a given OG
 #' @examples 
 #' 
-#' 
+#' \donttest{
 #' OG <- 'OG5_126968'
 #' dir <- system.file('extdata', 'fasta_dir', package='MAGNAMWAR')
 #' dir <- paste(dir,'/',sep='')
 #' 
 #' PrintOGSeqs(after_ortho_format, OG, dir)
-#' 
+#' }
 #' 
 #' @export
 

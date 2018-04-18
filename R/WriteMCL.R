@@ -5,8 +5,11 @@
 #' @param filename File name to save final output
 #' @return The path to the written file
 #' @examples
+#' 
+#' \donttest{
 #' WriteMCL(mcl_mtrx, 'matrix.tsv')
 #' #mcl_mtrx previously derived from AnalyzeOrthoMCL() or join_repset()
+#' }
 #' @export
 WriteMCL <- function(mtrx, filename) {
 

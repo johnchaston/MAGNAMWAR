@@ -21,9 +21,11 @@
 #' @return A matrix with the following columns: OG, p-values, Bonferroni corrected p-values, mean phenotype of OG-containing taxa, mean pheotype of OG-lacking taxa, taxa included in OG, taxa not included in OG
 #' @examples 
 #' #Linear Model
+#' 
+#' \donttest{
 #' mcl_mtrx <- AnalyzeOrthoMCL(after_ortho_format, pheno_data, 'lm',
 #'  'Treatment', resp='RespVar')
-#'
+#' }
 #'
 #' # the rest of the examples are not run for time's sake
 #' #Linear Mixed Effect with one random effect
