@@ -313,7 +313,7 @@ PhyDataError <- function(phy, data, mcl_matrix, species_colname, data_colname,
         if (!is.null(OG)) {
             grep <- mcl_matrix[grep(OG, mcl_matrix[, 1]), ]
             l <- unlist(strsplit(grep[6], split = "\\|"))
-            suppressWarnings(if (is.na(l)) {
+            suppressWarnings(if(sum(is.na(l))) {
                 cat("Invalid OG inputted... Printing without
                     specific coloration\n")
             })
