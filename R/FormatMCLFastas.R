@@ -5,7 +5,7 @@
 #' @param genbnk_id (Only necessary for the deprecated version of fasta headers) The index of the sequence ID in the GenBank pipe-separated annotation line (default: 4)
 #' @return Returns nothing, but prints the path to the final OrthoMCL compatible fasta file
 #' @examples
-#' \donttest{
+#' \dontrun{
 #' dir <- system.file('extdata', 'fasta_dir', package='MAGNAMWAR')
 #' dir <- paste(dir,'/',sep='')
 #' formatted_file <- FormatMCLFastas(dir)

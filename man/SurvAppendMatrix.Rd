@@ -21,9 +21,10 @@ Function used to append all .csv files that are outputted from AnalyzeOrthoMCL i
 }
 \examples{
 
+\dontrun{
 file <- system.file('extdata', 'outputs', package='MAGNAMWAR')
 directory <- paste(file, '/', sep = '')
 SurvAppendMatrix(directory)
-
+}
 
 }

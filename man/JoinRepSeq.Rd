@@ -23,8 +23,9 @@ Joins the OrthoMCL output matrix to representative sequences
 }
 \examples{
 
+\dontrun{
 dir <- system.file('extdata', 'fasta_dir', package='MAGNAMWAR')
 dir <- paste(dir,'/',sep='')
 joined_mtrx_grps <- JoinRepSeq(after_ortho_format_grps, dir, mcl_mtrx_grps, fastaformat = 'old')
-
+}
 }

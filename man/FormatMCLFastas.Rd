@@ -18,8 +18,9 @@ Returns nothing, but prints the path to the final OrthoMCL compatible fasta file
 Creates the composite fasta file for use in running OrthoMCL and/or submitting to www.orthomcl.org
 }
 \examples{
-
+\dontrun{
 dir <- system.file('extdata', 'fasta_dir', package='MAGNAMWAR')
 dir <- paste(dir,'/',sep='')
 formatted_file <- FormatMCLFastas(dir)
+}
 }

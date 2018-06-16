@@ -18,6 +18,9 @@ The path to the written file
 Writes a tab separated version of the analyzed OrthoMCL data with or without the joined representative sequences
 }
 \examples{
+
+\dontrun{
 WriteMCL(mcl_mtrx, 'matrix.tsv')
 #mcl_mtrx previously derived from AnalyzeOrthoMCL() or join_repset()
+}
 }

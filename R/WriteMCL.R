@@ -6,7 +6,7 @@
 #' @return The path to the written file
 #' @examples
 #' 
-#' \donttest{
+#' \dontrun{
 #' WriteMCL(mcl_mtrx, 'matrix.tsv')
 #' #mcl_mtrx previously derived from AnalyzeOrthoMCL() or join_repset()
 #' }

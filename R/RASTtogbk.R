@@ -6,7 +6,7 @@
 #' @param out_name_path name and path of the file to write to
 #' @examples 
 #' 
-#' \donttest{
+#' \dontrun{
 #' lfrc_fasta <- system.file('extdata', 'RASTtoGBK//lfrc.fasta', package='MAGNAMWAR')
 #' lfrc_reference <- system.file('extdata', 'RASTtoGBK//lfrc_lookup.csv', package='MAGNAMWAR')
 #' lfrc_path <- system.file('extdata', 'RASTtoGBK//lfrc_out.fasta', package='MAGNAMWAR')

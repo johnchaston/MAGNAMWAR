@@ -8,10 +8,11 @@
 #' @return Returns the original OrthoMCL output matrix with additional columns: representative sequence taxon, representative sequence id, representative sequence annotation, representative sequence 
 #' @examples
 #' 
+#' \dontrun{
 #' dir <- system.file('extdata', 'fasta_dir', package='MAGNAMWAR')
 #' dir <- paste(dir,'/',sep='')
 #' joined_mtrx_grps <- JoinRepSeq(after_ortho_format_grps, dir, mcl_mtrx_grps, fastaformat = 'old')
-#' 
+#' }
 #' @export
 
 JoinRepSeq <- function(mcl_data, fa_dir, mcl_mtrx, fastaformat = "new") {

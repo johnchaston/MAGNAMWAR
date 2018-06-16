@@ -7,7 +7,7 @@
 #' @return A csv file containing a matrix with the following columns: OG, p-values, Bonferroni corrected p-values, mean phenotype of OG-containing taxa, mean pheotype of OG-lacking taxa, taxa included in OG, taxa not included in OG
 #' @examples 
 #' 
-#' \donttest{
+#' \dontrun{
 #' file <- system.file('extdata', 'outputs', package='MAGNAMWAR')
 #' directory <- paste(file, '/', sep = '')
 #' SurvAppendMatrix(directory)

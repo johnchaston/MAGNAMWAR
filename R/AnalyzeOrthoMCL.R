@@ -22,49 +22,49 @@
 #' @examples 
 #' #Linear Model
 #' 
-#' \donttest{
+#' \dontrun{
 #' mcl_mtrx <- AnalyzeOrthoMCL(after_ortho_format, pheno_data, 'lm',
 #'  'Treatment', resp='RespVar')
 #' }
 #'
 #' # the rest of the examples are not run for time's sake
 #' #Linear Mixed Effect with one random effect
-#' \donttest{
+#' \dontrun{
 #' mcl_mtrx <- AnalyzeOrthoMCL(after_ortho_format, pheno_data, 'lmeR1',
 #' 'Treatment', resp='RespVar', rndm1='Experiment')
 #' }
 #'
 #' 
 #' #Linear Mixed Effect with two independent random effects
-#' \donttest{
+#' \dontrun{
 #' mcl_mtrx <- AnalyzeOrthoMCL(after_ortho_format, pheno_data, 'lmeR2ind',
 #'  'Treatment', resp='RespVar', rndm1='Experiment', rndm2='Vial')
 #' }
 #' 
 #' 
 #' #Linear Mixed Effect with rndm2 nested in rndm1
-#' \donttest{
+#' \dontrun{
 #' mcl_mtrx <- AnalyzeOrthoMCL(after_ortho_format, pheno_data, 'lmeR2nest',
 #'  'Treatment',  resp='RespVar', rndm1='Experiment', rndm2='Vial')
-#' 
+#'} 
 #'
 #' 
 #' #Linear Mixed Effect with two independent random effects and one additional fixed effect
-#' \donttest{
+#' \dontrun{
 #' mcl_mtrx3 <- AnalyzeOrthoMCL(after_ortho_format, pheno_data, 'lmeF2',
 #'  'Treatment', resp='RespVar', fix2='Treatment', rndm1='Experiment', rndm2='Vial', princ_coord = 4)
 #' }
 #' 
 #' 
 #' #Wilcoxon Test
-#' \donttest{
+#' \dontrun{
 #' mcl_mtrx <- AnalyzeOrthoMCL(after_ortho_format, pheno_data, 'wx',
 #'  'Treatment', resp='RespVar')
 #' }
 #'
 #' # ~ 5 minutes
 #' #Survival with two independent random effects, run on multiple cores
-#' \donttest{
+#' \dontrun{
 #' mcl_mtrx <- AnalyzeOrthoMCL(after_ortho_format, starv_pheno_data, 'TRT', model='survmulti',
 #'  time='t2', event='event', rndm1='EXP', rndm2='VIAL', multi=1)
 #' }
@@ -72,7 +72,7 @@
 #' # ~ 5 minutes
 #' #Survival with two independent random effects and one additional fixed effect,
 #' #including drops on multi cores
-#' \donttest{
+#' \dontrun{
 #' mcl_mtrx <- AnalyzeOrthoMCL(after_ortho_format, starv_pheno_data, 'TRT', model='survmulticensor',
 #'  time='t1', time2='t2', event='event', rndm1='EXP', rndm2='VIAL', fix2='BACLO', multi=1)
 #'  }
